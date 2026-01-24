@@ -1,0 +1,395 @@
+<div class="tienda-container">
+    <p-toast position="top-right"></p-toast>
+
+    <div class="mobile-header">
+        <button class="menu-toggle" (click)="toggleMobileMenu()">
+            <i class="pi pi-bars"></i>
+        </button>
+        <img src="/logos/logoOfigarita.png" alt="La Ofi Garita" class="mobile-logo">
+        <button class="cart-toggle" (click)="toggleMobileCart()">
+            <i class="pi pi-shopping-cart"></i>
+            <span class="cart-badge" *ngIf="cantidadTotalItems > 0">{{ cantidadTotalItems }}</span>
+        </button>
+    </div>
+
+    <div class="mobile-overlay" *ngIf="mobileMenuOpen || mobileCartOpen" (click)="closeMobileMenus()">
+    </div>
+
+    <div class="sidebar-left" [class.mobile-open]="mobileMenuOpen">
+        <button class="mobile-close" (click)="toggleMobileMenu()">
+            <i class="pi pi-times"></i>
+        </button>
+
+        <div class="logo-container">
+            <img src="/logos/logoOfigarita.png" alt="La Ofi Garita" class="logo">
+        </div>
+
+        <button class="btn-comprar" (click)="finalizarCompra()" [disabled]="carrito.length === 0">
+            Comprar
+        </button>
+
+<button class="btn-estado-cuenta" (click)="abrirModalEstadoCuenta()">
+    <i class="pi pi-file-edit"></i>
+    Estado de Cuenta
+</button>
+
+        <div class="info-contacto">
+            <p><i class="pi pi-map-marker"></i> Cra. 6B No. 81-163 Barranquilla</p>
+            <p><i class="pi pi-phone"></i> 300 813 2462</p>
+        </div>
+    </div>
+
+    <div class="contenido-principal">
+        <div class="header-bienvenida">
+            <h1>Bienvenidos</h1>
+        </div>
+
+        <div class="buscador-container">
+            <div class="buscador">
+                <i class="pi pi-search search-icon"></i>
+                <input type="text" pInputText [(ngModel)]="busqueda" placeholder="Buscar productos"
+                    class="search-input">
+                <button *ngIf="busqueda" class="clear-search" (click)="busqueda = ''">
+                    <i class="pi pi-times"></i>
+                </button>
+            </div>
+        </div>
+
+        <div class="productos-grid" *ngIf="!loading">
+            <div class="producto-card" *ngFor="let producto of productosFiltrados" [@fadeIn]>
+                <div class="producto-imagen">
+                    <img [src]="getImagenProducto(producto.img)" [alt]="producto.nombre_producto">
+                </div>
+
+                <div class="producto-info">
+                    <h3>{{ producto.nombre_producto }}</h3>
+                    <p class="precio">${{ producto.precio_venta | number:'1.0-0' }}</p>
+                    <p class="stock">{{ producto.stock }} disponibles</p>
+
+                    <button class="btn-agregar" (click)="agregarAlCarrito(producto)" [disabled]="producto.stock === 0">
+                        <i class="pi pi-shopping-cart"></i>
+                        Agregar
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="loading-container" *ngIf="loading">
+            <p-progressSpinner></p-progressSpinner>
+            <p>Cargando productos...</p>
+        </div>
+
+        <div class="sin-productos" *ngIf="!loading && productosFiltrados.length === 0">
+            <i class="pi pi-inbox"></i>
+            <p>No se encontraron productos</p>
+            <button class="btn-limpiar-busqueda" *ngIf="busqueda" (click)="busqueda = ''">
+                Limpiar búsqueda
+            </button>
+        </div>
+    </div>
+
+    <div class="carrito-sidebar" [class.mobile-open]="mobileCartOpen">
+        <button class="mobile-close" (click)="toggleMobileCart()">
+            <i class="pi pi-times"></i>
+        </button>
+
+        <div class="carrito-header">
+            <h2 style="color: white;">Carrito de Compras</h2>
+            <button class="btn-vaciar" *ngIf="carrito.length > 0" (click)="vaciarCarrito()" pTooltip="Vaciar carrito"
+                tooltipPosition="left">
+                <i class="pi pi-trash"></i>
+            </button>
+        </div>
+
+        <div class="carrito-items" *ngIf="carrito.length > 0">
+            <div class="carrito-item" *ngFor="let item of carrito" [@slideIn]>
+                <img [src]="getImagenProducto(item.producto.img)" [alt]="item.producto.nombre_producto"
+                    class="item-imagen">
+
+                <div class="item-info">
+                    <h4>{{ item.producto.nombre_producto }}</h4>
+                    <p class="item-disponibles">{{ item.producto.stock }} Disponibles</p>
+
+                    <div class="cantidad-control">
+                        <button class="btn-cantidad" (click)="disminuirCantidad(item)">
+                            <i class="pi pi-minus"></i>
+                        </button>
+                        <span class="cantidad">{{ item.cantidad }}</span>
+                        <button class="btn-cantidad" (click)="aumentarCantidad(item)"
+                            [disabled]="item.cantidad >= item.producto.stock">
+                            <i class="pi pi-plus"></i>
+                        </button>
+                    </div>
+
+                    <p class="item-precio">${{ item.producto.precio_venta | number:'1.0-0' }}</p>
+                    <p class="item-subtotal">
+                        Total: ${{ (item.producto.precio_venta * item.cantidad) | number:'1.0-0' }}
+                    </p>
+                </div>
+
+                <button class="btn-eliminar" (click)="eliminarDelCarrito(item)" pTooltip="Eliminar producto"
+                    tooltipPosition="left">
+                    <i class="pi pi-trash"></i>
+                </button>
+            </div>
+        </div>
+
+        <div class="carrito-vacio" *ngIf="carrito.length === 0">
+            <img class="w-25 max-w-full mx-auto" src="https://res.cloudinary.com/drnhhicpk/image/upload/v1769000913/canasta_vacia_qbriv3.png">
+            <p>Tu carrito está vacío</p>
+        </div>
+
+        <div class="carrito-total" *ngIf="carrito.length > 0">
+            <div class="total-info">
+                <span>Total:</span>
+                <span class="total-monto">${{ totalCarrito | number:'1.0-0' }}</span>
+            </div>
+            <button class="btn-finalizar" (click)="finalizarCompra()">
+                <i class="pi pi-check"></i>
+                Finalizar Compra
+            </button>
+        </div>
+    </div>
+</div>
+
+
+<p-dialog [(visible)]="mostrarModalCompra" [modal]="true" [draggable]="false" [resizable]="false" [closable]="true"
+    styleClass="modal-compra" (onHide)="cerrarModalCompra()">
+
+    <ng-template pTemplate="header">
+        <h3>
+            <i class="pi pi-shopping-cart"></i>
+            Finalizar Compra
+        </h3>
+    </ng-template>
+
+    <div class="modal-content">
+        <!-- PASO 1: Verificación de cédula -->
+        <div *ngIf="!clienteVerificado">
+            <div class="form-group">
+                <label for="cedula">
+                    <i class="pi pi-id-card"></i>
+                    Número de Cédula
+                </label>
+                <div class="input-wrapper">
+                    <input id="cedula" type="text" pInputText [(ngModel)]="cedula"
+                        placeholder="Ingresa tu número de cédula" (keyup.enter)="verificarClientePorCedula()"
+                        [disabled]="verificandoCliente">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <p-select [options]="opcionesPago" optionLabel="label" optionValue="value" [(ngModel)]="tipoPago"
+                    [checkmark]="true" [showClear]="true" placeholder="Método de pago" appendTo="body"
+                    class="w-full md:w-56">
+                </p-select>
+            </div>
+
+
+            <button class="btn-verificar" (click)="verificarClientePorCedula()"
+                [disabled]="verificandoCliente || !cedula">
+                <i class="pi" [ngClass]="verificandoCliente ? 'pi-spin pi-spinner' : 'pi-check-circle'"></i>
+                {{ verificandoCliente ? 'Verificando...' : 'Verificar Cliente' }}
+            </button>
+        </div>
+
+        <!-- PASO 2: Cliente verificado - Ingresar token -->
+        <div *ngIf="clienteVerificado" class="cliente-verificado">
+            <!-- Información del cliente -->
+            <div class="datos-cliente">
+                <div class="cliente-info-badge">
+                    <i class="pi pi-user-check"></i>
+                    <div>
+                        <h4>{{ clienteData?.nombres }} {{ clienteData?.apellidos }}</h4>
+                        <p>{{ clienteData?.correo }}</p>
+                        <p class="cedula-info">Cédula: {{ clienteData?.numero_id }}</p>
+                    </div>
+                </div>
+
+                <button class="btn-cambiar-cedula" (click)="cambiarCedula()">
+                    <i class="pi pi-pencil"></i>
+                    Cambiar cédula
+                </button>
+            </div>
+
+            <!-- Resumen de compra -->
+            <div class="resumen-compra">
+                <h4><i class="pi pi-list"></i> Resumen de Compra</h4>
+                <div class="items-resumen">
+                    <div class="item-resumen" *ngFor="let item of carrito">
+                        <span>{{ item.producto.nombre_producto }} (x{{ item.cantidad }})</span>
+                        <span>${{ (item.producto.precio_venta * item.cantidad) | number:'1.0-0' }}</span>
+                    </div>
+                </div>
+                <div class="total-resumen">
+                    <strong>Total:</strong>
+                    <strong>${{ totalCarrito | number:'1.0-0' }}</strong>
+                </div>
+            </div>
+
+            <!-- Estado de envío de token -->
+            <div *ngIf="!tokenEnviado && enviandoToken" class="token-info">
+                <i class="pi pi-spin pi-spinner"></i>
+                <p>Enviando código de verificación...</p>
+            </div>
+
+            <!-- Campo de token -->
+            <div *ngIf="tokenEnviado" class="token-group">
+                <div class="token-instruccion">
+                    <i class="pi pi-info-circle"></i>
+                    Se ha enviado un código de verificación a tu correo electrónico
+                </div>
+
+                <div class="form-group">
+                    <label for="token">
+                        <i class="pi pi-lock"></i>
+                        Código de Verificación
+                    </label>
+                    <div class="input-wrapper">
+                        <input id="token" type="text" pInputText [(ngModel)]="token"
+                            placeholder="Ingresa el código recibido" (keyup.enter)="confirmarCompraConToken()"
+                            [disabled]="procesandoCompra">
+                    </div>
+                </div>
+
+                <button class="btn-confirmar" (click)="confirmarCompraConToken()"
+                    [disabled]="procesandoCompra || !token">
+                    <i class="pi" [ngClass]="procesandoCompra ? 'pi-spin pi-spinner' : 'pi-check'"></i>
+                    {{ procesandoCompra ? 'Procesando...' : 'Confirmar Compra' }}
+                </button>
+            </div>
+        </div>
+    </div>
+</p-dialog>
+
+<p-dialog
+    [(visible)]="mostrarModalEstadoCuenta"
+    [modal]="true"
+    [draggable]="false"
+    [resizable]="false"
+    [closable]="true"
+     header="ESTADO CUENTA"
+     [style]="{ width: '50vw' }"
+    (onHide)="cerrarModalEstadoCuenta()">
+
+    <!-- <ng-template pTemplate="header">
+        <h3>
+            <i class="pi pi-file-edit"></i>
+            Estado de Cuenta
+        </h3>
+    </ng-template> -->
+
+    <div class="estado-cuenta-content">
+        <!-- Formulario de búsqueda -->
+        <div class="busqueda-cedula" *ngIf="!estadoCuentaData">
+            <div class="form-group-estado">
+                <label for="cedulaEstado">
+                    <i class="pi pi-id-card"></i>
+                    Número de Cédula
+                </label>
+                <div class="input-wrapper-estado">
+                    <input
+                        id="cedulaEstado"
+                        type="text"
+                        pInputText
+                        [(ngModel)]="cedulaEstadoCuenta"
+                        placeholder="Ingresa tu número de cédula"
+                        (keyup.enter)="consultarEstadoCuenta()"
+                        [disabled]="consultandoEstado"
+                        maxlength="10">
+                </div>
+            </div>
+
+            <button
+                class="btn-consultar-estado"
+                (click)="consultarEstadoCuenta()"
+                [disabled]="consultandoEstado || !cedulaEstadoCuenta">
+                <i class="pi" [ngClass]="consultandoEstado ? 'pi-spin pi-spinner' : 'pi-search'"></i>
+                {{ consultandoEstado ? 'Consultando...' : 'Consultar' }}
+            </button>
+        </div>
+
+        <!-- Resultados del estado de cuenta -->
+        <div class="factura-detalle" *ngIf="estadoCuentaData">
+            <!-- Logo y encabezado -->
+            <!-- <div class="factura-header">
+                <div class="logo-factura">
+                    <img src="/logos/logoOfigarita.png" alt="La Ofi Garita">
+                </div>
+                <div class="empresa-info">
+                    <h2>La OfiGarita</h2>
+                </div>
+            </div> -->
+
+            <!-- Información de la factura -->
+            <div class="factura-info-box">
+                <!-- <div class="info-row-estado">
+                    <span class="label-estado">N° Factura:</span>
+                    <span class="badge-factura">{{ estadoCuentaData.nro_factura }}</span>
+                </div> -->
+                <div class="info-row-estado">
+                    <span class="label-estado">Cliente:</span>
+                    <span class="value-estado">{{ estadoCuentaData.nombre }}</span>
+                </div>
+                <div class="info-row-estado">
+                    <span class="label-estado">Cédula:</span>
+                    <span class="value-estado">{{ estadoCuentaData.numero_id }}</span>
+                </div>
+                <div class="info-row-estado">
+                    <span class="label-estado">Fecha Emisión:</span>
+                    <span class="value-estado">{{ formatearFecha(estadoCuentaData.fecha_emision) }}</span>
+                </div>
+                <div class="info-row-estado">
+                    <span class="label-estado">Fecha Vencimiento:</span>
+                    <span class="value-estado fecha-vencimiento">
+                        {{ formatearFecha(estadoCuentaData.fecha_vencimiento) }}
+                    </span>
+                </div>
+            </div>
+
+            <!-- Tabla de productos -->
+            <div class="tabla-productos">
+                <h4>
+                    <i class="pi pi-shopping-bag"></i>
+                    Detalle de Productos
+                </h4>
+                <div class="tabla-container">
+                    <table class="tabla-factura">
+                        <thead>
+                            <tr>
+                                <th>Cant.</th>
+                                <th>Producto</th>
+                                <th class="text-right">Precio Unit.</th>
+                                <th class="text-right">Subtotal</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let item of estadoCuentaData.detalle">
+                                <td class="text-center">{{ item.cantidad }}</td>
+                                <td>{{ item.producto }}</td>
+                                <td class="text-right">${{ formatearNumero(item.precio_unitario) }}</td>
+                                <td class="text-right precio-destacado">
+                                    ${{ formatearNumero(item.subtotal) }}
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Total -->
+            <div class="total-factura">
+                <div class="total-contenido">
+                    <span class="total-label">Total a Pagar:</span>
+                    <span class="total-monto">${{ formatearNumero(estadoCuentaData.total) }}</span>
+                </div>
+            </div>
+
+            <!-- Botón nueva consulta -->
+            <button class="btn-nueva-consulta" (click)="estadoCuentaData = null; cedulaEstadoCuenta = ''">
+                <i class="pi pi-refresh"></i>
+                Nueva Consulta
+            </button>
+        </div>
+    </div>
+</p-dialog>
