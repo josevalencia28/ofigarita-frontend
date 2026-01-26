@@ -695,6 +695,7 @@ export class TiendaClienteComponent implements OnInit, AfterViewInit {
     cerrarModalRegistro() {
         this.mostrarModalRegistro = false;
         this.form.reset();
+            estado,
     }
 
     registrarCliente() {
