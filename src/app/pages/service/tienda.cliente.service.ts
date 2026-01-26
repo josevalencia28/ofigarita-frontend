@@ -38,4 +38,9 @@ export class TiendaClienteService {
         return this.http.get<any>(environment.HOST + `estadoCuenta/getEstadoCuentaCliente/${cedula}`);
     }
 
+    insertarCliente(params: object): Observable<any> {
+        return this.http.post<any>(environment.HOST + "clientes/insertCliente", params);
+    }
+
+
 }

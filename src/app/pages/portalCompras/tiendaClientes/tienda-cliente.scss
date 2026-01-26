@@ -1978,3 +1978,88 @@ $blanco-ofi: #ffffff;
     }
   }
 }
+
+
+::ng-deep .modal-registro-cliente {
+    .p-dialog-header {
+        background: linear-gradient(135deg, #ffffff 0%, #764ba2 100%);
+        color: white;
+        padding: 1.5rem;
+
+        .p-dialog-title {
+            font-weight: 600;
+            font-size: 1.25rem;
+        }
+
+        .p-dialog-header-icon {
+            color: white;
+
+            &:hover {
+                background-color: rgba(255, 255, 255, 0.1);
+            }
+        }
+    }
+
+    .p-dialog-content {
+        padding: 2rem;
+        background: #f8f9fa;
+    }
+}
+
+.contenedor-formulario {
+    .campo-formulario {
+        margin-bottom: 1.5rem;
+
+        .label-campo {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: #495057;
+            font-size: 0.95rem;
+
+            .obligatorio {
+                color: #dc3545;
+                margin-left: 2px;
+            }
+        }
+
+        .mensaje-error {
+            display: block;
+            color: #dc3545;
+            margin-top: 0.25rem;
+            font-size: 0.875rem;
+        }
+    }
+
+    .botones-accion {
+        display: flex;
+        justify-content: flex-end;
+        gap: 1rem;
+        margin-top: 2rem;
+        padding-top: 1.5rem;
+        border-top: 1px solid #dee2e6;
+    }
+}
+
+// Responsive
+@media (max-width: 576px) {
+    ::ng-deep .modal-registro-cliente {
+        .p-dialog-content {
+            padding: 1rem;
+        }
+    }
+
+    .contenedor-formulario {
+        .botones-accion {
+            flex-direction: column-reverse;
+
+            p-button {
+                width: 100%;
+
+                ::ng-deep button {
+                    width: 100%;
+                }
+            }
+        }
+    }
+}

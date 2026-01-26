@@ -1,7 +1,7 @@
-import { Component, OnInit, HostListener, ElementRef, AfterViewInit } from '@angular/core';
+import { Component, OnInit, HostListener, ElementRef, AfterViewInit, inject } from '@angular/core';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, FormsModule, Validators, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { MessageService } from 'primeng/api';
 import { trigger, transition, style, animate } from '@angular/animations';
@@ -14,7 +14,17 @@ import { TooltipModule } from 'primeng/tooltip';
 import { ToastModule } from 'primeng/toast';
 import { DialogModule } from 'primeng/dialog';
 import { TiendaClienteService } from '@/pages/service/tienda.cliente.service';
+import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 
+
+interface Cliente {
+    nombres: string;
+    apellidos: string;
+    tipo_identificacion: string;
+    numero_id: number;
+    telefono: number;
+    correo: string;
+}
 interface Producto {
     id_producto: number;
     nombre_producto: string;
@@ -57,7 +67,8 @@ interface ClienteData {
         TooltipModule,
         ToastModule,
         DialogModule,
-        SelectModule
+        SelectModule,
+        ReactiveFormsModule
     ],
     providers: [MessageService],
     animations: [
@@ -100,6 +111,9 @@ export class TiendaClienteComponent implements OnInit, AfterViewInit {
         { label: 'Transferencia', value: 'TR' },
         { label: 'Tarjeta Débito', value: 'TD' }
     ];
+    guardando = false;
+    form: FormGroup;
+    mostrarModalRegistro: boolean = false;
 
     mostrarModalEstadoCuenta: boolean = false;
     cedulaEstadoCuenta: string = '';
@@ -107,12 +121,56 @@ export class TiendaClienteComponent implements OnInit, AfterViewInit {
     estadoCuentaData: any = null;
     isScrolled: boolean = false;
 
+    tiposIdentificacion = [
+        { label: 'Cédula de Ciudadanía', value: 'CC' },
+        { label: 'Cédula de Extranjería', value: 'CE' },
+        { label: 'Pasaporte', value: 'PA' },
+        { label: 'NIT', value: 'NIT' }
+    ]
+
+    //       private fb = inject(FormBuilder);
+    //   private dialogRef = inject(DynamicDialogRef);
+    //   private config = inject(DynamicDialogConfig);
+
     constructor(
+        private fb: FormBuilder,
+
         private http: HttpClient,
         private messageService: MessageService,
         private tiendaClienteService: TiendaClienteService,
         private el: ElementRef
-    ) { }
+    ) {
+        this.form = this.fb.group({
+            tipo_identificacion: ['', Validators.required],
+            numero_id: ['', [
+                Validators.required,
+                Validators.pattern(/^[0-9]+$/),
+                Validators.minLength(6),
+                Validators.maxLength(15)
+            ]],
+            nombres: ['', [
+                Validators.required,
+                Validators.minLength(3),
+                Validators.maxLength(100)
+            ]],
+            apellidos: ['', [
+                Validators.required,
+                Validators.minLength(3),
+                Validators.maxLength(100)
+            ]],
+            correo: ['', [
+                Validators.required,
+                Validators.email,
+                Validators.maxLength(100)
+            ]],
+            telefono: ['', [
+                Validators.required,
+                Validators.pattern(/^[0-9]+$/),
+                Validators.minLength(7),
+                Validators.maxLength(10)
+            ]]
+        });
+    }
 
     ngOnInit() {
         this.cargarProductos();
@@ -125,6 +183,7 @@ export class TiendaClienteComponent implements OnInit, AfterViewInit {
             this.setupScrollListener();
         }, 0);
     }
+
 
     setupScrollListener() {
         const contenidoPrincipal = this.el.nativeElement.querySelector('.contenido-principal');
@@ -370,6 +429,7 @@ export class TiendaClienteComponent implements OnInit, AfterViewInit {
                         detail: 'No existe un cliente registrado con esta cédula',
                         life: 4000
                     });
+                    this.abrirModalRegistro();
                 } else {
                     this.messageService.add({
                         severity: 'error',
@@ -618,6 +678,83 @@ export class TiendaClienteComponent implements OnInit, AfterViewInit {
             year: 'numeric',
             month: 'long',
             day: 'numeric'
+        });
+    }
+
+    abrirModalRegistro() {
+        this.mostrarModalRegistro = true;
+        this.form.reset();
+    }
+
+    cerrarModalRegistro() {
+        this.mostrarModalRegistro = false;
+        this.form.reset();
+    }
+
+    registrarCliente() {
+        if (this.form.invalid) {
+            Object.keys(this.form.controls).forEach(key => {
+                this.form.get(key)?.markAsTouched();
+            });
+            this.messageService.add({
+                severity: 'warn',
+                summary: 'Formulario incompleto',
+                detail: 'Por favor completa todos los campos requeridos',
+                life: 3000
+            });
+            return;
+        }
+
+        this.guardando = true;
+        const datosCliente = this.form.value;
+        console.log(datosCliente)
+
+        this.tiendaClienteService.insertarCliente(datosCliente).subscribe({
+            next: (response) => {
+                this.guardando = false;
+                if (response.p_estado === 1) {
+                    // Después del registro exitoso:
+                    this.clienteData = {
+                        id_sgclientes: response.data.id_sgclientes,
+                        numero_id: response.data.numero_id,
+                        nombres: response.data.nombres,
+                        apellidos: response.data.apellidos,
+                        correo: response.data.correo,
+                        telefono: response.data.telefono,
+                        tipo_identificacion: response.data.tipo_identificacion
+                    };
+
+                    this.cedula = response.data.numero_id;
+                    this.clienteVerificado = true;
+
+                    // Automáticamente inicia el proceso de venta
+                    this.iniciarProcesoVentaEnviatoken();
+                    this.messageService.add({
+                        severity: 'success',
+                        summary: 'Cliente registrado',
+                        detail: 'El cliente ha sido registrado exitosamente',
+                        life: 4000
+                    });
+                    this.cerrarModalRegistro();
+                } else {
+                    this.messageService.add({
+                        severity: 'error',
+                        summary: 'Error al registrar',
+                        detail: response.p_mensaje || 'No se pudo registrar el cliente',
+                        life: 3000
+                    });
+                }
+            },
+            error: (error) => {
+                this.guardando = false;
+                console.error('Error al registrar cliente:', error);
+                this.messageService.add({
+                    severity: 'error',
+                    summary: 'Error',
+                    detail: 'No se pudo registrar el cliente',
+                    life: 3000
+                });
+            }
         });
     }
 }
