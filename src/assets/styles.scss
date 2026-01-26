@@ -2,3 +2,33 @@
 @use './tailwind.css';
 @use './layout/layout.scss';
 @use 'primeicons/primeicons.css';
+
+.p-dialog-header {
+    background: #ee2a7b !important;
+
+    /* Arriba curvo, abajo cuadrado */
+    border-top-left-radius: inherit;
+    border-top-right-radius: inherit;
+    border-bottom-left-radius: 0 !important;
+    border-bottom-right-radius: 0 !important;
+
+    border-radius: inherit;
+    border-bottom: none !important;
+
+
+    h3,
+    span {
+        color: white !important;
+    }
+
+    .p-ripple {
+        color: white !important;
+
+        &:hover,
+        &:focus-visible,
+        &:active {
+            background: transparent !important;
+            outline-color: transparent !important;
+        }
+    }
+}

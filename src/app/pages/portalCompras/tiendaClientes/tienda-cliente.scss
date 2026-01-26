@@ -345,6 +345,8 @@ $tablet-breakpoint: 768px;
         transform: translateY(0);
       }
     }
+
+
   }
 }
 
@@ -2039,6 +2041,8 @@ $blanco-ofi: #ffffff;
 }
 
 .contenedor-formulario {
+    padding: 15px 0;
+
     .campo-formulario {
         margin-bottom: 1.5rem;
 
@@ -2094,4 +2098,23 @@ $blanco-ofi: #ffffff;
             }
         }
     }
+}
+
+.autores {
+    font-size: 0.85rem;
+    //opacity: 0.8;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+}
+
+.corazon {
+    color: #ffffff; /* puedes usar tu rosa principal */
+    animation: latido 1.5s infinite;
+}
+
+@keyframes latido {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.2); }
 }

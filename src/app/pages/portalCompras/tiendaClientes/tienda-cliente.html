@@ -37,7 +37,7 @@
             Estado de Cuenta
         </button>
 
-        <button class="btn-registro-cliente" (click)="abrirModalRegistro()">
+        <button class="btn-registro-cliente" (click)="abrirModalRegistroCliente()">
             <i class="pi pi-user"></i>
             Registro Cliente
         </button>
@@ -48,6 +48,12 @@
             <a href="https://wa.me/573008132462" target="_blank" rel="noopener noreferrer" class="whatsapp-link">
                 <i class="pi pi-send"></i> WhatsApp
             </a>
+
+
+            <div class="autores corazon">
+                <strong>Hecho con🤍</strong>
+                <strong>Laurita | Jose Valencia</strong>
+            </div>
         </div>
     </div>
 
@@ -420,6 +426,197 @@
 
     <div class="contenedor-formulario">
         <form [formGroup]="form" (ngSubmit)="registrarCliente()">
+
+            <!-- Tipo de Identificación -->
+            <div class="campo-formulario">
+                <label for="tipo_identificacion" class="label-campo">
+                    Tipo de Identificación <span class="obligatorio">*</span>
+                </label>
+                <p-select
+                    id="tipo_identificacion"
+                    formControlName="tipo_identificacion"
+                    [options]="tiposIdentificacion"
+                    optionLabel="label"
+                    optionValue="value"
+                    placeholder="Seleccione tipo de documento"
+                    styleClass="w-full">
+                </p-select>
+                <small class="mensaje-error"
+                    *ngIf="form.get('tipo_identificacion')?.invalid &&
+                           form.get('tipo_identificacion')?.touched">
+                    El tipo de identificación es requerido
+                </small>
+            </div>
+
+            <!-- Número de Identificación -->
+            <div class="campo-formulario">
+                <label for="numero_id" class="label-campo">
+                    Número de Identificación <span class="obligatorio">*</span>
+                </label>
+                <input
+                    pInputText
+                    id="numero_id"
+                    type="text"
+                    formControlName="numero_id"
+                    placeholder="Ingrese número de documento"
+                    class="w-full"
+                    maxlength="15" />
+                <small class="mensaje-error"
+                    *ngIf="form.get('numero_id')?.invalid &&
+                           form.get('numero_id')?.touched">
+                    <span *ngIf="form.get('numero_id')?.errors?.['required']">
+                        El número de identificación es requerido
+                    </span>
+                    <span *ngIf="form.get('numero_id')?.errors?.['pattern']">
+                        Solo se permiten números
+                    </span>
+                    <span *ngIf="form.get('numero_id')?.errors?.['minlength']">
+                        Mínimo 6 dígitos
+                    </span>
+                </small>
+            </div>
+
+            <!-- Nombres -->
+            <div class="campo-formulario">
+                <label for="nombres" class="label-campo">
+                    Nombres <span class="obligatorio">*</span>
+                </label>
+                <input
+                    pInputText
+                    id="nombres"
+                    type="text"
+                    formControlName="nombres"
+                    placeholder="Ingrese nombres completos"
+                    class="w-full"
+                    maxlength="100" />
+                <small class="mensaje-error"
+                    *ngIf="form.get('nombres')?.invalid &&
+                           form.get('nombres')?.touched">
+                    <span *ngIf="form.get('nombres')?.errors?.['required']">
+                        Los nombres son requeridos
+                    </span>
+                    <span *ngIf="form.get('nombres')?.errors?.['minlength']">
+                        Mínimo 3 caracteres
+                    </span>
+                </small>
+            </div>
+
+            <!-- Apellidos -->
+            <div class="campo-formulario">
+                <label for="apellidos" class="label-campo">
+                    Apellidos <span class="obligatorio">*</span>
+                </label>
+                <input
+                    pInputText
+                    id="apellidos"
+                    type="text"
+                    formControlName="apellidos"
+                    placeholder="Ingrese apellidos completos"
+                    class="w-full"
+                    maxlength="100" />
+                <small class="mensaje-error"
+                    *ngIf="form.get('apellidos')?.invalid &&
+                           form.get('apellidos')?.touched">
+                    <span *ngIf="form.get('apellidos')?.errors?.['required']">
+                        Los apellidos son requeridos
+                    </span>
+                    <span *ngIf="form.get('apellidos')?.errors?.['minlength']">
+                        Mínimo 3 caracteres
+                    </span>
+                </small>
+            </div>
+
+            <!-- Correo Electrónico -->
+            <div class="campo-formulario">
+                <label for="correo" class="label-campo">
+                    Correo Electrónico <span class="obligatorio">*</span>
+                </label>
+                <input
+                    pInputText
+                    id="correo"
+                    type="email"
+                    formControlName="correo"
+                    placeholder="correo@ejemplo.com"
+                    class="w-full"
+                    maxlength="100" />
+                <small class="mensaje-error"
+                    *ngIf="form.get('correo')?.invalid &&
+                           form.get('correo')?.touched">
+                    <span *ngIf="form.get('correo')?.errors?.['required']">
+                        El correo electrónico es requerido
+                    </span>
+                    <span *ngIf="form.get('correo')?.errors?.['email']">
+                        Ingrese un correo electrónico válido
+                    </span>
+                </small>
+            </div>
+
+            <!-- Teléfono -->
+            <div class="campo-formulario">
+                <label for="telefono" class="label-campo">
+                    Teléfono <span class="obligatorio">*</span>
+                </label>
+                <input
+                    pInputText
+                    id="telefono"
+                    type="tel"
+                    formControlName="telefono"
+                    placeholder="Ej: 3001234567"
+                    class="w-full"
+                    maxlength="10" />
+                <small class="mensaje-error"
+                    *ngIf="form.get('telefono')?.invalid &&
+                           form.get('telefono')?.touched">
+                    <span *ngIf="form.get('telefono')?.errors?.['required']">
+                        El teléfono es requerido
+                    </span>
+                    <span *ngIf="form.get('telefono')?.errors?.['pattern']">
+                        Solo se permiten números
+                    </span>
+                    <span *ngIf="form.get('telefono')?.errors?.['minlength']">
+                        Mínimo 7 dígitos
+                    </span>
+                </small>
+            </div>
+
+            <!-- Botones de Acción -->
+            <div class="botones-accion">
+                <p-button
+                    label="Cancelar"
+                    icon="pi pi-times"
+                    severity="secondary"
+                    [outlined]="true"
+                    type="button"
+                    (onClick)="cerrarModalRegistro()">
+                </p-button>
+
+                <p-button
+                    label="Registrar Cliente"
+                    icon="pi pi-check"
+                    severity="success"
+                    type="submit"
+                    [disabled]="form.invalid || guardando"
+                    [loading]="guardando">
+                </p-button>
+            </div>
+
+        </form>
+    </div>
+</p-dialog>
+
+
+<p-dialog
+    [(visible)]="mostrarModalRegistroCliente"
+    [modal]="true"
+    [closable]="true"
+    [draggable]="false"
+    [resizable]="false"
+    header="Registrar Nuevos Cliente"
+    [style]="{width: '30rem'}"
+    (onHide)="cerrarModalRegistro()">
+
+    <div class="contenedor-formulario">
+        <form [formGroup]="form" (ngSubmit)="registrarClienteBoton()">
 
             <!-- Tipo de Identificación -->
             <div class="campo-formulario">

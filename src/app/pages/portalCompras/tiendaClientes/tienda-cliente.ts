@@ -114,6 +114,7 @@ export class TiendaClienteComponent implements OnInit, AfterViewInit {
     guardando = false;
     form: FormGroup;
     mostrarModalRegistro: boolean = false;
+    mostrarModalRegistroCliente: boolean = false;
 
     mostrarModalEstadoCuenta: boolean = false;
     cedulaEstadoCuenta: string = '';
@@ -686,6 +687,11 @@ export class TiendaClienteComponent implements OnInit, AfterViewInit {
         this.form.reset();
     }
 
+    abrirModalRegistroCliente() {
+        this.mostrarModalRegistroCliente = true;
+        this.form.reset();
+    }
+
     cerrarModalRegistro() {
         this.mostrarModalRegistro = false;
         this.form.reset();
@@ -783,14 +789,13 @@ export class TiendaClienteComponent implements OnInit, AfterViewInit {
                 if (response.p_estado === 1) {
                     this.cedula = response.data.numero_id;
                     this.clienteVerificado = true;
-
                     this.messageService.add({
                         severity: 'success',
                         summary: 'Cliente registrado',
                         detail: 'El cliente ha sido registrado exitosamente',
                         life: 4000
                     });
-                    this.cerrarModalRegistro();
+                    // this.cerrarModalRegistro();
                 } else if (response.p_estado === 0) {
                     this.messageService.add({
                         severity: 'error',
