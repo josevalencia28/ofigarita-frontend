@@ -38,13 +38,7 @@
                     },
                     "configurations": {
                         "production": {
-                            "outputHashing": "all",
-                            "fileReplacements": [
-                                {
-                                    "replace": "src/enviroments/enviroment.ts",
-                                    "with": "src/environments/environment.prod.ts"
-                                }
-                            ]
+                            "outputHashing": "all"
                         },
                         "development": {
                             "optimization": false,
