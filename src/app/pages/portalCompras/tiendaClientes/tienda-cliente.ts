@@ -108,7 +108,7 @@ export class TiendaClienteComponent implements OnInit, AfterViewInit {
     opcionesPago = [
         { label: 'Efectivo', value: 'EF' },
         { label: 'Crédito', value: 'CR' },
-        { label: 'Transferencia', value: 'TR' }
+        //{ label: 'Transferencia', value: 'TR' }
         // { label: 'Tarjeta Débito', value: 'TD' }
     ];
     guardando = false;
@@ -736,6 +736,70 @@ export class TiendaClienteComponent implements OnInit, AfterViewInit {
                         life: 4000
                     });
                     this.cerrarModalRegistro();
+                } else {
+                    this.messageService.add({
+                        severity: 'error',
+                        summary: 'Error al registrar',
+                        detail: response.p_mensaje || 'No se pudo registrar el cliente',
+                        life: 3000
+                    });
+                }
+            },
+            error: (error) => {
+                this.guardando = false;
+                console.error('Error al registrar cliente:', error);
+                this.messageService.add({
+                    severity: 'error',
+                    summary: 'Error',
+                    detail: 'No se pudo registrar el cliente',
+                    life: 3000
+                });
+            }
+        });
+    }
+
+
+    registrarClienteBoton() {
+        if (this.form.invalid) {
+            Object.keys(this.form.controls).forEach(key => {
+                this.form.get(key)?.markAsTouched();
+            });
+            this.messageService.add({
+                severity: 'warn',
+                summary: 'Formulario incompleto',
+                detail: 'Por favor completa todos los campos requeridos',
+                life: 3000
+            });
+            return;
+        }
+
+        this.guardando = true;
+        const datosCliente = this.form.value;
+        console.log(datosCliente)
+
+        this.tiendaClienteService.insertarCliente(datosCliente).subscribe({
+            next: (response) => {
+                this.guardando = false;
+                if (response.p_estado === 1) {
+                    this.cedula = response.data.numero_id;
+                    this.clienteVerificado = true;
+
+                    this.messageService.add({
+                        severity: 'success',
+                        summary: 'Cliente registrado',
+                        detail: 'El cliente ha sido registrado exitosamente',
+                        life: 4000
+                    });
+                    this.cerrarModalRegistro();
+                } else if (response.p_estado === 0) {
+                    this.messageService.add({
+                        severity: 'error',
+                        summary: 'Error al registrar',
+                        detail: response.p_mensaje || 'El cliente ya existe en el sistema"',
+                        life: 3000
+                    });
+                    this.cerrarModalRegistro();
+
                 } else {
                     this.messageService.add({
                         severity: 'error',
