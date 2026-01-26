@@ -108,8 +108,8 @@ export class TiendaClienteComponent implements OnInit, AfterViewInit {
     opcionesPago = [
         { label: 'Efectivo', value: 'EF' },
         { label: 'Crédito', value: 'CR' },
-        { label: 'Transferencia', value: 'TR' },
-        { label: 'Tarjeta Débito', value: 'TD' }
+        { label: 'Transferencia', value: 'TR' }
+        // { label: 'Tarjeta Débito', value: 'TD' }
     ];
     guardando = false;
     form: FormGroup;

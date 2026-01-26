@@ -1,6 +1,8 @@
 export const environment = {
-  production: true,
+  production: false,
   url: 'http://192.168.15.169:4300',
-  HOST: 'https://ofigarita-backend.onrender.com/ofigarita/',
+  HOST: 'http://192.168.15.239:4000/ofigarita/',
   CRYPTO_KEY:'crypto'
 };
+
+//192.168.15.239
