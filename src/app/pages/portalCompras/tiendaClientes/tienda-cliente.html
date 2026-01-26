@@ -16,35 +16,41 @@
     </div>
 
     <div class="sidebar-left" [class.mobile-open]="mobileMenuOpen">
+
         <button class="mobile-close" (click)="toggleMobileMenu()">
             <i class="pi pi-times"></i>
         </button>
 
-        <div class="logo-container">
-            <img src="/logos/logoOfigarita.png" alt="La Ofi Garita" class="logo">
+        <div class="logo-container" >
+            <a href="index.html">
+                <img src="/logos/logoOfigarita.png" alt="La Ofi Garita" class="logo">
+            </a>
         </div>
 
         <button class="btn-comprar" (click)="finalizarCompra()" [disabled]="carrito.length === 0">
             Comprar
         </button>
 
-<button class="btn-estado-cuenta" (click)="abrirModalEstadoCuenta()">
-    <i class="pi pi-file-edit"></i>
-    Estado de Cuenta
-</button>
+        <button class="btn-estado-cuenta" (click)="abrirModalEstadoCuenta()">
+            <i class="pi pi-file-edit"></i>
+            Estado de Cuenta
+        </button>
 
         <div class="info-contacto">
             <p><i class="pi pi-map-marker"></i> Cra. 6B No. 81-163 Barranquilla</p>
             <p><i class="pi pi-phone"></i> 300 813 2462</p>
+            <a href="https://wa.me/573008132462" target="_blank" rel="noopener noreferrer" class="whatsapp-link">
+                <i class="pi pi-send"></i> WhatsApp
+            </a>
         </div>
     </div>
 
     <div class="contenido-principal">
-        <div class="header-bienvenida">
-            <h1>Bienvenidos</h1>
+        <div class="header-bienvenida" [class.scrolled]="isScrolled">
+            <h1>Bienvenid@s</h1>
         </div>
 
-        <div class="buscador-container">
+        <div class="buscador-container" [class.scrolled]="isScrolled">
             <div class="buscador">
                 <i class="pi pi-search search-icon"></i>
                 <input type="text" pInputText [(ngModel)]="busqueda" placeholder="Buscar productos"
@@ -155,7 +161,7 @@
 
 <p-dialog [(visible)]="mostrarModalCompra" [modal]="true" [draggable]="false" [resizable]="false" [closable]="true"
     styleClass="modal-compra" (onHide)="cerrarModalCompra()">
-
+    
     <ng-template pTemplate="header">
         <h3>
             <i class="pi pi-shopping-cart"></i>
@@ -293,7 +299,7 @@
                         type="text"
                         pInputText
                         [(ngModel)]="cedulaEstadoCuenta"
-                        placeholder="Ingresa tu número de cédula"
+                        placeholder="Ingresa tu número de   cédula"
                         (keyup.enter)="consultarEstadoCuenta()"
                         [disabled]="consultandoEstado"
                         maxlength="10">
