@@ -284,6 +284,37 @@ $tablet-breakpoint: 768px;
       font-size: 1rem;
       flex-shrink: 0;
     }
+
+    .whatsapp-link {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      margin: 0.8rem auto;
+      padding: 0.6rem 1rem;
+      background-color: #08b447;
+      color: white;
+      text-decoration: none;
+      border-radius: 25px;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      width: fit-content;
+      min-width: 140px;
+
+      i {
+        font-size: 1.1rem;
+      }
+
+      &:hover {
+        background-color: #20ba5a;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(37, 211, 102, 0.4);
+      }
+
+      &:active {
+        transform: translateY(0);
+      }
+    }
   }
 }
 
@@ -304,10 +335,24 @@ $tablet-breakpoint: 768px;
     border-radius: 15px;
     margin-bottom: 1.5rem;
     box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    transition: background 0.4s ease, border-radius 0.4s ease, margin-bottom 0.4s ease;
 
     @media (max-width: $tablet-breakpoint) {
       padding: 1.2rem 1.5rem;
       margin-bottom: 1rem;
+    }
+
+    &.scrolled {
+      background: $rosa-primary;
+      border-radius: 15px 15px 0 0;
+      margin-bottom: 0;
+
+      h1 {
+        color: white;
+      }
     }
 
     h1 {
@@ -316,6 +361,7 @@ $tablet-breakpoint: 768px;
       font-size: 2rem;
       font-weight: 700;
       text-align: center;
+      transition: color 0.4s ease;
 
       @media (max-width: $tablet-breakpoint) {
         font-size: 1.5rem;
@@ -325,9 +371,46 @@ $tablet-breakpoint: 768px;
 
   .buscador-container {
     margin-bottom: 2rem;
+    position: sticky;
+    top: 0;
+    z-index: 99;
+    background: transparent;
+    padding-top: 0;
+    transition: background 0.4s ease, padding 0.4s ease, top 0.4s ease, margin-top 0.4s ease, margin-bottom 0.4s ease, border-radius 0.4s ease;
+    margin-top: 0;
 
     @media (max-width: $tablet-breakpoint) {
       margin-bottom: 1.5rem;
+    }
+
+    &.scrolled {
+      background: $rosa-primary;
+      padding: 1rem 0;
+      margin-top: 0;
+      margin-bottom: 1.5rem;
+      border-radius: 0 0 15px 15px;
+      z-index: 98; // Asegurar que esté visible pero debajo del header
+    }
+  }
+
+  // Cuando el header está scrolled, el buscador debe posicionarse justo debajo
+  // El header tiene: padding-top (1.5rem) + h1 (2rem) + padding-bottom (1.5rem) = ~80px
+  .header-bienvenida.scrolled + .buscador-container {
+    top: 80px;
+    z-index: 98; // Asegurar visibilidad
+
+    @media (max-width: $tablet-breakpoint) {
+      top: 70px;
+    }
+
+    // Cuando el buscador también está scrolled, mantener la misma posición
+    &.scrolled {
+      top: 80px;
+      z-index: 98;
+
+      @media (max-width: $tablet-breakpoint) {
+        top: 70px;
+      }
     }
   }
 
@@ -942,7 +1025,7 @@ $tablet-breakpoint: 768px;
   .btn-confirmar {
     width: 100%;
     padding: 0.875rem 1.5rem;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #ee2a7b 0%, #ee2a7b 100%);
     color: white;
     border: none;
     border-radius: 8px;

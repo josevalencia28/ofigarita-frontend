@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, HostListener, ElementRef, AfterViewInit } from '@angular/core';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -75,7 +75,7 @@ interface ClienteData {
         ])
     ]
 })
-export class TiendaClienteComponent implements OnInit {
+export class TiendaClienteComponent implements OnInit, AfterViewInit {
     productos: Producto[] = [];
     carrito: CarritoItem[] = [];
     busqueda: string = '';
@@ -105,15 +105,50 @@ export class TiendaClienteComponent implements OnInit {
     cedulaEstadoCuenta: string = '';
     consultandoEstado: boolean = false;
     estadoCuentaData: any = null;
+    isScrolled: boolean = false;
+
     constructor(
         private http: HttpClient,
         private messageService: MessageService,
-        private tiendaClienteService: TiendaClienteService
+        private tiendaClienteService: TiendaClienteService,
+        private el: ElementRef
     ) { }
 
     ngOnInit() {
         this.cargarProductos();
         this.cargarCarritoLocalStorage();
+    }
+
+    ngAfterViewInit() {
+        // Esperar a que el DOM esté listo antes de agregar el listener
+        setTimeout(() => {
+            this.setupScrollListener();
+        }, 0);
+    }
+
+    setupScrollListener() {
+        const contenidoPrincipal = this.el.nativeElement.querySelector('.contenido-principal');
+        if (contenidoPrincipal) {
+            let ticking = false;
+            contenidoPrincipal.addEventListener('scroll', () => {
+                if (!ticking) {
+                    window.requestAnimationFrame(() => {
+                        this.checkScroll();
+                        ticking = false;
+                    });
+                    ticking = true;
+                }
+            }, { passive: true });
+        }
+    }
+
+    checkScroll() {
+        const contenidoPrincipal = this.el.nativeElement.querySelector('.contenido-principal');
+        if (contenidoPrincipal) {
+            const scrollTop = contenidoPrincipal.scrollTop;
+            // Aumentar el threshold para evitar parpadeos al inicio
+            this.isScrolled = scrollTop > 50;
+        }
     }
     abrirModalEstadoCuenta() {
         this.mostrarModalEstadoCuenta = true;
