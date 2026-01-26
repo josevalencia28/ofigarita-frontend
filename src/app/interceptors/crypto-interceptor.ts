@@ -3,7 +3,7 @@ import { catchError, map, throwError } from 'rxjs';
 import * as CryptoJS from 'crypto-js';
 import { isPlatformServer } from '@angular/common';
 import { inject, PLATFORM_ID } from '@angular/core';
-import { environment } from 'src/enviroments/enviroment.';
+import { environment } from 'src/enviroments/enviroment';
 
 export const cryptoInterceptor: HttpInterceptorFn = (req, next) => {
     const platformId = inject(PLATFORM_ID);

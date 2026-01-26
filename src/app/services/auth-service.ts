@@ -3,7 +3,7 @@ import { Injectable, signal } from '@angular/core';
 import { MessageService } from 'primeng/api';
 import { Usuarios } from 'src/entidades/Usuarios';
 import { SessionService } from './session-service';
-import { environment } from 'src/enviroments/enviroment.';
+import { environment } from 'src/enviroments/enviroment';
 import { catchError, Observable, throwError } from 'rxjs';
 
 @Injectable({

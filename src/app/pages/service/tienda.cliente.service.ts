@@ -5,7 +5,7 @@ import { Router } from '@angular/router';
 import { AuthService } from '@/services/auth-service';
 import { HttpClient } from '@angular/common/http';
 import { MessageService } from 'primeng/api';
-import { environment } from 'src/enviroments/enviroment.';
+import { environment } from 'src/enviroments/enviroment';
 
 @Injectable({
     providedIn: 'root'
