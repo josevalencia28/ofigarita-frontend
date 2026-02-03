@@ -69,11 +69,11 @@ export class Menu {
     getMenu(): void {
         this.model = [
             {
-                label: 'DASHBOARD',
+                label: 'INICIO',
                 items: [
                     {
                         label: 'Dashboard',
-                        icon: 'pi pi-fw pi-upload',
+                        icon: 'pi pi-fw pi-chart-bar',
                         routerLink: ['dashboard']
                         // items: [
                         //     {
@@ -87,7 +87,7 @@ export class Menu {
 
             },
             {
-                label: 'VENTAS',
+                label: 'GESTION VENTAS',
                 items: [
                     {
                         label: 'Ventas',
@@ -102,7 +102,68 @@ export class Menu {
                         // ]
                     }
                 ],
-            }
+            },
+            {
+                label: 'GESTION CARTERA',
+                items: [
+                    {
+                        label: 'Actualizar Cartera Cliente',
+                        icon: 'pi pi-fw pi-user',
+                        routerLink: ['actualizar-cartera']
+                        // items: [
+                        //     {
+                        //         label: 'Cargue de Archivos',
+                        //         icon: 'pi pi-fw pi-file',
+                        //         routerLink: ['layout/cargue']
+                        //     }
+                        // ]
+                    },
+                    {
+                        label: 'Notificación Facturas',
+                        icon: 'pi pi-fw pi-bell',
+                        routerLink: ['notificar-factura']
+                        // items: [
+                        //     {
+                        //         label: 'Cargue de Archivos',
+                        //         icon: 'pi pi-fw pi-file',
+                        //         routerLink: ['layout/cargue']
+                        //     }
+                        // ]
+                    }
+                ],
+
+            },
+
+            {
+                label: 'GESTION INVENTARIO',
+                items: [
+                    {
+                        label: 'Ingresar Producto',
+                        icon: 'pi pi-fw pi-barcode',
+                        routerLink: ['ingresar-producto']
+                        // items: [
+                        //     {
+                        //         label: 'Cargue de Archivos',
+                        //         icon: 'pi pi-fw pi-file',
+                        //         routerLink: ['layout/cargue']
+                        //     }
+                        // ]
+                    },
+                    {
+                        label: 'Ingresar Compra',
+                        icon: 'pi pi-fw pi-shopping-bag',
+                        routerLink: ['ingresar-compra']
+                        // items: [
+                        //     {
+                        //         label: 'Cargue de Archivos',
+                        //         icon: 'pi pi-fw pi-file',
+                        //         routerLink: ['layout/cargue']
+                        //     }
+                        // ]
+                    }
+                ],
+            },
+
         ];
 
     }
