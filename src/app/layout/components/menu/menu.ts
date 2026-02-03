@@ -17,63 +17,103 @@ import { tap } from 'rxjs';
     templateUrl: './menu.html'
 })
 export class Menu {
-  model: MenuItem[] = [];
-  modelPanel: any[] = [];
-  usuario: any;
+    model: MenuItem[] = [];
+    modelPanel: any[] = [];
+    usuario: any;
 
 
-  constructor(
-    private menuService: MenuService,
-    private authService: AuthService,
-  ) { }
-  ngOnInit(): void {
-    this.getMenu();
-  }
-  @ViewChildren('menu') menus!: QueryList<TieredMenu>;
+    constructor(
+        private menuService: MenuService,
+        private authService: AuthService,
+    ) { }
+    ngOnInit(): void {
+        this.getMenu();
+    }
+    @ViewChildren('menu') menus!: QueryList<TieredMenu>;
 
-// menuUser(): void {
-//   const idUsuario = this.authService.getUsuario.ID_SGUSUARIOS;
-// console.log(idUsuario);
-//   this.menuService.menu(idUsuario).subscribe(res => {
-//     if (res.length > 0) {
-//       this.model = res.map((item: any) => ({
-//         label: item.label,
-//         icon: item.icon ?? '',
-//         items: item.items
-//       }));
+    // menuUser(): void {
+    //   const idUsuario = this.authService.getUsuario.ID_SGUSUARIOS;
+    // console.log(idUsuario);
+    //   this.menuService.menu(idUsuario).subscribe(res => {
+    //     if (res.length > 0) {
+    //       this.model = res.map((item: any) => ({
+    //         label: item.label,
+    //         icon: item.icon ?? '',
+    //         items: item.items
+    //       }));
 
-//       this.modelPanel = res.map((item: any) => {
-//         const dic: MenuItem = {
-//           label: item.label,
-//           icon: item.icon
-//         };
+    //       this.modelPanel = res.map((item: any) => {
+    //         const dic: MenuItem = {
+    //           label: item.label,
+    //           icon: item.icon
+    //         };
 
-//         if (item.items?.length > 0) {
-//           dic.items = item.items;
-//         }
+    //         if (item.items?.length > 0) {
+    //           dic.items = item.items;
+    //         }
 
-//         return dic;
-//       });
-//     }
-//   });
-// }
+    //         return dic;
+    //       });
+    //     }
+    //   });
+    // }
+    // getMenu(): void {
+    //     console.log(this.authService.getUsuario)
+    //     this.menuService.menu(this.authService.getUsuario.ID_SGUSUARIOS).pipe(tap(res => {
+    //     console.log(res);
+    //         console.log(res.data[0].o_json);
+    //         this.model = res.data[0].o_json;
+    //     })).subscribe();
+    // }
+
     getMenu(): void {
-        console.log(this.authService.getUsuario)
-        this.menuService.menu(this.authService.getUsuario.ID_SGUSUARIOS).pipe(tap(res => {
-        console.log(res);
-            console.log(res.data[0].o_json);
-            this.model = res.data[0].o_json;
-        })).subscribe();
+        this.model = [
+            {
+                label: 'DASHBOARD',
+                items: [
+                    {
+                        label: 'Dashboard',
+                        icon: 'pi pi-fw pi-upload',
+                        routerLink: ['dashboard']
+                        // items: [
+                        //     {
+                        //         label: 'Cargue de Archivos',
+                        //         icon: 'pi pi-fw pi-file',
+                        //         routerLink: ['layout/cargue']
+                        //     }
+                        // ]
+                    }
+                ],
+
+            },
+            {
+                label: 'VENTAS',
+                items: [
+                    {
+                        label: 'Ventas',
+                        icon: 'pi pi-fw pi-cart-plus',
+                        routerLink: ['ventas']
+                        // items: [
+                        //     {
+                        //         label: 'Cargue de Archivos',
+                        //         icon: 'pi pi-fw pi-file',
+                        //         routerLink: ['layout/cargue']
+                        //     }
+                        // ]
+                    }
+                ],
+            }
+        ];
+
     }
 
+    toggleMenu(event: Event, index: number) {
+        this.menus.forEach((menu, i) => {
+            if (i !== index) {
+                menu.hide();
+            }
+        });
 
-  toggleMenu(event: Event, index: number) {
-    this.menus.forEach((menu, i) => {
-      if (i !== index) {
-        menu.hide();
-      }
-    });
-
-    this.menus.get(index)?.toggle(event);
-  }
+        this.menus.get(index)?.toggle(event);
+    }
 }
