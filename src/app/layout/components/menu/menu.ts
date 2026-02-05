@@ -13,7 +13,7 @@ import { tap } from 'rxjs';
 @Component({
     selector: 'app-menu',
     standalone: true,
-    imports: [CommonModule, Menuitem, RouterModule, Menubar, SplitButtonModule, TieredMenu],
+    imports: [CommonModule, Menuitem, RouterModule, SplitButtonModule],
     templateUrl: './menu.html'
 })
 export class Menu {

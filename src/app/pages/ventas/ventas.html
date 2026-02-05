@@ -1,1 +1,133 @@
-<p>ventas works!</p>
+<div class="card">
+  <p-table #dt [value]="ventas" dataKey="internalId" [loading]="loading" showGridlines [expandedRowKeys]="expandedRows"
+    [globalFilterFields]="['nombre', 'listaProductos']" [paginator]="true" [rows]="10"
+    [rowsPerPageOptions]="[5, 10, 20]">
+
+    <ng-template #caption>
+      <div class="flex flex-wrap justify-between items-center gap-2">
+        <span class="text-xl font-bold">Últimas Ventas</span>
+        <p-iconfield iconPosition="left" class="ml-auto w-1/5">
+          <p-inputicon>
+            <i class="pi pi-search"></i>
+          </p-inputicon>
+          <input pInputText type="text" (input)="dt.filterGlobal($any($event.target).value, 'contains')"
+            placeholder="Buscar por cliente o producto" class="w-full" />
+        </p-iconfield>
+      </div>
+    </ng-template>
+
+    <ng-template #header>
+      <tr>
+        <th></th>
+        <th>
+          <div class="flex items-center justify-between">
+            Fecha
+            <p-columnFilter type="text" field="fecha_venta" display="menu"></p-columnFilter>
+          </div>
+        </th>
+        <th>
+          <div class="flex items-center justify-between">
+            ID Cliente
+            <p-columnFilter type="numeric" field="numero_id" display="menu"></p-columnFilter>
+          </div>
+        </th>
+        <th>
+          <div class="flex items-center justify-between">
+            Cliente
+            <p-columnFilter type="text" field="nombre" display="menu"></p-columnFilter>
+          </div>
+        </th>
+        <th>
+          <div class="flex items-center justify-between">
+            Medio de Pago
+            <p-columnFilter type="text" field="forma_pago" display="menu"></p-columnFilter>
+          </div>
+        </th>
+        <th>
+          <div class="flex items-center justify-between">
+            Estado Venta
+            <p-columnFilter type="text" field="estado_venta" display="menu"></p-columnFilter>
+          </div>
+        </th>
+        <th>
+          <div class="flex items-center justify-between">
+            Total
+            <p-columnFilter type="numeric" field="total" display="menu" currency="COP"></p-columnFilter>
+          </div>
+        </th>
+      </tr>
+    </ng-template>
+
+    <ng-template #body let-venta let-expanded="expanded">
+      <tr>
+        <td>
+          <p-button type="button" pRipple [pRowToggler]="venta" [text]="true" [rounded]="true"
+            [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'" />
+        </td>
+        <td>{{ venta.fecha_venta }}</td>
+        <td>{{ venta.numero_id }}</td>
+        <td>{{ venta.nombre }}</td>
+        <td>{{ venta.forma_pago }}</td>
+        <td>{{ venta.estado_venta }}</td>
+        <td>{{ venta.total | currency }}</td>
+      </tr>
+    </ng-template>
+
+    <ng-template #loadingbody>
+      <tr>
+        <td colspan="7">
+          <div class="flex justify-center">
+            <span>Cargando...</span>
+          </div>
+        </td>
+      </tr>
+    </ng-template>
+
+    <ng-template #emptymessage>
+      <tr>
+        <td colspan="7">
+          <div class="flex justify-center">
+            No hay ventas disponibles.
+          </div>
+        </td>
+      </tr>
+    </ng-template>
+
+    <ng-template #expandedrow let-venta>
+      <tr>
+        <td colspan="7">
+          <div class="p-4">
+            <h5>Detalle de Venta</h5>
+            <p-table [value]="venta.detalle" dataKey="producto">
+              <ng-template #header>
+      <tr>
+        <th>Producto</th>
+        <th>Cantidad</th>
+        <th>Precio Unitario</th>
+        <th>Subtotal</th>
+      </tr>
+    </ng-template>
+    <ng-template #body let-detalle>
+      <tr>
+        <td>{{ detalle.producto }}</td>
+        <td>{{ detalle.cantidad }}</td>
+        <td>{{ detalle.precio_unitario | currency }}</td>
+        <td>{{ detalle.subtotal | currency }}</td>
+      </tr>
+    </ng-template>
+    <ng-template #emptymessage>
+      <tr>
+        <td colspan="4">
+          <div class="flex items-center justify-center">
+            No hay detalles disponibles.
+          </div>
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+</div>
+</td>
+</tr>
+</ng-template>
+</p-table>
+</div>

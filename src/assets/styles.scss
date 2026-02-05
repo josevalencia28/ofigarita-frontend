@@ -32,3 +32,22 @@
         }
     }
 }
+
+.p-datatable .p-datatable-thead>tr>th {
+    background: #ee2a7b !important;
+    color: white !important;
+}
+
+.p-datatable-thead>tr>th p-columnfilter .p-icon {
+    color: white !important;
+}
+
+.p-datatable-column-filter-button {
+
+    &:hover,
+    &:focus-visible,
+    &:active {
+        background: transparent !important;
+        outline-color: transparent !important;
+    }
+}

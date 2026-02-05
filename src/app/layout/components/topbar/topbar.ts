@@ -20,9 +20,9 @@ import { ConfirmDialog } from "primeng/confirmdialog";
 @Component({
     selector: 'app-topbar',
     standalone: true,
-    imports: [RouterModule, CommonModule, StyleClassModule, Configurator, Menu, Toast, Dialog, MenuBar, ReactiveFormsModule, Button, Password, ConfirmDialog],
+    imports: [RouterModule, CommonModule, StyleClassModule, Configurator, Menu, Toast, Dialog, ReactiveFormsModule, Button, Password, ConfirmDialog],
     templateUrl: './topbar.html',
-    providers: [MessageService,ConfirmationService],
+    providers: [MessageService, ConfirmationService],
     styleUrl: './topbar.scss'
 
 })
@@ -95,7 +95,7 @@ export class Topbar implements OnInit {
     }
 
     logout(): void {
-            this.router.navigate(["login"]);
+        this.router.navigate(["login"]);
 
         // this.authService.logout().pipe(
         //     tap(res => {
