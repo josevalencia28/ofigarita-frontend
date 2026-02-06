@@ -1,3 +1,8 @@
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { environment } from 'src/enviroments/enviroment';
+
 export interface VentaDetalle {
     cantidad: number;
     producto: string;
@@ -24,14 +29,10 @@ export interface VentasResponse {
     data: FacturaData[];
 }
 
-import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
-import { environment } from 'src/enviroments/enviroment';
-
 @Injectable({
     providedIn: 'root'
 })
+
 export class VentasService {
     private readonly URL = `${environment.HOST}ventas`;
 
