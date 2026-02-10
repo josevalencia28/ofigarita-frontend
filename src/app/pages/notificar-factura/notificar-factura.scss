@@ -1,0 +1,59 @@
+::ng-deep {
+
+    // Botón "Enviar a Todos" verde con letras blancas
+    .p-button-success-custom {
+        background-color: #22c55e !important;
+        border-color: #22c55e !important;
+        color: white !important;
+
+        &:enabled:hover {
+            background-color: #16a34a !important;
+            border-color: #16a34a !important;
+        }
+
+        &:enabled:active {
+            background-color: #15803d !important;
+            border-color: #15803d !important;
+        }
+
+        .pi {
+            color: white !important;
+        }
+    }
+
+    // Headers de la tabla en rosa
+    .p-datatable-thead>tr>th {
+        background-color: #ec4899 !important;
+        color: white !important;
+        font-weight: 600;
+        text-transform: uppercase;
+        font-size: 0.875rem;
+        letter-spacing: 0.5px;
+    }
+
+    .p-sortable-column-icon {
+        color: white !important;
+    }
+
+    // Hover en las filas
+    .p-datatable-tbody>tr:hover {
+        background-color: #fef3f8 !important;
+    }
+
+    // Estilos del input de búsqueda
+    .p-inputtext {
+        &:enabled:focus {
+            border-color: #ec4899;
+            box-shadow: 0 0 0 0.2rem rgba(236, 72, 153, 0.25);
+        }
+    }
+
+    // Paginador
+    .p-paginator {
+        .p-paginator-pages .p-paginator-page.p-highlight {
+            background-color: #ec4899;
+            border-color: #ec4899;
+            color: white;
+        }
+    }
+}

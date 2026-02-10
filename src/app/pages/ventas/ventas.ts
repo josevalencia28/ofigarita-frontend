@@ -1,3 +1,4 @@
+
 import { Component } from '@angular/core';
 import { FacturaData, Venta, VentasResponse, VentasService } from '../service/ventas.service';
 import { TableModule } from 'primeng/table';

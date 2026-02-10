@@ -1,1 +1,106 @@
-<p>notificar-factura works!</p>
+<div class="card">
+    <p-toast position="top-right"></p-toast>
+    <p-confirmDialog></p-confirmDialog>
+
+    <p-table #dt [value]="clientes" dataKey="factura_json.numero_id" [loading]="loading" showGridlines
+        [globalFilterFields]="['factura_json.nombre', 'factura_json.numero_id', 'factura_json.nro_factura', 'factura_json.correo', 'factura_json.total']"
+        [paginator]="true" [rows]="10" [rowsPerPageOptions]="[5, 10, 20]">
+
+        <ng-template pTemplate="caption">
+            <div class="flex flex-wrap justify-between items-center gap-4">
+                <span class="text-xl font-bold text-gray-700">Notificación Factura</span>
+
+                <p-iconfield iconPosition="left" class="flex-1 max-w-md">
+                    <p-inputicon>
+                        <i class="pi pi-search"></i>
+                    </p-inputicon>
+                    <input pInputText type="text" (input)="onGlobalFilter($event)" placeholder="Buscar"
+                        class="w-full" />
+                </p-iconfield>
+
+                <p-button label="Notificación Masiva" icon="pi pi-send" styleClass="p-button-success-custom"
+                    [loading]="enviandoMasivo" [disabled]="clientes.length === 0 || enviandoMasivo"
+                    (onClick)="enviarNotificacionMasiva()" />
+            </div>
+        </ng-template>
+
+        <ng-template pTemplate="header">
+            <tr>
+                <th pSortableColumn="factura_json.nro_factura">
+                    <div class="flex items-center justify-between">
+                        NO. FACTURAS
+                        <p-sortIcon field="factura_json.nro_factura"></p-sortIcon>
+                    </div>
+                </th>
+                <th pSortableColumn="factura_json.numero_id">
+                    <div class="flex items-center justify-between">
+                        IDENTIFICACIÓN
+                        <p-sortIcon field="factura_json.numero_id"></p-sortIcon>
+                    </div>
+                </th>
+                <th pSortableColumn="factura_json.nombre">
+                    <div class="flex items-center justify-between">
+                        NOMBRE
+                        <p-sortIcon field="factura_json.nombre"></p-sortIcon>
+                    </div>
+                </th>
+                <th>
+                    <div class="flex items-center justify-between">
+                        CORREO
+                    </div>
+                </th>
+                <th pSortableColumn="factura_json.total">
+                    <div class="flex items-center justify-between">
+                        TOTAL
+                        <p-sortIcon field="factura_json.total"></p-sortIcon>
+                    </div>
+                </th>
+                <th>
+                    <div class="flex items-center justify-between">
+                        ACCIÓN
+                    </div>
+                </th>
+            </tr>
+        </ng-template>
+
+        <ng-template pTemplate="body" let-cliente>
+            <tr>
+                <td>{{ cliente.factura_json.nro_factura }}</td>
+                <td>{{ cliente.factura_json.numero_id }}</td>
+                <td>{{ cliente.factura_json.nombre }}</td>
+                <td>{{ cliente.factura_json.correo }}</td>
+                <td>{{ formatearPrecio(cliente.factura_json.total) }}</td>
+                <td>
+                    <div class="flex gap-2 justify-center items-center">
+                        <p-button label="Notificar" severity="success" size="small" icon="pi pi-send"
+                            [loading]="isEnviandoPuntual(cliente.factura_json.numero_id)"
+                            [disabled]="isEnviandoPuntual(cliente.factura_json.numero_id)"
+                            (onClick)="enviarNotificacionPuntual(cliente)" />
+                    </div>
+                </td>
+            </tr>
+        </ng-template>
+
+        <ng-template pTemplate="loadingbody">
+            <tr>
+                <td colspan="6">
+                    <div class="flex justify-center py-4">
+                        <i class="pi pi-spin pi-spinner text-2xl"></i>
+                        <span class="ml-2">Cargando...</span>
+                    </div>
+                </td>
+            </tr>
+        </ng-template>
+
+        <ng-template pTemplate="emptymessage">
+            <tr>
+                <td colspan="6">
+                    <div class="flex justify-center py-4 text-gray-500">
+                        <i class="pi pi-inbox text-3xl mr-2"></i>
+                        No hay facturas disponibles.
+                    </div>
+                </td>
+            </tr>
+        </ng-template>
+    </p-table>
+</div>

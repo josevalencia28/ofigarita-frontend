@@ -1,7 +1,10 @@
 <div class="card">
+    <p-toast position="top-right"></p-toast>
+    <p-confirmDialog></p-confirmDialog>
+
     <p-table #dt [value]="carteraCliente" dataKey="internalId" [loading]="loading" showGridlines
-        [expandedRowKeys]="expandedRows" [globalFilterFields]="['nombre', 'listaProductos']" [paginator]="true"
-        [rows]="10" [rowsPerPageOptions]="[5, 10, 20]">
+        [expandedRowKeys]="expandedRows" [globalFilterFields]="['nombre', 'numero_id', 'forma_pago', 'estado_venta']"
+        [paginator]="true" [rows]="10" [rowsPerPageOptions]="[5, 10, 20]">
 
         <ng-template #caption>
             <div class="flex flex-wrap justify-between items-center gap-2">
@@ -21,7 +24,7 @@
                 <th></th>
                 <th>
                     <div class="flex items-center justify-between">
-                        Fecha
+                        Fecha Última Venta
                         <p-columnFilter type="text" field="fecha_venta" display="menu"></p-columnFilter>
                     </div>
                 </th>
@@ -45,42 +48,42 @@
                 </th>
                 <th>
                     <div class="flex items-center justify-between">
-                        Estado Venta
+                        Estado
                         <p-columnFilter type="text" field="estado_venta" display="menu"></p-columnFilter>
                     </div>
                 </th>
                 <th>
                     <div class="flex items-center justify-between">
-                        Total
+                        Total Consolidado
                         <p-columnFilter type="numeric" field="total" display="menu" currency="COP"></p-columnFilter>
                     </div>
                 </th>
                 <th>
                     <div class="flex items-center justify-between">
-                        Acciones
+                        Pago Total
                     </div>
                 </th>
             </tr>
         </ng-template>
 
-        <ng-template #body let-venta let-expanded="expanded">
+        <ng-template #body let-cliente let-expanded="expanded">
             <tr>
                 <td>
-                    <p-button type="button" pRipple [pRowToggler]="venta" [text]="true" [rounded]="true"
+                    <p-button type="button" pRipple [pRowToggler]="cliente" [text]="true" [rounded]="true"
                         [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'" />
                 </td>
-                <td>{{ venta.fecha_venta }}</td>
-                <td>{{ venta.numero_id }}</td>
-                <td>{{ venta.nombre }}</td>
-                <td>{{ venta.forma_pago }}</td>
-                <td>{{ venta.estado_venta }}</td>
-                <td>{{ venta.total | currency }}</td>
+                <td>{{ cliente.fecha_venta }}</td>
+                <td>{{ cliente.numero_id }}</td>
+                <td>{{ cliente.nombre }}</td>
+                <td>{{ cliente.forma_pago }}</td>
+                <td>{{ cliente.estado_venta }}</td>
+                <td>{{ cliente.total | currency }}</td>
                 <td>
                     <div class="flex gap-2">
-                        <p-button label="EFECTIVO" (onClick)="actualizarTipoPago(venta.id_venta, 'EF')"
-                            severity="success" size="small" />
-                        <p-button label="NEQUI" (onClick)="actualizarTipoPago(venta.id_venta, 'NE')" severity="info"
-                            size="small" />
+                        <p-button label="EFECTIVO" (onClick)="actualizarPagoTotal(cliente.numero_id, 'EF')"
+                            severity="success" size="small" icon="pi pi-money-bill" />
+                        <p-button label="NEQUI" (onClick)="actualizarPagoTotal(cliente.numero_id, 'NE')" severity="info"
+                            size="small" icon="pi pi-mobile" />
                     </div>
                 </td>
             </tr>
@@ -106,16 +109,54 @@
             </tr>
         </ng-template>
 
-        <ng-template #expandedrow let-venta>
+        <ng-template #expandedrow let-cliente>
             <tr>
                 <td colspan="8">
                     <div class="p-4">
-                        <h5>Detalle de Venta</h5>
-                        <p-table [value]="venta.detalle" dataKey="producto">
+                        <h5 class="mb-3 font-semibold text-lg">Ventas del Cliente</h5>
+                        <p-table [value]="cliente.ventas" dataKey="id_venta" styleClass="mb-4">
                             <ng-template #header>
             <tr>
+                <th>ID Venta</th>
+                <th>Fecha</th>
+                <th>Total</th>
+                <th>Estado</th>
+                <th>Acciones Individuales</th>
+            </tr>
+        </ng-template>
+        <ng-template #body let-venta>
+            <tr>
+                <td>{{ venta.id_venta }}</td>
+                <td>{{ venta.fecha_venta }}</td>
+                <td>{{ venta.total | currency }}</td>
+                <td>{{ venta.estado_venta }}</td>
+                <td>
+                    <div class="flex gap-2">
+                        <p-button label="EFECTIVO" (onClick)="actualizarTipoPago(venta.id_venta, 'EF')"
+                            severity="success" size="small" />
+                        <p-button label="NEQUI" (onClick)="actualizarTipoPago(venta.id_venta, 'NE')" severity="info"
+                            size="small" />
+                    </div>
+                </td>
+            </tr>
+        </ng-template>
+        <ng-template #emptymessage>
+            <tr>
+                <td colspan="5">
+                    <div class="flex items-center justify-center">
+                        No hay ventas disponibles.
+                    </div>
+                </td>
+            </tr>
+        </ng-template>
+    </p-table>
+
+    <h5 class="mb-3 font-semibold text-lg">Detalle de Productos Consolidado</h5>
+    <p-table [value]="getDetalleConsolidado(cliente.ventas)" dataKey="producto">
+        <ng-template #header>
+            <tr>
                 <th>Producto</th>
-                <th>Cantidad</th>
+                <th>Cantidad Total</th>
                 <th>Precio Unitario</th>
                 <th>Subtotal</th>
             </tr>
