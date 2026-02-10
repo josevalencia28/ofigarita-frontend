@@ -88,7 +88,7 @@
 
         <ng-template #loadingbody>
             <tr>
-                <td colspan="7">
+                <td colspan="8">
                     <div class="flex justify-center">
                         <span>Cargando...</span>
                     </div>
@@ -98,7 +98,7 @@
 
         <ng-template #emptymessage>
             <tr>
-                <td colspan="7">
+                <td colspan="8">
                     <div class="flex justify-center">
                         No hay ventas disponibles.
                     </div>
@@ -108,7 +108,7 @@
 
         <ng-template #expandedrow let-venta>
             <tr>
-                <td colspan="7">
+                <td colspan="8">
                     <div class="p-4">
                         <h5>Detalle de Venta</h5>
                         <p-table [value]="venta.detalle" dataKey="producto">

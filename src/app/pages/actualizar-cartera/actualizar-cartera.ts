@@ -8,6 +8,7 @@ import { RippleModule } from 'primeng/ripple';
 import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
 import { InputTextModule } from 'primeng/inputtext';
+import { MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-actualizar-cartera',
@@ -21,12 +22,15 @@ export class ActualizarCartera {
   carteraCliente: any[] = [];
   expandedRows = {};
 
-  constructor(private carteraClienteService: CarteraClienteService) { }
+  constructor(private messageService: MessageService,
+    private carteraClienteService: CarteraClienteService) { }
 
   ngOnInit(): void {
     this.getCarteraCliente();
     console.log(this.carteraCliente);
   }
+
+  //private messageService = inject(MessageService);
 
   getCarteraCliente(): void {
     this.carteraCliente = [];
@@ -52,9 +56,13 @@ export class ActualizarCartera {
     this.carteraClienteService.actualizarTipoPago(id_venta, tipo_pago).subscribe({
       next: (response: any) => {
         console.log(response);
+        this.messageService.add({ severity: 'success', summary: 'Éxito', detail: 'Cartera actualizada correctamente' });
+        this.getCarteraCliente();
       },
       error: (error: any) => {
         console.error(error);
+        this.messageService.add({ severity: 'error', summary: 'Error', detail: 'No se pudo actualizar la cartera' });
+        this.getCarteraCliente();
       }
     });
   }
