@@ -1,1 +1,51 @@
-<p>Dashboard</p>
+<div class="dashboard-grid">
+    <!-- Card de Top Clientes (Izquierda) -->
+    <p-card class="ventas-card">
+        <div class="card-header">
+            <div class="header-title">
+                <span class="title-text">Top Clientes con Más Compras</span>
+            </div>
+        </div>
+
+        <div class="chart-title">Resumen Clientes</div>
+
+        <div class="chart-container">
+            <p-chart type="bar" [data]="clientesChartData" [options]="clientesChartOptions"
+                [style]="{'height': '400px'}">
+            </p-chart>
+        </div>
+    </p-card>
+
+    <!-- Card de Ventas Totales (Derecha) -->
+    <p-card class="ventas-card">
+        <div class="card-header">
+            <div class="header-title">
+                <span class="title-text">Ventas Totales</span>
+            </div>
+        </div>
+
+        <div class="metrics-grid">
+            <div class="metric-card">
+                <div class="metric-label">Hoy</div>
+                <div class="metric-value">{{ formatCurrency(totalHoy) }}</div>
+            </div>
+
+            <div class="metric-card">
+                <div class="metric-label">Semana</div>
+                <div class="metric-value">{{ formatCurrency(totalSemana) }}</div>
+            </div>
+
+            <div class="metric-card">
+                <div class="metric-label">Mes</div>
+                <div class="metric-value">{{ formatCurrency(totalMes) }}</div>
+            </div>
+        </div>
+
+        <div class="chart-title">Resumen de Ingresos</div>
+
+        <div class="chart-container">
+            <p-chart type="bar" [data]="chartData" [options]="chartOptions" [style]="{'height': '350px'}">
+            </p-chart>
+        </div>
+    </p-card>
+</div>

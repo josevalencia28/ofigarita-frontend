@@ -1,0 +1,157 @@
+.ventas-container {
+    padding: 1.5rem;
+    max-width: 1400px; // Aumentado para acomodar dos cards
+    margin: 0 auto;
+}
+
+/* Grid para las dos cards lado a lado */
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+}
+
+.ventas-card {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 12px;
+    height: 100%;
+}
+
+.card-header {
+    margin-bottom: 1.5rem;
+}
+
+.header-title {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.header-icon {
+    font-size: 1.5rem;
+    color: #10B981;
+    background: #D1FAE5;
+    padding: 0.5rem;
+    border-radius: 8px;
+}
+
+/* Icono específico para clientes */
+.pi-users.header-icon {
+    color: #3B82F6;
+    background: #DBEAFE;
+}
+
+.title-text {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #1F2937;
+}
+
+/* Metrics Grid */
+.metrics-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.metric-card {
+    padding: 1.25rem;
+    background: #F9FAFB;
+    border-radius: 10px;
+    border-left: 4px solid #10B981;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.metric-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.metric-card:nth-child(1) {
+    border-left-color: #FE6A35;
+}
+
+.metric-card:nth-child(2) {
+    border-left-color: #8B5CF6;
+}
+
+.metric-card:nth-child(3) {
+    border-left-color: #10B981;
+}
+
+.metric-label {
+    font-size: 0.875rem;
+    color: #6B7280;
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.metric-value {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: #1F2937;
+}
+
+/* Chart Section */
+.chart-title {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: #1F2937;
+    text-align: center;
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 2px solid #E5E7EB;
+}
+
+.chart-container {
+    padding: 1rem 0;
+}
+
+/* Responsive Design */
+@media (max-width: 1200px) {
+    .dashboard-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .ventas-container {
+        padding: 1rem;
+    }
+
+    .metrics-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+
+    .metric-value {
+        font-size: 1.5rem;
+    }
+
+    .title-text {
+        font-size: 1.125rem;
+    }
+
+    .chart-container {
+        overflow-x: auto;
+    }
+}
+
+/* PrimeNG Card Override */
+::ng-deep .ventas-card .p-card-body {
+    padding: 1.5rem;
+}
+
+::ng-deep .ventas-card .p-card-content {
+    padding: 0;
+}
+
+/* Chart Legend Custom Style */
+::ng-deep .chart-container canvas {
+    max-width: 100%;
+    height: auto !important;
+}

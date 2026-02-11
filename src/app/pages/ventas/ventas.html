@@ -1,7 +1,7 @@
 <div class="card">
   <p-table #dt [value]="ventas" dataKey="internalId" [loading]="loading" showGridlines [expandedRowKeys]="expandedRows"
-    [globalFilterFields]="['nombre', 'listaProductos', 'forma_pago', 'estado_venta']" [paginator]="true" [rows]="10"
-    [rowsPerPageOptions]="[5, 10, 20]">
+    [globalFilterFields]="['nombre', 'listaProductos', 'forma_pago', 'estado_venta', 'fecha_venta']" [paginator]="true"
+    [rows]="10" [rowsPerPageOptions]="[5, 10, 20]">
 
     <ng-template #caption>
       <div class="flex flex-wrap justify-between items-center gap-2">
