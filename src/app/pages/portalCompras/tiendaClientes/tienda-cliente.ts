@@ -543,6 +543,7 @@ export class TiendaClienteComponent implements OnInit, AfterViewInit {
                     // Limpiar carrito y cerrar modal
                     this.vaciarCarrito();
                     this.cerrarModalCompra();
+                    this.cargarProductos();
                 } else {
                     this.messageService.add({
                         severity: 'error',
@@ -550,6 +551,7 @@ export class TiendaClienteComponent implements OnInit, AfterViewInit {
                         detail: 'El código de verificación no es correcto',
                         life: 3000
                     });
+                    this.cargarProductos();
                 }
             },
             error: (error) => {

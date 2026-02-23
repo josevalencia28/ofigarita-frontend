@@ -1,1 +1,290 @@
-<p>ingreso-compra works!</p>
+<div class="card">
+    <p-toast position="top-right"></p-toast>
+    <p-confirmDialog></p-confirmDialog>
+
+    <p-table #dt [value]="compras" dataKey="id_ingreso" [loading]="loading" showGridlines
+        [globalFilterFields]="['proveedor', 'fecha']" [paginator]="true" [rows]="10" [rowsPerPageOptions]="[5, 10, 20]">
+
+        <ng-template pTemplate="caption">
+            <div class="flex flex-wrap justify-between items-center gap-4">
+                <span class="text-xl font-bold text-gray-700">INGRESO DE COMPRAS</span>
+                <p-iconField iconPosition="left" class="flex-1 max-w-md">
+                    <p-inputicon><i class="pi pi-search"></i></p-inputicon>
+                    <input pInputText type="text" (input)="dt.filterGlobal($any($event.target).value, 'contains')"
+                        class="w-full" placeholder="Buscar compra" />
+                </p-iconField>
+                <p-button label="Ingresar Compra" icon="pi pi-plus" severity="success" (onClick)="abrirModalNueva()" />
+            </div>
+        </ng-template>
+
+        <ng-template pTemplate="header">
+            <tr>
+                <th style="width: 5%">#</th>
+                <th pSortableColumn="proveedor" style="width: 25%">
+                    Proveedor <p-sortIcon field="proveedor"></p-sortIcon>
+                </th>
+                <th pSortableColumn="fecha" style="width: 20%">
+                    Fecha <p-sortIcon field="fecha"></p-sortIcon>
+                </th>
+                <th pSortableColumn="total_compra" style="width: 18%">
+                    Total <p-sortIcon field="total_compra"></p-sortIcon>
+                </th>
+                <th style="width: 12%; text-align:center">N° Productos</th>
+                <th style="width: 10%; text-align:center">Acciones</th>
+            </tr>
+        </ng-template>
+
+        <ng-template pTemplate="body" let-compra let-i="rowIndex">
+            <tr>
+                <td class="text-gray-400 text-sm">{{ i + 1 }}</td>
+                <td>{{ compra.proveedor }}</td>
+                <td>{{ compra.fecha | date:'dd/MM/yyyy' }}</td>
+                <td class="font-semibold text-blue-700">
+                    {{ compra.total_compra | currency:'COP':'symbol-narrow':'1.0-0' }}
+                </td>
+                <td class="text-center">
+                    <p-tag [value]="compra.productos.length + ' producto(s)'"
+                        [severity]="compra.productos.length > 0 ? 'success' : 'warn'">
+                    </p-tag>
+                </td>
+                <td>
+                    <div class="flex gap-2 justify-center">
+                        <p-button icon="pi pi-eye" [rounded]="true" [text]="true" severity="info" pTooltip="Ver detalle"
+                            (onClick)="verDetalle(compra)">
+                        </p-button>
+                        <!-- <p-button icon="pi pi-trash" [rounded]="true" [text]="true" severity="danger"
+                            pTooltip="Eliminar" (onClick)="confirmarEliminar(compra)">
+                        </p-button> -->
+                    </div>
+                </td>
+            </tr>
+        </ng-template>
+
+        <ng-template pTemplate="emptymessage">
+            <tr>
+                <td colspan="6" class="text-center py-10 text-gray-400">
+                    <i class="pi pi-inbox text-4xl block mb-2"></i>
+                    No se encontraron compras.
+                </td>
+            </tr>
+        </ng-template>
+
+    </p-table>
+</div>
+
+
+<p-dialog header="Nueva Compra" [(visible)]="showModalNueva" [modal]="true" [style]="{ width: '740px' }"
+    [closable]="true" (onHide)="cerrarModalNueva()">
+
+    <div class="flex flex-col gap-5 pt-2">
+
+        <div class="grid grid-cols-2 gap-4">
+            <div class="flex flex-col gap-1">
+                <label class="text-sm font-semibold text-gray-600">
+                    Fecha <span class="text-red-500">*</span>
+                </label>
+                <input pInputText type="date" [(ngModel)]="nuevaCompra.fecha" class="w-full" />
+            </div>
+            <div class="flex flex-col gap-1">
+                <label class="text-sm font-semibold text-gray-600">
+                    Proveedor <span class="text-red-500">*</span>
+                </label>
+                <input pInputText type="text" [(ngModel)]="nuevaCompra.proveedor" placeholder="Nombre del proveedor"
+                    class="w-full" />
+            </div>
+        </div>
+
+        <div class="border border-gray-200 rounded-lg p-4 bg-gray-50">
+            <p class="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-3">
+                Agregar producto
+            </p>
+
+            <div class="flex flex-col gap-1 mb-3">
+                <label class="text-xs text-gray-500">
+                    Producto <span class="text-red-500">*</span>
+                </label>
+                <p-select [options]="productos" appendTo="body" [(ngModel)]=" productoSeleccionado"
+                    optionLabel="nombre_producto" [filter]="true" filterBy="nombre_producto"
+                    placeholder="Buscar producto..." [loading]="loadingProductos" [showClear]="true" styleClass="w-full"
+                    (onChange)="onProductoSeleccionado($event.value)">
+
+                    <ng-template let-prod pTemplate="item">
+                        <div class="flex items-center justify-between gap-3 py-1">
+                            <div class="flex items-center gap-2">
+                                <span class="font-medium text-sm">{{ prod.nombre_producto }}</span>
+                            </div>
+                        </div>
+                    </ng-template>
+
+                    <ng-template let-prod pTemplate="selectedItem">
+                        <div class="flex items-center gap-2">
+                            <span class="font-medium text-sm">{{ prod.nombre_producto }}</span>
+                        </div>
+                    </ng-template>
+                </p-select>
+            </div>
+
+            <div class="grid grid-cols-3 gap-3 mb-3">
+                <div class="flex flex-col gap-1">
+                    <label class="text-xs text-gray-500">Cantidad <span class="text-red-500">*</span></label>
+                    <p-inputNumber [(ngModel)]="productoTemp.cantidad" [min]="1" placeholder="0" styleClass="w-full">
+                    </p-inputNumber>
+                </div>
+                <div class="flex flex-col gap-1">
+                    <label class="text-xs text-gray-500">Valor paquete <span class="text-red-500">*</span></label>
+                    <p-inputNumber [(ngModel)]="productoTemp.valor_paquete" [min]="0" mode="currency" currency="COP"
+                        locale="es-CO" placeholder="$0" styleClass="w-full">
+                    </p-inputNumber>
+                </div>
+                <div class="flex flex-col gap-1">
+                    <label class="text-xs text-gray-500">Precio unitario</label>
+                    <p-inputNumber [(ngModel)]="productoTemp.precio_unitario" [min]="0" mode="currency" currency="COP"
+                        locale="es-CO" placeholder="$0" styleClass="w-full">
+                    </p-inputNumber>
+                </div>
+            </div>
+
+            <p-button label="+ Agregar a la lista" severity="secondary" size="small"
+                [disabled]="!productoSeleccionado || productoTemp.cantidad <= 0 || productoTemp.valor_paquete <= 0"
+                (onClick)="agregarProducto()">
+            </p-button>
+        </div>
+
+        <div *ngIf="nuevaCompra.productos.length > 0">
+            <p class="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-2">
+                Productos en esta compra
+            </p>
+            <p-table [value]="nuevaCompra.productos" showGridlines styleClass="p-datatable-sm">
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th>Producto</th>
+                        <th style="width:90px; text-align:center">Cantidad</th>
+                        <th style="width:130px">Valor paquete</th>
+                        <th style="width:130px">Precio unitario</th>
+                        <th style="width:50px"></th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-prod let-i="rowIndex">
+                    <tr>
+                        <td>
+                            <span class="font-medium">{{ getNombreProducto(prod.id_producto) }}</span>
+                            <span class="text-xs text-gray-400 ml-1">#{{ prod.id_producto }}</span>
+                        </td>
+                        <td class="text-center">{{ prod.cantidad }}</td>
+                        <td>{{ prod.valor_paquete | currency:'COP':'symbol-narrow':'1.0-0' }}</td>
+                        <td>{{ prod.precio_unitario | currency:'COP':'symbol-narrow':'1.0-2' }}</td>
+                        <td>
+                            <p-button icon="pi pi-times" [rounded]="true" [text]="true" severity="danger" size="small"
+                                (onClick)="quitarProducto(i)">
+                            </p-button>
+                        </td>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="footer">
+                    <tr>
+                        <td colspan="2" class="font-semibold text-gray-600">Total compra</td>
+                        <td colspan="3" class="font-bold text-blue-700 text-base">
+                            {{ totalCompra | currency:'COP':'symbol-narrow':'1.0-0' }}
+                        </td>
+                    </tr>
+                </ng-template>
+            </p-table>
+        </div>
+
+    </div>
+
+    <ng-template pTemplate="footer">
+        <p-button label="Cancelar" severity="secondary" [text]="true" (onClick)="cerrarModalNueva()">
+        </p-button>
+        <p-button label="Registrar compra" icon="pi pi-save" [disabled]="!formValido() || guardando"
+            [loading]="guardando" (onClick)="guardarCompra()">
+        </p-button>
+    </ng-template>
+</p-dialog>
+
+
+<p-dialog header="Detalle de Compra" [(visible)]="showModalDetalle" [modal]="true" [style]="{ width: '750px' }"
+    (onHide)="cerrarModalDetalle()">
+
+    <div class="flex flex-col gap-4 pt-2" *ngIf="compraSeleccionada">
+
+        <!-- Resumen -->
+        <div class="grid grid-cols-3 gap-4 bg-gray-50 rounded-lg p-4 border border-gray-200">
+            <div>
+                <p class="text-xs text-gray-400 font-semibold uppercase tracking-wide">ID Ingreso</p>
+                <p class="font-bold text-gray-700">#{{ compraSeleccionada.id_ingreso }}</p>
+            </div>
+            <div>
+                <p class="text-xs text-gray-400 font-semibold uppercase tracking-wide">Fecha</p>
+                <p class="font-medium">{{ compraSeleccionada.fecha | date:'dd/MM/yyyy' }}</p>
+            </div>
+            <div>
+                <p class="text-xs text-gray-400 font-semibold uppercase tracking-wide">Proveedor</p>
+                <p class="font-medium">{{ compraSeleccionada.proveedor }}</p>
+            </div>
+            <div class="col-span-3 border-t border-gray-200 pt-3">
+                <p class="text-xs text-gray-400 font-semibold uppercase tracking-wide">Total compra</p>
+                <p class="font-bold text-blue-700 text-lg">
+                    {{ compraSeleccionada.total_compra | currency:'COP':'symbol-narrow':'1.0-0' }}
+                </p>
+            </div>
+        </div>
+
+        <!-- Productos del ingreso -->
+        <p class="text-sm font-semibold text-gray-500 uppercase tracking-wide">Productos</p>
+        <p-table [value]="compraSeleccionada.productos" showGridlines styleClass="p-datatable-sm">
+            <ng-template pTemplate="header">
+                <tr>
+                    <th>ID</th>
+                    <th>Nombre</th>
+                    <th>Cantidad</th>
+                    <th>Precio unitario</th>
+                    <th>Valor paquete</th>
+                    <th>Precio venta</th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-prod>
+                <tr>
+                    <td>{{ prod.id_producto }}</td>
+                    <td>{{ prod.nombre_producto }}</td>
+                    <td>{{ prod.cantidad }}</td>
+                    <td>{{ prod.precio_unitario | currency:'COP':'symbol-narrow':'1.0-2' }}</td>
+                    <td>{{ prod.valor_paquete | currency:'COP':'symbol-narrow':'1.0-0' }}</td>
+                    <td>{{ prod.precio_venta | currency:'COP':'symbol-narrow':'1.0-0' }}</td>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="emptymessage">
+                <tr>
+                    <td colspan="6" class="text-center py-4 text-gray-400">
+                        Este ingreso no tiene productos detallados.
+                    </td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </div>
+
+    <ng-template pTemplate="footer">
+        <p-button label="Cerrar" severity="secondary" (onClick)="cerrarModalDetalle()"></p-button>
+    </ng-template>
+</p-dialog>
+
+
+<p-dialog header="Confirmar eliminación" [(visible)]="showModalEliminar" [modal]="true" [style]="{ width: '440px' }"
+    (onHide)="cerrarModalEliminar()">
+
+    <div class="pt-2" *ngIf="compraAEliminar">
+        <p class="text-gray-700 mb-2">
+            ¿Estás seguro de que deseas eliminar el ingreso
+            <strong>#{{ compraAEliminar.id_ingreso }}</strong> del proveedor
+            <strong>{{ compraAEliminar.proveedor }}</strong>?
+        </p>
+        <p class="text-red-500 text-sm">Esta acción no se puede deshacer.</p>
+    </div>
+
+    <ng-template pTemplate="footer">
+        <p-button label="Cancelar" severity="secondary" [text]="true" (onClick)="cerrarModalEliminar()">
+        </p-button>
+        <p-button label="Eliminar" icon="pi pi-trash" severity="danger" (onClick)="eliminarCompra()">
+        </p-button>
+    </ng-template>
+</p-dialog>

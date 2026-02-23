@@ -18,6 +18,7 @@ $tablet-breakpoint: 768px;
     opacity: 0;
     transform: translateY(20px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -28,6 +29,7 @@ $tablet-breakpoint: 768px;
   from {
     transform: translateX(100%);
   }
+
   to {
     transform: translateX(0);
   }
@@ -37,6 +39,7 @@ $tablet-breakpoint: 768px;
   from {
     transform: translateX(-100%);
   }
+
   to {
     transform: translateX(0);
   }
@@ -75,7 +78,7 @@ $tablet-breakpoint: 768px;
   padding: 0 1rem;
   align-items: center;
   justify-content: space-between;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
   z-index: 1000;
 
   @media (max-width: $mobile-breakpoint) {
@@ -180,7 +183,7 @@ $tablet-breakpoint: 768px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
   position: relative;
   overflow-y: auto;
 
@@ -211,7 +214,7 @@ $tablet-breakpoint: 768px;
     .logo {
       max-width: 180px;
       width: 100%;
-      filter: drop-shadow(0 4px 8px rgba(0,0,0,0.2));
+      filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.2));
 
       @media (max-width: $mobile-breakpoint) {
         max-width: 150px;
@@ -265,7 +268,7 @@ $tablet-breakpoint: 768px;
     &:hover:not(:disabled) {
       background-color: $amarillo-dark;
       transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
     }
 
     &:disabled {
@@ -281,7 +284,7 @@ $tablet-breakpoint: 768px;
     &:hover {
       background-color: #fff176;
       transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
     }
   }
 
@@ -292,7 +295,7 @@ $tablet-breakpoint: 768px;
     &:hover {
       background-color: #fff176;
       transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
     }
   }
 
@@ -366,7 +369,7 @@ $tablet-breakpoint: 768px;
     padding: 1.5rem 2rem;
     border-radius: 15px;
     margin-bottom: 1.5rem;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     position: sticky;
     top: 0;
     z-index: 100;
@@ -427,7 +430,7 @@ $tablet-breakpoint: 768px;
 
   // Cuando el header está scrolled, el buscador debe posicionarse justo debajo
   // El header tiene: padding-top (1.5rem) + h1 (2rem) + padding-bottom (1.5rem) = ~80px
-  .header-bienvenida.scrolled + .buscador-container {
+  .header-bienvenida.scrolled+.buscador-container {
     top: 80px;
     z-index: 98; // Asegurar visibilidad
 
@@ -566,7 +569,7 @@ $tablet-breakpoint: 768px;
   background: white;
   border-radius: 12px;
   overflow: hidden;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
   transition: all 0.3s ease;
   display: flex;
   flex-direction: column;
@@ -574,7 +577,7 @@ $tablet-breakpoint: 768px;
 
   &:hover {
     transform: translateY(-5px);
-    box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
   }
 
   .producto-imagen {
@@ -685,7 +688,7 @@ $tablet-breakpoint: 768px;
   border-left: 1px solid $gris-medio;
   display: flex;
   flex-direction: column;
-  box-shadow: -2px 0 10px rgba(0,0,0,0.08);
+  box-shadow: -2px 0 10px rgba(0, 0, 0, 0.08);
   position: relative;
   overflow-y: scroll;
 
@@ -699,7 +702,7 @@ $tablet-breakpoint: 768px;
     transition: transform 0.3s ease;
     z-index: 999;
     border-left: none;
-    box-shadow: -4px 0 20px rgba(0,0,0,0.15);
+    box-shadow: -4px 0 20px rgba(0, 0, 0, 0.15);
 
     &.mobile-open {
       transform: translateX(0);
@@ -895,7 +898,7 @@ $tablet-breakpoint: 768px;
       border-radius: 50px;
       padding: 0.2rem 0.4rem;
       margin: 0.5rem 0;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 
       .btn-cantidad {
         background-color: $rosa-primary;
@@ -2015,106 +2018,114 @@ $blanco-ofi: #ffffff;
 
 
 ::ng-deep .modal-registro-cliente {
-    .p-dialog-header {
-        background: linear-gradient(135deg, #ffffff 0%, #764ba2 100%);
-        color: white;
-        padding: 1.5rem;
+  .p-dialog-header {
+    background: linear-gradient(135deg, #ffffff 0%, #764ba2 100%);
+    color: white;
+    padding: 1.5rem;
 
-        .p-dialog-title {
-            font-weight: 600;
-            font-size: 1.25rem;
-        }
-
-        .p-dialog-header-icon {
-            color: white;
-
-            &:hover {
-                background-color: rgba(255, 255, 255, 0.1);
-            }
-        }
+    .p-dialog-title {
+      font-weight: 600;
+      font-size: 1.25rem;
     }
 
-    .p-dialog-content {
-        padding: 2rem;
-        background: #f8f9fa;
+    .p-dialog-header-icon {
+      color: white;
+
+      &:hover {
+        background-color: rgba(255, 255, 255, 0.1);
+      }
     }
+  }
+
+  .p-dialog-content {
+    padding: 2rem;
+    background: #f8f9fa;
+  }
 }
 
 .contenedor-formulario {
-    padding: 15px 0;
+  padding: 15px 0;
 
-    .campo-formulario {
-        margin-bottom: 1.5rem;
+  .campo-formulario {
+    margin-bottom: 1.5rem;
 
-        .label-campo {
-            display: block;
-            margin-bottom: 0.5rem;
-            font-weight: 500;
-            color: #495057;
-            font-size: 0.95rem;
+    .label-campo {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 500;
+      color: #495057;
+      font-size: 0.95rem;
 
-            .obligatorio {
-                color: #dc3545;
-                margin-left: 2px;
-            }
-        }
-
-        .mensaje-error {
-            display: block;
-            color: #dc3545;
-            margin-top: 0.25rem;
-            font-size: 0.875rem;
-        }
+      .obligatorio {
+        color: #dc3545;
+        margin-left: 2px;
+      }
     }
 
-    .botones-accion {
-        display: flex;
-        justify-content: flex-end;
-        gap: 1rem;
-        margin-top: 2rem;
-        padding-top: 1.5rem;
-        border-top: 1px solid #dee2e6;
+    .mensaje-error {
+      display: block;
+      color: #dc3545;
+      margin-top: 0.25rem;
+      font-size: 0.875rem;
     }
+  }
+
+  .botones-accion {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid #dee2e6;
+  }
 }
 
 // Responsive
 @media (max-width: 576px) {
-    ::ng-deep .modal-registro-cliente {
-        .p-dialog-content {
-            padding: 1rem;
-        }
+  ::ng-deep .modal-registro-cliente {
+    .p-dialog-content {
+      padding: 1rem;
     }
+  }
 
-    .contenedor-formulario {
-        .botones-accion {
-            flex-direction: column-reverse;
+  .contenedor-formulario {
+    .botones-accion {
+      flex-direction: column-reverse;
 
-            p-button {
-                width: 100%;
+      p-button {
+        width: 100%;
 
-                ::ng-deep button {
-                    width: 100%;
-                }
-            }
+        ::ng-deep button {
+          width: 100%;
         }
+      }
     }
+  }
 }
 
 .autores {
-    font-size: 0.85rem;
-    //opacity: 0.8;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 4px;
+  font-size: 0.85rem;
+  //opacity: 0.8;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
 }
 
 .corazon {
-    color: #ffffff; /* puedes usar tu rosa principal */
-    animation: latido 1.5s infinite;
+  color: #ffffff;
+  /* puedes usar tu rosa principal */
+  animation: latido 1.5s infinite;
 }
 
 @keyframes latido {
-    0%, 100% { transform: scale(1); }
-    50% { transform: scale(1.2); }
+
+  0%,
+  100% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.2);
+  }
 }

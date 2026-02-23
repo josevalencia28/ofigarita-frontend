@@ -1,1 +1,161 @@
-<p>ingreso-producto works!</p>
+<div class="card">
+    <p-toast position="top-right"></p-toast>
+    <p-confirmDialog></p-confirmDialog>
+    <p-table #dt [value]="productos" dataKey="id_producto" [loading]="loading" showGridlines
+        [globalFilterFields]="['nombre_producto', 'id_producto', 'precio_venta', 'stock']" [paginator]="true"
+        [rows]="10" [rowsPerPageOptions]="[5, 10, 20]">
+
+        <ng-template pTemplate="caption">
+            <div class="flex flex-wrap justify-between items-center gap-4">
+                <span class="text-xl font-bold text-gray-700">Gestión de Productos</span>
+                <p-iconField iconPosition="left" class="flex-1 max-w-md">
+                    <p-inputicon>
+                        <i class="pi pi-search"></i>
+                    </p-inputicon>
+                    <input pInputText type="text" (input)="dt.filterGlobal($any($event.target).value, 'contains')"
+                        class="w-full" placeholder="Buscar producto" />
+                </p-iconField>
+                <p-button label="Crear Producto" icon="pi pi-plus" styleClass="p-button-success-custom"
+                    (onClick)="abrirModalCrear()" />
+            </div>
+        </ng-template>
+
+
+
+        <ng-template pTemplate="header">
+            <tr>
+                <th pSortableColumn="id_producto" style="width: 10%">
+                    Codigo Producto <p-sortIcon field="id_producto"></p-sortIcon>
+                </th>
+                <th pSortableColumn="nombre_producto" style="width: 25%">
+                    Nombre <p-sortIcon field="nombre_producto"></p-sortIcon>
+                </th>
+                <th pSortableColumn="precio_venta" style="width: 15%">
+                    Precio <p-sortIcon field="precio_venta"></p-sortIcon>
+                </th>
+                <th pSortableColumn="stock" style="width: 10%">
+                    Stock <p-sortIcon field="stock"></p-sortIcon>
+                </th>
+                <th pSortableColumn="egreso" style="width: 10%">
+                    Egreso <p-sortIcon field="egreso"></p-sortIcon>
+                </th>
+                <th pSortableColumn="estado" style="width: 10%">
+                    Estado <p-sortIcon field="estado"></p-sortIcon>
+                </th>
+                <th style="width: 5%">Acciones</th>
+            </tr>
+        </ng-template>
+
+        <ng-template pTemplate="body" let-producto>
+            <tr>
+                <td>{{ producto.id_producto }}</td>
+                <td>{{ producto.nombre_producto }}</td>
+                <td>{{ producto.precio_venta | currency:'COP':'symbol-narrow':'1.0-0' }}</td>
+                <td>
+                    {{producto.stock}}
+                </td>
+                <td>{{ producto.egreso }}</td>
+                <td>
+                    <p-tag [value]="producto.estado ? 'Activo' : 'Inactivo'"
+                        [severity]="producto.estado ? 'success' : 'danger'">
+                    </p-tag>
+                </td>
+                <td>
+                    <div class="flex gap-2">
+                        <p-button icon="pi pi-pencil" [rounded]="true" [text]="true" severity="info"
+                            (onClick)="abrirModalEditar(producto)">
+                        </p-button>
+                        <p-button icon="pi pi-trash" [rounded]="true" [text]="true" severity="danger"
+                            (onClick)="eliminarProducto(producto)">
+                        </p-button>
+                    </div>
+                </td>
+            </tr>
+        </ng-template>
+
+        <ng-template pTemplate="emptymessage">
+            <tr>
+                <td colspan="8" class="text-center">No se encontraron productos.</td>
+            </tr>
+        </ng-template>
+    </p-table>
+</div>
+
+<p-dialog [(visible)]="mostrarModalProducto" [modal]="true" [draggable]="false" [resizable]="false" [closable]="true"
+    styleClass="crear-producto">
+    <ng-template pTemplate="header">
+        <div class="flex items-center gap-2">
+            <span class="text-xl font-bold">Crear Nuevo Producto</span>
+        </div>
+    </ng-template>
+
+    <ng-template pTemplate="content">
+        <div class="flex flex-col gap-4 p-2">
+            <div>
+                <label class="block text-sm font-medium mb-2">Nombre del Producto</label>
+                <input pInputText [(ngModel)]="nombreProducto" class="w-full"
+                    placeholder="Ingresar Nombre del Producto" />
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium mb-2">Precio de Venta</label>
+                <p-inputNumber [(ngModel)]="precioVenta" [min]="0" [mode]="'currency'" currency="COP" locale="es-CO"
+                    class="w-full" />
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium mb-2">Imagen</label>
+                <input pInputText [(ngModel)]="img" class="w-full" placeholder="Ingresar Imagen" />
+            </div>
+        </div>
+    </ng-template>
+
+    <ng-template pTemplate="footer">
+        <div class="flex justify-end gap-2">
+            <p-button label="Cancelar" severity="secondary" (onClick)="cerrarModal()" />
+            <p-button label="Crear Producto" (onClick)="crearProducto()" />
+        </div>
+    </ng-template>
+</p-dialog>
+
+<p-dialog [(visible)]="mostrarModalEditar" [modal]="true" [draggable]="false" [resizable]="false" [closable]="true">
+
+    <ng-template pTemplate="header">
+        <span class="text-xl font-bold">Editar Producto</span>
+    </ng-template>
+
+    <ng-template pTemplate="content">
+        <div class="flex flex-col gap-4 p-2">
+
+            <div>
+                <label class="block text-sm font-medium mb-2">Nombre del Producto</label>
+                <input pInputText [(ngModel)]="editNombre" class="w-full" placeholder="Nombre del producto" />
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium mb-2">Precio de Venta</label>
+                <p-inputNumber [(ngModel)]="editPrecio" [min]="0" [mode]="'currency'" currency="COP" locale="es-CO"
+                    class="w-full" />
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium mb-2">Stock</label>
+                <p-inputNumber [(ngModel)]="editStock" [min]="0" class="w-full" />
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium mb-2">Imagen</label>
+                <input pInputText [(ngModel)]="editImg" class="w-full" placeholder="Nombre de la imagen" />
+            </div>
+
+        </div>
+    </ng-template>
+
+    <ng-template pTemplate="footer">
+        <div class="flex justify-end gap-2">
+            <p-button label="Cancelar" severity="secondary" (onClick)="cerrarModalEditar()" />
+            <p-button label="Actualizar Producto" (onClick)="actualizarProducto()" />
+        </div>
+    </ng-template>
+
+</p-dialog>

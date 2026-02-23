@@ -20,7 +20,7 @@ import { ConfirmDialog } from "primeng/confirmdialog";
 @Component({
     selector: 'app-topbar',
     standalone: true,
-    imports: [RouterModule, CommonModule, StyleClassModule, Configurator, Menu, Toast, Dialog, ReactiveFormsModule, Button, Password, ConfirmDialog],
+    imports: [RouterModule, CommonModule, StyleClassModule, Menu, Toast, Dialog, ReactiveFormsModule, Button, Password, ConfirmDialog],
     templateUrl: './topbar.html',
     providers: [MessageService, ConfirmationService],
     styleUrl: './topbar.scss'

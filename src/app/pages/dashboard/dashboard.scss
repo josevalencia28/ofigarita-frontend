@@ -1,6 +1,6 @@
 .ventas-container {
     padding: 1.5rem;
-    max-width: 1400px; // Aumentado para acomodar dos cards
+    max-width: 1400px;
     margin: 0 auto;
 }
 
@@ -9,16 +9,20 @@
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 1.5rem;
+    margin-bottom: 1.5rem;
 }
 
 .ventas-card {
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     border-radius: 12px;
-    height: 100%;
+}
+
+.annual-card {
+    background: linear-gradient(to bottom, #ffffff 0%, #f9fafb 100%);
 }
 
 .card-header {
-    margin-bottom: 1.5rem;
+    margin-bottom: 1rem;
 }
 
 .header-title {
@@ -41,8 +45,14 @@
     background: #DBEAFE;
 }
 
+/* Icono para gráfico de barras */
+.pi-chart-bar.header-icon {
+    color: #8B5CF6;
+    background: #EDE9FE;
+}
+
 .title-text {
-    font-size: 1.25rem;
+    font-size: 1.125rem;
     font-weight: 600;
     color: #1F2937;
 }
@@ -50,13 +60,13 @@
 /* Metrics Grid */
 .metrics-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    grid-template-columns: repeat(3, 1fr);
     gap: 1rem;
-    margin-bottom: 2rem;
+    margin-bottom: 1.5rem;
 }
 
 .metric-card {
-    padding: 1.25rem;
+    padding: 1rem;
     background: #F9FAFB;
     border-radius: 10px;
     border-left: 4px solid #10B981;
@@ -81,7 +91,7 @@
 }
 
 .metric-label {
-    font-size: 0.875rem;
+    font-size: 0.75rem;
     color: #6B7280;
     font-weight: 500;
     margin-bottom: 0.5rem;
@@ -90,24 +100,28 @@
 }
 
 .metric-value {
-    font-size: 1.75rem;
+    font-size: 1.5rem;
     font-weight: 700;
     color: #1F2937;
 }
 
 /* Chart Section */
 .chart-title {
-    font-size: 1.125rem;
+    font-size: 0.95rem;
     font-weight: 600;
     color: #1F2937;
     text-align: center;
-    margin-bottom: 1.5rem;
-    padding-bottom: 0.75rem;
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
     border-bottom: 2px solid #E5E7EB;
 }
 
 .chart-container {
-    padding: 1rem 0;
+    padding: 0.5rem 0;
+}
+
+.annual-chart {
+    padding: 1rem;
 }
 
 /* Responsive Design */
@@ -133,17 +147,32 @@
     }
 
     .title-text {
-        font-size: 1.125rem;
+        font-size: 1rem;
     }
 
     .chart-container {
         overflow-x: auto;
     }
+
+    .annual-chart {
+        padding: 1rem 0.5rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .title-text {
+        font-size: 1rem;
+    }
+
+    .header-icon {
+        font-size: 1.25rem;
+        padding: 0.4rem;
+    }
 }
 
 /* PrimeNG Card Override */
 ::ng-deep .ventas-card .p-card-body {
-    padding: 1.5rem;
+    padding: 1.25rem;
 }
 
 ::ng-deep .ventas-card .p-card-content {
@@ -154,4 +183,9 @@
 ::ng-deep .chart-container canvas {
     max-width: 100%;
     height: auto !important;
+}
+
+/* Estilo específico para el gráfico anual */
+::ng-deep .annual-chart .p-chart {
+    width: 100%;
 }

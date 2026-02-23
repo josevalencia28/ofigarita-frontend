@@ -1,5 +1,6 @@
+<!-- Primera fila: Top Clientes y Ventas Totales -->
 <div class="dashboard-grid">
-    <!-- Card de Top Clientes (Izquierda) -->
+    <!-- Card de Top Clientes (Izquierda Superior) -->
     <p-card class="ventas-card">
         <div class="card-header">
             <div class="header-title">
@@ -7,16 +8,16 @@
             </div>
         </div>
 
-        <div class="chart-title">Resumen Clientes</div>
+        <div class="chart-title">Resumen de Clientes</div>
 
         <div class="chart-container">
             <p-chart type="bar" [data]="clientesChartData" [options]="clientesChartOptions"
-                [style]="{'height': '400px'}">
+                [style]="{'height': '280px'}">
             </p-chart>
         </div>
     </p-card>
 
-    <!-- Card de Ventas Totales (Derecha) -->
+    <!-- Card de Ventas Totales (Derecha Superior) -->
     <p-card class="ventas-card">
         <div class="card-header">
             <div class="header-title">
@@ -44,7 +45,42 @@
         <div class="chart-title">Resumen de Ingresos</div>
 
         <div class="chart-container">
-            <p-chart type="bar" [data]="chartData" [options]="chartOptions" [style]="{'height': '350px'}">
+            <p-chart type="bar" [data]="chartData" [options]="chartOptions" [style]="{'height': '280px'}">
+            </p-chart>
+        </div>
+    </p-card>
+</div>
+
+<!-- Segunda fila: Productos Más Vendidos y Total Anual -->
+<div class="dashboard-grid">
+    <!-- Card de Productos Más Vendidos (Izquierda Inferior) -->
+    <p-card class="ventas-card">
+        <div class="card-header">
+            <div class="header-title">
+                <span class="title-text">Productos Más Vendidos del Mes</span>
+            </div>
+        </div>
+
+        <div class="chart-title">Top 5 Productos</div>
+
+        <div class="chart-container">
+            <p-chart type="bar" [data]="productosChartData" [options]="productosChartOptions"
+                [style]="{'height': '280px'}">
+            </p-chart>
+        </div>
+    </p-card>
+
+    <!-- Card de Total por Años y Meses (Derecha Inferior) -->
+    <p-card class="ventas-card annual-card">
+        <div class="card-header">
+            <div class="header-title">
+                <span class="title-text">Total por Años y Meses</span>
+            </div>
+        </div>
+
+        <div class="chart-container annual-chart">
+            <p-chart type="bar" [data]="ventasAnualesChartData" [options]="ventasAnualesChartOptions"
+                [style]="{'height': '280px'}">
             </p-chart>
         </div>
     </p-card>

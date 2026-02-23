@@ -26,4 +26,12 @@ export class AnaliticaService {
     getUltimasCincoVentas(): Observable<any> {
         return this.http.get(`${this.URL}/getUltimasCincoVentas`);
     }
+
+    getVentasAnuales(): Observable<any> {
+        return this.http.get(`${this.URL}/getVentasTotalMesesAnos`);
+    }
+
+    getProductosMasVendidosMes(): Observable<any> {
+        return this.http.get(`${this.URL}/getProductosMasVendidosMes`);
+    }
 }
