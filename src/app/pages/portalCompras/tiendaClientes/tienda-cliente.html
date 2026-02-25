@@ -21,7 +21,7 @@
             <i class="pi pi-times"></i>
         </button>
 
-        <div class="logo-container" >
+        <div class="logo-container">
             <a href="index.html">
                 <img src="/logos/logoOfigarita.png" alt="La Ofi Garita" class="logo">
             </a>
@@ -153,7 +153,8 @@
         </div>
 
         <div class="carrito-vacio" *ngIf="carrito.length === 0">
-            <img class="w-25 max-w-full mx-auto" src="https://res.cloudinary.com/drnhhicpk/image/upload/v1769000913/canasta_vacia_qbriv3.png">
+            <img class="w-25 max-w-full mx-auto"
+                src="https://res.cloudinary.com/drnhhicpk/image/upload/v1769000913/canasta_vacia_qbriv3.png">
             <p>Tu carrito está vacío</p>
         </div>
 
@@ -280,15 +281,8 @@
     </div>
 </p-dialog>
 
-<p-dialog
-    [(visible)]="mostrarModalEstadoCuenta"
-    [modal]="true"
-    [draggable]="false"
-    [resizable]="false"
-    [closable]="true"
-     header="ESTADO CUENTA"
-     [style]="{ width: '50vw' }"
-    (onHide)="cerrarModalEstadoCuenta()">
+<p-dialog [(visible)]="mostrarModalEstadoCuenta" [modal]="true" [draggable]="false" [resizable]="false"
+    [closable]="true" header="ESTADO CUENTA" [style]="{ width: '50vw' }" (onHide)="cerrarModalEstadoCuenta()">
 
     <!-- <ng-template pTemplate="header">
         <h3>
@@ -306,21 +300,13 @@
                     Número de Cédula
                 </label>
                 <div class="input-wrapper-estado">
-                    <input
-                        id="cedulaEstado"
-                        type="text"
-                        pInputText
-                        [(ngModel)]="cedulaEstadoCuenta"
-                        placeholder="Ingresa tu número de   cédula"
-                        (keyup.enter)="consultarEstadoCuenta()"
-                        [disabled]="consultandoEstado"
-                        maxlength="10">
+                    <input id="cedulaEstado" type="text" pInputText [(ngModel)]="cedulaEstadoCuenta"
+                        placeholder="Ingresa tu número de   cédula" (keyup.enter)="consultarEstadoCuenta()"
+                        [disabled]="consultandoEstado" maxlength="10">
                 </div>
             </div>
 
-            <button
-                class="btn-consultar-estado"
-                (click)="consultarEstadoCuenta()"
+            <button class="btn-consultar-estado" (click)="consultarEstadoCuenta()"
                 [disabled]="consultandoEstado || !cedulaEstadoCuenta">
                 <i class="pi" [ngClass]="consultandoEstado ? 'pi-spin pi-spinner' : 'pi-search'"></i>
                 {{ consultandoEstado ? 'Consultando...' : 'Consultar' }}
@@ -414,15 +400,8 @@
 
 
 <!-- Modal de Registro de Cliente -->
-<p-dialog
-    [(visible)]="mostrarModalRegistro"
-    [modal]="true"
-    [closable]="true"
-    [draggable]="false"
-    [resizable]="false"
-    header="Registrar Nuevo Cliente"
-    [style]="{width: '30rem'}"
-    (onHide)="cerrarModalRegistro()">
+<p-dialog [(visible)]="mostrarModalRegistro" [modal]="true" [closable]="true" [draggable]="false" [resizable]="false"
+    header="Registrar Nuevo Cliente" [style]="{width: '30rem'}" (onHide)="cerrarModalRegistro()">
 
     <div class="contenedor-formulario">
         <form [formGroup]="form" (ngSubmit)="registrarCliente()">
@@ -432,17 +411,11 @@
                 <label for="tipo_identificacion" class="label-campo">
                     Tipo de Identificación <span class="obligatorio">*</span>
                 </label>
-                <p-select
-                    id="tipo_identificacion"
-                    formControlName="tipo_identificacion"
-                    [options]="tiposIdentificacion"
-                    optionLabel="label"
-                    optionValue="value"
-                    placeholder="Seleccione tipo de documento"
+                <p-select id="tipo_identificacion" formControlName="tipo_identificacion" [options]="tiposIdentificacion"
+                    optionLabel="label" optionValue="value" placeholder="Seleccione tipo de documento"
                     styleClass="w-full">
                 </p-select>
-                <small class="mensaje-error"
-                    *ngIf="form.get('tipo_identificacion')?.invalid &&
+                <small class="mensaje-error" *ngIf="form.get('tipo_identificacion')?.invalid &&
                            form.get('tipo_identificacion')?.touched">
                     El tipo de identificación es requerido
                 </small>
@@ -453,16 +426,9 @@
                 <label for="numero_id" class="label-campo">
                     Número de Identificación <span class="obligatorio">*</span>
                 </label>
-                <input
-                    pInputText
-                    id="numero_id"
-                    type="text"
-                    formControlName="numero_id"
-                    placeholder="Ingrese número de documento"
-                    class="w-full"
-                    maxlength="15" />
-                <small class="mensaje-error"
-                    *ngIf="form.get('numero_id')?.invalid &&
+                <input pInputText id="numero_id" type="text" formControlName="numero_id"
+                    placeholder="Ingrese número de documento" class="w-full" maxlength="15" />
+                <small class="mensaje-error" *ngIf="form.get('numero_id')?.invalid &&
                            form.get('numero_id')?.touched">
                     <span *ngIf="form.get('numero_id')?.errors?.['required']">
                         El número de identificación es requerido
@@ -481,16 +447,9 @@
                 <label for="nombres" class="label-campo">
                     Nombres <span class="obligatorio">*</span>
                 </label>
-                <input
-                    pInputText
-                    id="nombres"
-                    type="text"
-                    formControlName="nombres"
-                    placeholder="Ingrese nombres completos"
-                    class="w-full"
-                    maxlength="100" />
-                <small class="mensaje-error"
-                    *ngIf="form.get('nombres')?.invalid &&
+                <input pInputText id="nombres" type="text" formControlName="nombres"
+                    placeholder="Ingrese nombres completos" class="w-full" maxlength="100" />
+                <small class="mensaje-error" *ngIf="form.get('nombres')?.invalid &&
                            form.get('nombres')?.touched">
                     <span *ngIf="form.get('nombres')?.errors?.['required']">
                         Los nombres son requeridos
@@ -506,16 +465,9 @@
                 <label for="apellidos" class="label-campo">
                     Apellidos <span class="obligatorio">*</span>
                 </label>
-                <input
-                    pInputText
-                    id="apellidos"
-                    type="text"
-                    formControlName="apellidos"
-                    placeholder="Ingrese apellidos completos"
-                    class="w-full"
-                    maxlength="100" />
-                <small class="mensaje-error"
-                    *ngIf="form.get('apellidos')?.invalid &&
+                <input pInputText id="apellidos" type="text" formControlName="apellidos"
+                    placeholder="Ingrese apellidos completos" class="w-full" maxlength="100" />
+                <small class="mensaje-error" *ngIf="form.get('apellidos')?.invalid &&
                            form.get('apellidos')?.touched">
                     <span *ngIf="form.get('apellidos')?.errors?.['required']">
                         Los apellidos son requeridos
@@ -531,16 +483,9 @@
                 <label for="correo" class="label-campo">
                     Correo Electrónico <span class="obligatorio">*</span>
                 </label>
-                <input
-                    pInputText
-                    id="correo"
-                    type="email"
-                    formControlName="correo"
-                    placeholder="correo@ejemplo.com"
-                    class="w-full"
-                    maxlength="100" />
-                <small class="mensaje-error"
-                    *ngIf="form.get('correo')?.invalid &&
+                <input pInputText id="correo" type="email" formControlName="correo" placeholder="correo@ejemplo.com"
+                    class="w-full" maxlength="100" />
+                <small class="mensaje-error" *ngIf="form.get('correo')?.invalid &&
                            form.get('correo')?.touched">
                     <span *ngIf="form.get('correo')?.errors?.['required']">
                         El correo electrónico es requerido
@@ -556,16 +501,9 @@
                 <label for="telefono" class="label-campo">
                     Teléfono <span class="obligatorio">*</span>
                 </label>
-                <input
-                    pInputText
-                    id="telefono"
-                    type="tel"
-                    formControlName="telefono"
-                    placeholder="Ej: 3001234567"
-                    class="w-full"
-                    maxlength="10" />
-                <small class="mensaje-error"
-                    *ngIf="form.get('telefono')?.invalid &&
+                <input pInputText id="telefono" type="tel" formControlName="telefono" placeholder="Ej: 3001234567"
+                    class="w-full" maxlength="10" />
+                <small class="mensaje-error" *ngIf="form.get('telefono')?.invalid &&
                            form.get('telefono')?.touched">
                     <span *ngIf="form.get('telefono')?.errors?.['required']">
                         El teléfono es requerido
@@ -581,22 +519,12 @@
 
             <!-- Botones de Acción -->
             <div class="botones-accion">
-                <p-button
-                    label="Cancelar"
-                    icon="pi pi-times"
-                    severity="secondary"
-                    [outlined]="true"
-                    type="button"
+                <p-button label="Cancelar" icon="pi pi-times" severity="secondary" [outlined]="true" type="button"
                     (onClick)="cerrarModalRegistro()">
                 </p-button>
 
-                <p-button
-                    label="Registrar Cliente"
-                    icon="pi pi-check"
-                    severity="success"
-                    type="submit"
-                    [disabled]="form.invalid || guardando"
-                    [loading]="guardando">
+                <p-button label="Registrar Cliente" icon="pi pi-check" severity="success" type="submit"
+                    [disabled]="form.invalid || guardando" [loading]="guardando">
                 </p-button>
             </div>
 
@@ -605,15 +533,8 @@
 </p-dialog>
 
 
-<p-dialog
-    [(visible)]="mostrarModalRegistroCliente"
-    [modal]="true"
-    [closable]="true"
-    [draggable]="false"
-    [resizable]="false"
-    header="Registrar Nuevos Cliente"
-    [style]="{width: '30rem'}"
-    (onHide)="cerrarModalRegistro()">
+<p-dialog [(visible)]="mostrarModalRegistroCliente" [modal]="true" [closable]="true" [draggable]="false"
+    [resizable]="false" header="Registrar Nuevos Cliente" [style]="{width: '30rem'}" (onHide)="cerrarModalRegistro()">
 
     <div class="contenedor-formulario">
         <form [formGroup]="form" (ngSubmit)="registrarClienteBoton()">
@@ -623,17 +544,11 @@
                 <label for="tipo_identificacion" class="label-campo">
                     Tipo de Identificación <span class="obligatorio">*</span>
                 </label>
-                <p-select
-                    id="tipo_identificacion"
-                    formControlName="tipo_identificacion"
-                    [options]="tiposIdentificacion"
-                    optionLabel="label"
-                    optionValue="value"
-                    placeholder="Seleccione tipo de documento"
+                <p-select id="tipo_identificacion" formControlName="tipo_identificacion" [options]="tiposIdentificacion"
+                    optionLabel="label" optionValue="value" placeholder="Seleccione tipo de documento"
                     styleClass="w-full">
                 </p-select>
-                <small class="mensaje-error"
-                    *ngIf="form.get('tipo_identificacion')?.invalid &&
+                <small class="mensaje-error" *ngIf="form.get('tipo_identificacion')?.invalid &&
                            form.get('tipo_identificacion')?.touched">
                     El tipo de identificación es requerido
                 </small>
@@ -644,16 +559,9 @@
                 <label for="numero_id" class="label-campo">
                     Número de Identificación <span class="obligatorio">*</span>
                 </label>
-                <input
-                    pInputText
-                    id="numero_id"
-                    type="text"
-                    formControlName="numero_id"
-                    placeholder="Ingrese número de documento"
-                    class="w-full"
-                    maxlength="15" />
-                <small class="mensaje-error"
-                    *ngIf="form.get('numero_id')?.invalid &&
+                <input pInputText id="numero_id" type="text" formControlName="numero_id"
+                    placeholder="Ingrese número de documento" class="w-full" maxlength="15" />
+                <small class="mensaje-error" *ngIf="form.get('numero_id')?.invalid &&
                            form.get('numero_id')?.touched">
                     <span *ngIf="form.get('numero_id')?.errors?.['required']">
                         El número de identificación es requerido
@@ -672,16 +580,9 @@
                 <label for="nombres" class="label-campo">
                     Nombres <span class="obligatorio">*</span>
                 </label>
-                <input
-                    pInputText
-                    id="nombres"
-                    type="text"
-                    formControlName="nombres"
-                    placeholder="Ingrese nombres completos"
-                    class="w-full"
-                    maxlength="100" />
-                <small class="mensaje-error"
-                    *ngIf="form.get('nombres')?.invalid &&
+                <input pInputText id="nombres" type="text" formControlName="nombres"
+                    placeholder="Ingrese nombres completos" class="w-full" maxlength="100" />
+                <small class="mensaje-error" *ngIf="form.get('nombres')?.invalid &&
                            form.get('nombres')?.touched">
                     <span *ngIf="form.get('nombres')?.errors?.['required']">
                         Los nombres son requeridos
@@ -697,16 +598,9 @@
                 <label for="apellidos" class="label-campo">
                     Apellidos <span class="obligatorio">*</span>
                 </label>
-                <input
-                    pInputText
-                    id="apellidos"
-                    type="text"
-                    formControlName="apellidos"
-                    placeholder="Ingrese apellidos completos"
-                    class="w-full"
-                    maxlength="100" />
-                <small class="mensaje-error"
-                    *ngIf="form.get('apellidos')?.invalid &&
+                <input pInputText id="apellidos" type="text" formControlName="apellidos"
+                    placeholder="Ingrese apellidos completos" class="w-full" maxlength="100" />
+                <small class="mensaje-error" *ngIf="form.get('apellidos')?.invalid &&
                            form.get('apellidos')?.touched">
                     <span *ngIf="form.get('apellidos')?.errors?.['required']">
                         Los apellidos son requeridos
@@ -722,16 +616,9 @@
                 <label for="correo" class="label-campo">
                     Correo Electrónico <span class="obligatorio">*</span>
                 </label>
-                <input
-                    pInputText
-                    id="correo"
-                    type="email"
-                    formControlName="correo"
-                    placeholder="correo@ejemplo.com"
-                    class="w-full"
-                    maxlength="100" />
-                <small class="mensaje-error"
-                    *ngIf="form.get('correo')?.invalid &&
+                <input pInputText id="correo" type="email" formControlName="correo" placeholder="correo@ejemplo.com"
+                    class="w-full" maxlength="100" />
+                <small class="mensaje-error" *ngIf="form.get('correo')?.invalid &&
                            form.get('correo')?.touched">
                     <span *ngIf="form.get('correo')?.errors?.['required']">
                         El correo electrónico es requerido
@@ -747,16 +634,9 @@
                 <label for="telefono" class="label-campo">
                     Teléfono <span class="obligatorio">*</span>
                 </label>
-                <input
-                    pInputText
-                    id="telefono"
-                    type="tel"
-                    formControlName="telefono"
-                    placeholder="Ej: 3001234567"
-                    class="w-full"
-                    maxlength="10" />
-                <small class="mensaje-error"
-                    *ngIf="form.get('telefono')?.invalid &&
+                <input pInputText id="telefono" type="tel" formControlName="telefono" placeholder="Ej: 3001234567"
+                    class="w-full" maxlength="10" />
+                <small class="mensaje-error" *ngIf="form.get('telefono')?.invalid &&
                            form.get('telefono')?.touched">
                     <span *ngIf="form.get('telefono')?.errors?.['required']">
                         El teléfono es requerido
@@ -772,22 +652,12 @@
 
             <!-- Botones de Acción -->
             <div class="botones-accion">
-                <p-button
-                    label="Cancelar"
-                    icon="pi pi-times"
-                    severity="secondary"
-                    [outlined]="true"
-                    type="button"
-                    (onClick)="cerrarModalRegistro()">
+                <p-button label="Cancelar" icon="pi pi-times" severity="secondary" [outlined]="true" type="button"
+                    (click)="cerrarModalRegistroCliente()">
                 </p-button>
 
-                <p-button
-                    label="Registrar Cliente"
-                    icon="pi pi-check"
-                    severity="success"
-                    type="submit"
-                    [disabled]="form.invalid || guardando"
-                    [loading]="guardando">
+                <p-button label="Registrar Cliente" icon="pi pi-check" severity="success" type="submit"
+                    [disabled]="form.invalid || guardando" [loading]="guardando">
                 </p-button>
             </div>
 

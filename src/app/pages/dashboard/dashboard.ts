@@ -4,12 +4,18 @@ import { CardModule } from 'primeng/card';
 import { ChartModule } from 'primeng/chart';
 import { HttpClient } from '@angular/common/http';
 import { AnaliticaService } from '@/pages/service/analitica.service';
+import { MessageService } from 'primeng/api';
+import { Toast } from "primeng/toast";
+
+
 
 @Component({
     selector: 'app-dashboard',
-    imports: [CommonModule, CardModule, ChartModule],
+    imports: [CommonModule, CardModule, ChartModule, Toast],
     templateUrl: './dashboard.html',
-    styleUrl: './dashboard.scss'
+    styleUrl: './dashboard.scss',
+    providers: [MessageService],
+
 })
 export class Dashboard implements OnInit {
     totalHoy: number = 0;
@@ -30,7 +36,7 @@ export class Dashboard implements OnInit {
     productosChartData: any;
     productosChartOptions: any;
 
-    constructor(private http: HttpClient, private analiticaService: AnaliticaService) { }
+    constructor(private http: HttpClient, private analiticaService: AnaliticaService, private messageService: MessageService) { }
 
     ngOnInit() {
         // Inicializar todas las opciones de gráficos primero
@@ -63,8 +69,6 @@ export class Dashboard implements OnInit {
     getTopProductos() {
         this.analiticaService.getProductosMasVendidosMes().subscribe({
             next: (response) => {
-                console.log('Respuesta productos:', response);
-
                 // El backend retorna directamente un array
                 if (Array.isArray(response) && response.length > 0) {
                     this.topProductos = response;
@@ -74,12 +78,10 @@ export class Dashboard implements OnInit {
                     this.topProductos = response.data;
                     this.updateProductosChartData();
                 } else {
-                    console.warn('No hay productos disponibles');
                     this.initializeEmptyProductosChart();
                 }
             },
             error: (error) => {
-                console.error('Error al cargar top productos:', error);
                 this.initializeEmptyProductosChart();
             }
         });

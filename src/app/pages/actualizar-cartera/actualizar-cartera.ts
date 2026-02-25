@@ -47,10 +47,9 @@ export class ActualizarCartera {
 
   getCarteraCliente(): void {
     this.carteraCliente = [];
+    this.messageService.clear();
     this.carteraClienteService.getUltimasVentas().subscribe({
       next: (carteraCliente: carteraClienteResponse) => {
-        console.log(carteraCliente);
-
         this.carteraCliente = carteraCliente.data.map((item: CarteraClienteData, index: number) => {
           const clienteData = item.cartera_json;
 
@@ -79,11 +78,9 @@ export class ActualizarCartera {
         });
 
         this.loading = false;
-        console.log('Cartera procesada:', this.carteraCliente);
       },
       error: (error: any) => {
         this.loading = false;
-        console.error(error);
         this.messageService.add({
           severity: 'error',
           summary: 'Error',
@@ -95,7 +92,7 @@ export class ActualizarCartera {
 
   actualizarPagoTotal(numero_id: number, tipo_pago: string): void {
     const tipoPagoNombre = tipo_pago === 'EF' ? 'EFECTIVO' : 'NEQUI';
-
+    this.messageService.clear();
     this.confirmationService.confirm({
       message: `¿Está seguro de actualizar TODAS las ventas a crédito de este cliente a ${tipoPagoNombre}?`,
       header: 'Confirmación de Pago Total',
@@ -108,8 +105,6 @@ export class ActualizarCartera {
         this.loading = true;
         this.carteraClienteService.actualizarPagoTotal(numero_id, tipo_pago).subscribe({
           next: (response: any) => {
-            console.log(response);
-
             if (response.p_estado === 1) {
               this.messageService.add({
                 severity: 'success',
@@ -144,11 +139,9 @@ export class ActualizarCartera {
   }
 
   actualizarTipoPago(id_venta: number, tipo_pago: string): void {
-    console.log(id_venta, tipo_pago);
-
+    this.messageService.clear();
     this.carteraClienteService.actualizarTipoPago(id_venta, tipo_pago).subscribe({
       next: (response: any) => {
-        console.log(response);
 
         if (response.p_estado === 1) {
           this.messageService.add({

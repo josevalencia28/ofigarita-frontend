@@ -96,6 +96,7 @@ export class IngresoCompra implements OnInit {
 
   getProductos(): void {
     this.loadingProductos = true;
+    this.messageService.clear();
     this.productoService.getProductos().subscribe({
       next: (response) => {
         if (response.p_estado === 1 && response.data?.length > 0) {
@@ -104,7 +105,6 @@ export class IngresoCompra implements OnInit {
         this.loadingProductos = false;
       },
       error: (err) => {
-        console.error('Error al cargar productos:', err);
         this.messageService.add({
           severity: 'error', summary: 'Error', detail: 'Error al cargar los productos'
         });
@@ -124,6 +124,7 @@ export class IngresoCompra implements OnInit {
 
   cargarCompras(): void {
     this.loading = true;
+    this.messageService.clear();
     this.ingresoCompraService.getIngresoCompra().subscribe({
       next: (response) => {
         this.compras = this.agruparPorIngreso(response.data);
@@ -230,6 +231,7 @@ export class IngresoCompra implements OnInit {
 
   guardarCompra(): void {
     if (!this.formValido()) return;
+    this.messageService.clear();
     this.guardando = true;
     this.ingresoCompraService.registrarCompra(this.nuevaCompra).subscribe({
       next: () => {
@@ -271,7 +273,6 @@ export class IngresoCompra implements OnInit {
   }
 
   eliminarCompra(): void {
-    console.log('Eliminar ingreso:', this.compraAEliminar?.id_ingreso);
     this.cerrarModalEliminar();
     this.cargarCompras();
   }

@@ -129,10 +129,6 @@ export class TiendaClienteComponent implements OnInit, AfterViewInit {
         { label: 'NIT', value: 'NIT' }
     ]
 
-    //       private fb = inject(FormBuilder);
-    //   private dialogRef = inject(DynamicDialogRef);
-    //   private config = inject(DynamicDialogConfig);
-
     constructor(
         private fb: FormBuilder,
 
@@ -179,7 +175,6 @@ export class TiendaClienteComponent implements OnInit, AfterViewInit {
     }
 
     ngAfterViewInit() {
-        // Esperar a que el DOM esté listo antes de agregar el listener
         setTimeout(() => {
             this.setupScrollListener();
         }, 0);
@@ -227,6 +222,7 @@ export class TiendaClienteComponent implements OnInit, AfterViewInit {
     }
     cargarProductos() {
         this.loading = true;
+        this.messageService.clear();
         this.tiendaClienteService.getProductos().subscribe({
             next: (response) => {
                 if (response.p_estado === 1) {
@@ -234,8 +230,8 @@ export class TiendaClienteComponent implements OnInit, AfterViewInit {
                 }
                 this.loading = false;
             },
+
             error: (error) => {
-                console.error('Error al cargar productos:', error);
                 this.messageService.add({
                     severity: 'error',
                     summary: 'Error',
@@ -268,6 +264,7 @@ export class TiendaClienteComponent implements OnInit, AfterViewInit {
         );
 
         if (itemExistente) {
+            this.messageService.clear();
             if (itemExistente.cantidad < producto.stock) {
                 itemExistente.cantidad++;
                 this.messageService.add({
@@ -302,6 +299,7 @@ export class TiendaClienteComponent implements OnInit, AfterViewInit {
     }
 
     aumentarCantidad(item: CarritoItem) {
+        this.messageService.clear();
         if (item.cantidad < item.producto.stock) {
             item.cantidad++;
             this.guardarCarritoLocalStorage();
@@ -323,6 +321,7 @@ export class TiendaClienteComponent implements OnInit, AfterViewInit {
     }
 
     eliminarDelCarrito(item: CarritoItem) {
+        this.messageService.clear();
         const index = this.carrito.indexOf(item);
         if (index > -1) {
             this.carrito.splice(index, 1);
@@ -347,6 +346,7 @@ export class TiendaClienteComponent implements OnInit, AfterViewInit {
     }
 
     finalizarCompra() {
+        this.messageService.clear();
         if (this.carrito.length === 0) {
             this.messageService.add({
                 severity: 'warn',
@@ -380,6 +380,7 @@ export class TiendaClienteComponent implements OnInit, AfterViewInit {
     }
 
     verificarClientePorCedula() {
+        this.messageService.clear();
         if (!this.cedula || this.cedula.trim().length === 0) {
             this.messageService.add({
                 severity: 'warn',
@@ -442,7 +443,6 @@ export class TiendaClienteComponent implements OnInit, AfterViewInit {
             },
             error: (error) => {
                 this.verificandoCliente = false;
-                console.error('Error al verificar cliente:', error);
                 this.messageService.add({
                     severity: 'error',
                     summary: 'Error',
@@ -471,7 +471,7 @@ export class TiendaClienteComponent implements OnInit, AfterViewInit {
             tipo_pago: this.tipoPago
         };
 
-
+        this.messageService.clear();
         this.tiendaClienteService.iniciarProcesoVentaEnviatoken(params).subscribe({
             next: (res) => {
                 this.enviandoToken = false;
@@ -494,7 +494,6 @@ export class TiendaClienteComponent implements OnInit, AfterViewInit {
             },
             error: (error) => {
                 this.enviandoToken = false;
-                console.error('Error al enviar token:', error);
                 this.messageService.add({
                     severity: 'error',
                     summary: 'Error',
@@ -506,6 +505,7 @@ export class TiendaClienteComponent implements OnInit, AfterViewInit {
     }
 
     confirmarCompraConToken() {
+        this.messageService.clear();
         if (!this.token || this.token.trim().length === 0) {
             this.messageService.add({
                 severity: 'warn',
@@ -556,7 +556,6 @@ export class TiendaClienteComponent implements OnInit, AfterViewInit {
             },
             error: (error) => {
                 this.procesandoCompra = false;
-                console.error('Error al confirmar compra:', error);
                 this.messageService.add({
                     severity: 'error',
                     summary: 'Error',
@@ -577,6 +576,7 @@ export class TiendaClienteComponent implements OnInit, AfterViewInit {
     }
 
     vaciarCarrito() {
+        this.messageService.clear();
         if (this.carrito.length === 0) return;
 
         this.carrito = [];
@@ -618,13 +618,13 @@ export class TiendaClienteComponent implements OnInit, AfterViewInit {
             try {
                 this.carrito = JSON.parse(carritoGuardado);
             } catch (error) {
-                console.error('Error al cargar carrito:', error);
                 this.carrito = [];
             }
         }
     }
 
     consultarEstadoCuenta() {
+        this.messageService.clear();
         if (!this.cedulaEstadoCuenta || this.cedulaEstadoCuenta.trim().length === 0) {
             this.messageService.add({
                 severity: 'warn',
@@ -640,6 +640,7 @@ export class TiendaClienteComponent implements OnInit, AfterViewInit {
         this.tiendaClienteService.estadoCuentaCliente(this.cedulaEstadoCuenta.trim()).subscribe({
             next: (response) => {
                 this.consultandoEstado = false;
+                this.messageService.clear();
                 if (response.p_estado === 1 && response.result && response.result.length > 0) {
                     this.estadoCuentaData = response.result[0].factura_json;
                     this.messageService.add({
@@ -657,10 +658,10 @@ export class TiendaClienteComponent implements OnInit, AfterViewInit {
                         life: 3000
                     });
                 }
+
             },
             error: (error) => {
                 this.consultandoEstado = false;
-                console.error('Error al consultar estado de cuenta:', error);
                 this.messageService.add({
                     severity: 'error',
                     summary: 'Error',
@@ -699,7 +700,13 @@ export class TiendaClienteComponent implements OnInit, AfterViewInit {
         this.form.reset();
     }
 
+    cerrarModalRegistroCliente() {
+        this.mostrarModalRegistroCliente = false;
+        this.form.reset();
+    }
+
     registrarCliente() {
+        this.messageService.clear();
         if (this.form.invalid) {
             Object.keys(this.form.controls).forEach(key => {
                 this.form.get(key)?.markAsTouched();
@@ -715,7 +722,6 @@ export class TiendaClienteComponent implements OnInit, AfterViewInit {
 
         this.guardando = true;
         const datosCliente = this.form.value;
-        console.log(datosCliente)
 
         this.tiendaClienteService.insertarCliente(datosCliente).subscribe({
             next: (response) => {
@@ -755,7 +761,6 @@ export class TiendaClienteComponent implements OnInit, AfterViewInit {
             },
             error: (error) => {
                 this.guardando = false;
-                console.error('Error al registrar cliente:', error);
                 this.messageService.add({
                     severity: 'error',
                     summary: 'Error',
@@ -768,6 +773,7 @@ export class TiendaClienteComponent implements OnInit, AfterViewInit {
 
 
     registrarClienteBoton() {
+        this.messageService.clear();
         if (this.form.invalid) {
             Object.keys(this.form.controls).forEach(key => {
                 this.form.get(key)?.markAsTouched();
@@ -783,7 +789,6 @@ export class TiendaClienteComponent implements OnInit, AfterViewInit {
 
         this.guardando = true;
         const datosCliente = this.form.value;
-        console.log(datosCliente)
 
         this.tiendaClienteService.insertarCliente(datosCliente).subscribe({
             next: (response) => {
@@ -818,7 +823,6 @@ export class TiendaClienteComponent implements OnInit, AfterViewInit {
             },
             error: (error) => {
                 this.guardando = false;
-                console.error('Error al registrar cliente:', error);
                 this.messageService.add({
                     severity: 'error',
                     summary: 'Error',

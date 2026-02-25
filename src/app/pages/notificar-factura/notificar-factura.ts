@@ -49,6 +49,7 @@ export class NotificarFactura {
 
   cargarClientes(): void {
     this.loading = true;
+    this.messageService.clear();
     this.notificarService.getClientesNotificar().subscribe({
       next: (response) => {
         if (response.p_estado === 1 && response.result) {
@@ -77,7 +78,7 @@ export class NotificarFactura {
 
   enviarNotificacionPuntual(cliente: ClienteFactura): void {
     const numero_id = cliente.factura_json.numero_id.toString();
-
+    this.messageService.clear();
     this.confirmationService.confirm({
       message: `¿Desea enviar la factura ${cliente.factura_json.nro_factura} a ${cliente.factura_json.nombre}?`,
       header: 'Confirmar Envío',
@@ -121,6 +122,7 @@ export class NotificarFactura {
   }
 
   enviarNotificacionMasiva(): void {
+    this.messageService.clear();
     this.confirmationService.confirm({
       message: `¿Desea enviar facturas a ${this.clientes.length} clientes?`,
       header: 'Confirmar Envío Masivo',

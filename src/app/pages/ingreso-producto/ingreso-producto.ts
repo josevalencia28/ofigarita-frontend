@@ -66,6 +66,7 @@ export class IngresoProducto implements OnInit {
   }
 
   getProductos() {
+    this.messageService.clear();
     this.loading = true;
     this.productoService.getProductos().subscribe({
       next: (response) => {
@@ -75,7 +76,6 @@ export class IngresoProducto implements OnInit {
         this.loading = false;
       },
       error: (error) => {
-        console.error('Error al cargar productos:', error);
         this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Error al cargar los productos' });
         this.loading = false;
       }
@@ -99,6 +99,7 @@ export class IngresoProducto implements OnInit {
   }
 
   crearProducto() {
+    this.messageService.clear();
     if (!this.nombreProducto.trim()) {
       this.messageService.add({ severity: 'warn', summary: 'Advertencia', detail: 'Debe ingresar el nombre del producto' });
       return;
@@ -150,6 +151,7 @@ export class IngresoProducto implements OnInit {
   }
 
   actualizarProducto() {
+    this.messageService.clear();
     if (!this.productoSeleccionado) return;
 
     if (!this.editNombre.trim()) {
@@ -189,6 +191,7 @@ export class IngresoProducto implements OnInit {
   }
 
   eliminarProducto(producto: Producto) {
+    this.messageService.clear();
     this.confirmationService.confirm({
       message: `¿Está seguro de eliminar el producto ${producto.nombre_producto}?`,
       header: 'Confirmar Eliminación',

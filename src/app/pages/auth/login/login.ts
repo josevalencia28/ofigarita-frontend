@@ -19,9 +19,9 @@ import { Toast } from "primeng/toast";
     providers: [MessageService],
 })
 export class Login {
-    user: string = 'jvalencia';
+    user: string = '';
 
-    pass: string = 'ClaveSegura123';
+    pass: string = '';
 
     checked: boolean = false;
 
@@ -34,7 +34,7 @@ export class Login {
     login(): void {
 
         if (!this.pass || !this.user) {
-            this.messageService.clear();
+            // this.messageService.clear();
             this.messageService.add({ severity: 'error', summary: 'Campos requeridos', detail: 'Verificar todos los campos' });
             this.checked = true;
 
@@ -45,15 +45,15 @@ export class Login {
             "username": this.user,
             "password": this.pass
         }
-        console.log(params);
         this.authService.login(params).pipe(tap(res => {
             if (res.p_estado === 0) {
-                this.messageService.clear();
                 this.messageService.add({ severity: 'error', summary: 'Inicio de sesión fallido', detail: 'Usuario y/o contraseña incorrectos' });
                 this.checked = true;
 
                 return;
             }
+
+            this.messageService.add({ severity: 'success', summary: 'Inicio de sesión exitoso', detail: 'Bienvenido' });
             this.authService.guardarUsuario(res.token);
             this.authService.guardarToken(res.token);
 
