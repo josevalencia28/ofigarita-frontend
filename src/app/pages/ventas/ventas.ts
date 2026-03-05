@@ -1,6 +1,6 @@
 
-import { Component } from '@angular/core';
-import { FacturaData, Venta, VentasResponse, VentasService } from '../service/ventas.service';
+import { Component, OnInit } from '@angular/core';
+import { Compra, FacturaData, VentaCliente, VentasResponse, VentasService } from '../service/ventas.service';
 import { TableModule } from 'primeng/table';
 import { CardModule } from 'primeng/card';
 import { ButtonModule } from 'primeng/button';
@@ -16,7 +16,7 @@ import { InputTextModule } from 'primeng/inputtext';
   templateUrl: './ventas.html',
   styleUrl: './ventas.scss'
 })
-export class Ventas {
+export class Ventas implements OnInit {
 
   loading: boolean = true;
   ventas: any[] = [];
@@ -35,7 +35,9 @@ export class Ventas {
         this.ventas = ventas.data.map((item: FacturaData, index: number) => ({
           ...item.factura_json,
           internalId: index,
-          listaProductos: item.factura_json.detalle ? item.factura_json.detalle.map(d => d.producto).join(' ') : ''
+          listaProductos: item.factura_json.compras
+            ? item.factura_json.compras.flatMap((c: Compra) => c.productos?.map(p => p.producto) ?? []).join(' ')
+            : ''
         }));
         this.loading = false;
       },
@@ -46,3 +48,4 @@ export class Ventas {
     });
   }
 }
+

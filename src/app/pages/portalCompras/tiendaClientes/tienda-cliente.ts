@@ -1,4 +1,4 @@
-import { Component, OnInit, HostListener, ElementRef, AfterViewInit, inject } from '@angular/core';
+import { Component, OnInit, OnDestroy, HostListener, ElementRef, AfterViewInit, inject } from '@angular/core';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, FormsModule, Validators, ReactiveFormsModule } from '@angular/forms';
@@ -86,7 +86,7 @@ interface ClienteData {
         ])
     ]
 })
-export class TiendaClienteComponent implements OnInit, AfterViewInit {
+export class TiendaClienteComponent implements OnInit, AfterViewInit, OnDestroy {
     productos: Producto[] = [];
     carrito: CarritoItem[] = [];
     busqueda: string = '';
@@ -121,6 +121,10 @@ export class TiendaClienteComponent implements OnInit, AfterViewInit {
     consultandoEstado: boolean = false;
     estadoCuentaData: any = null;
     isScrolled: boolean = false;
+
+    mostrarCompraExitosa: boolean = false;
+    nombreClienteCompra: string = '';
+    private pollingInterval: any;
 
     tiposIdentificacion = [
         { label: 'Cédula de Ciudadanía', value: 'CC' },
@@ -172,6 +176,11 @@ export class TiendaClienteComponent implements OnInit, AfterViewInit {
     ngOnInit() {
         this.cargarProductos();
         this.cargarCarritoLocalStorage();
+        this.pollingInterval = setInterval(() => this.cargarProductos(true), 30000);
+    }
+
+    ngOnDestroy() {
+        clearInterval(this.pollingInterval);
     }
 
     ngAfterViewInit() {
@@ -220,24 +229,27 @@ export class TiendaClienteComponent implements OnInit, AfterViewInit {
         const metodo = this.opcionesPago.find(op => op.value === this.tipoPago);
         return metodo ? metodo.label : this.tipoPago;
     }
-    cargarProductos() {
-        this.loading = true;
-        this.messageService.clear();
+    cargarProductos(silente = false) {
+        if (!silente) {
+            this.loading = true;
+            this.messageService.clear();
+        }
         this.tiendaClienteService.getProductos().subscribe({
             next: (response) => {
                 if (response.p_estado === 1) {
                     this.productos = response.data.filter((p: Producto) => p.estado && p.stock > 0);
                 }
-                this.loading = false;
+                if (!silente) this.loading = false;
             },
-
             error: (error) => {
-                this.messageService.add({
-                    severity: 'error',
-                    summary: 'Error',
-                    detail: 'No se pudieron cargar los productos'
-                });
-                this.loading = false;
+                if (!silente) {
+                    this.messageService.add({
+                        severity: 'error',
+                        summary: 'Error',
+                        detail: 'No se pudieron cargar los productos'
+                    });
+                    this.loading = false;
+                }
             }
         });
     }
@@ -534,16 +546,11 @@ export class TiendaClienteComponent implements OnInit, AfterViewInit {
             next: (res) => {
                 this.procesandoCompra = false;
                 if (res.p_estado == 1 && res.estadoCompra == true) {
-                    this.messageService.add({
-                        severity: 'success',
-                        summary: 'Compra exitosa',
-                        detail: 'Tu pedido ha sido procesado correctamente',
-                        life: 4000
-                    });
-                    // Limpiar carrito y cerrar modal
+                    this.nombreClienteCompra = this.clienteData?.nombres ?? '';
                     this.vaciarCarrito();
                     this.cerrarModalCompra();
-                    this.cargarProductos();
+                    this.cargarProductos(true);
+                    this.mostrarCompraExitosa = true;
                 } else {
                     this.messageService.add({
                         severity: 'error',
@@ -551,7 +558,7 @@ export class TiendaClienteComponent implements OnInit, AfterViewInit {
                         detail: 'El código de verificación no es correcto',
                         life: 3000
                     });
-                    this.cargarProductos();
+                    this.cargarProductos(true);
                 }
             },
             error: (error) => {
@@ -567,6 +574,11 @@ export class TiendaClienteComponent implements OnInit, AfterViewInit {
     }
 
 
+
+    cerrarCompraExitosa() {
+        this.mostrarCompraExitosa = false;
+        this.nombreClienteCompra = '';
+    }
 
     cambiarCedula() {
         this.clienteVerificado = false;
@@ -802,7 +814,7 @@ export class TiendaClienteComponent implements OnInit, AfterViewInit {
                         detail: 'El cliente ha sido registrado exitosamente',
                         life: 4000
                     });
-                    // this.cerrarModalRegistro();
+                    this.cerrarModalRegistroCliente();
                 } else if (response.p_estado === 0) {
                     this.messageService.add({
                         severity: 'error',

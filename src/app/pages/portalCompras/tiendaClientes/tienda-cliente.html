@@ -281,8 +281,40 @@
     </div>
 </p-dialog>
 
+<!-- ===== POPUP COMPRA EXITOSA ===== -->
+<p-dialog [(visible)]="mostrarCompraExitosa" [modal]="true" [draggable]="false" [resizable]="false" [closable]="false"
+    styleClass="modal-compra-exitosa" [style]="{ width: '420px', 'max-width': '95vw' }">
+    <div class="compra-exitosa-wrapper">
+        <div class="compra-exitosa-icono">
+            <i class="pi pi-check"></i>
+        </div>
+        <h2 class="compra-exitosa-titulo">¡Compra Exitosa!</h2>
+        <p class="compra-exitosa-nombre">¡Gracias, <strong>{{ nombreClienteCompra }}</strong>! 🎉</p>
+        <p class="compra-exitosa-mensaje">
+            Tu pedido fue procesado correctamente.<br>
+            Te enviamos el detalle de tu compra al correo. 📩
+        </p>
+        <div class="compra-exitosa-detalle">
+            <span>🍬 Tus dulces favoritos ya están listos</span>
+        </div>
+        <p class="compra-exitosa-invitacion">
+            ¡Siempre tenemos novedades esperándote!<br>
+            <strong>¡Vuelve pronto!</strong> ✨
+        </p>
+        <button class="compra-exitosa-btn" (click)="cerrarCompraExitosa()">
+            <i class="pi pi-shopping-bag"></i>
+            Seguir Comprando
+        </button>
+    </div>
+</p-dialog>
+
 <p-dialog [(visible)]="mostrarModalEstadoCuenta" [modal]="true" [draggable]="false" [resizable]="false"
-    [closable]="true" header="ESTADO CUENTA" [style]="{ width: '50vw' }" (onHide)="cerrarModalEstadoCuenta()">
+    [closable]="true" header="ESTADO CUENTA"
+    [style]="{ width: '50vw' }"
+    [breakpoints]="{ '960px': '75vw', '640px': '96vw' }"
+    [contentStyle]="{ 'max-height': '80vh', 'overflow-y': 'auto' }"
+    styleClass="modal-estado-cuenta"
+    (onHide)="cerrarModalEstadoCuenta()">
 
     <!-- <ng-template pTemplate="header">
         <h3>

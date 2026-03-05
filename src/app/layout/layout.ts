@@ -1,4 +1,4 @@
-import { Component, HostListener, Renderer2, ViewChild } from '@angular/core';
+import { Component, HostListener, OnDestroy, OnInit, Renderer2, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NavigationEnd, Router, RouterModule } from '@angular/router';
 import { filter, Subscription } from 'rxjs';
@@ -6,15 +6,20 @@ import { Topbar } from './components/topbar/topbar';
 import { Sidebar } from './components/sidebar/sidebar';
 import { Footer } from './components/footer/footer';
 import { LayoutService } from '../layout/service/layout.service';
+import { VentasService } from '@/pages/service/ventas.service';
+import { MessageService } from 'primeng/api';
+import { ToastModule } from 'primeng/toast';
+import { AuthService } from '@/services/auth-service';
 
 @Component({
     selector: 'app-layout',
     standalone: true,
-    imports: [CommonModule, Topbar, RouterModule, Footer, Sidebar],
+    imports: [CommonModule, Topbar, RouterModule, Footer, Sidebar, ToastModule],
     templateUrl: `./layout.html`
 })
-export class Layout {
+export class Layout implements OnDestroy, OnInit {
     overlayMenuOpenSubscription: Subscription;
+    private sseSubscription?: Subscription;
 
     menuOutsideClickListener: any;
     with_screen:number = window.innerWidth;
@@ -28,7 +33,10 @@ export class Layout {
     constructor(
         public layoutService: LayoutService,
         public renderer: Renderer2,
-        public router: Router
+        public router: Router,
+        private ventasService: VentasService,
+        private messageService: MessageService,
+        private authService: AuthService,
     ) {
         this.overlayMenuOpenSubscription = this.layoutService.overlayOpen$.subscribe(() => {
             if (!this.menuOutsideClickListener) {
@@ -100,11 +108,71 @@ export class Layout {
         if (this.menuOutsideClickListener) {
             this.menuOutsideClickListener();
         }
+
+        this.sseSubscription?.unsubscribe();
     }
 
     ngOnInit(): void {
-        console.log(this.layoutService.layoutConfig())
         this.layoutService.layoutConfig.update((state) => ({ ...state, primary: 'rose' }));
+        this.solicitarPermisoNotificaciones();
+        this.conectarNotificacionesVentas();
+    }
+
+    private esAdministrador(): boolean {
+        const usuario = this.authService.getUsuario;
+        // Ajusta el ID de rol si tu rol de administrador es distinto de 1
+        return Array.isArray(usuario.ROL) && usuario.ROL.includes(1);
+    }
+
+    private async solicitarPermisoNotificaciones(): Promise<void> {
+        if (typeof window === 'undefined' || !('Notification' in window)) {
+            return;
+        }
+
+        if (Notification.permission === 'default') {
+            try {
+                await Notification.requestPermission();
+            } catch {
+                // Ignorar errores de solicitud de permiso
+            }
+        }
+    }
+
+    private mostrarNotificacionEscritorio(titulo: string, cuerpo: string): void {
+        if (typeof window === 'undefined' || !('Notification' in window)) {
+            return;
+        }
+
+        if (Notification.permission !== 'granted') {
+            return;
+        }
+
+        new Notification(titulo, {
+            body: cuerpo,
+        });
+    }
+
+    conectarNotificacionesVentas(): void {
+        if (!this.esAdministrador()) {
+            return;
+        }
+
+        this.sseSubscription = this.ventasService.streamNuevasVentas().subscribe({
+            next: (venta: any) => {
+                const cliente = `${venta.nombres ?? ''} ${venta.apellidos ?? ''}`.trim() || 'Cliente';
+                const total = new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP', maximumFractionDigits: 0 }).format(venta.total);
+                const detalle = `${cliente} — ${total}`;
+
+                this.messageService.add({
+                    severity: 'success',
+                    summary: '¡Nueva compra!',
+                    detail: `${cliente} — ${total}`,
+                    life: 10000,
+                });
+
+                this.mostrarNotificacionEscritorio('¡Nueva compra!', detalle);
+            },
+        });
     }
 
     @HostListener('window:resize', ['$event'])

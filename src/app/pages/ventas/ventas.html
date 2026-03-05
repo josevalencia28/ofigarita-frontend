@@ -1,6 +1,6 @@
 <div class="card">
   <p-table #dt [value]="ventas" dataKey="internalId" [loading]="loading" showGridlines [expandedRowKeys]="expandedRows"
-    [globalFilterFields]="['nombre', 'listaProductos', 'forma_pago', 'estado_venta', 'fecha_venta']" [paginator]="true"
+    [globalFilterFields]="['nombre', 'listaProductos', 'numero_id']" [paginator]="true"
     [rows]="10" [rowsPerPageOptions]="[5, 10, 20]">
 
     <ng-template #caption>
@@ -18,13 +18,7 @@
 
     <ng-template #header>
       <tr>
-        <th></th>
-        <th>
-          <div class="flex items-center justify-between">
-            Fecha
-            <p-columnFilter type="text" field="fecha_venta" display="menu"></p-columnFilter>
-          </div>
-        </th>
+        <th style="width:3rem"></th>
         <th>
           <div class="flex items-center justify-between">
             ID Cliente
@@ -37,22 +31,11 @@
             <p-columnFilter type="text" field="nombre" display="menu"></p-columnFilter>
           </div>
         </th>
+        <th>Nº Compras</th>
         <th>
           <div class="flex items-center justify-between">
-            Medio de Pago
-            <p-columnFilter type="text" field="forma_pago" display="menu"></p-columnFilter>
-          </div>
-        </th>
-        <th>
-          <div class="flex items-center justify-between">
-            Estado Venta
-            <p-columnFilter type="text" field="estado_venta" display="menu"></p-columnFilter>
-          </div>
-        </th>
-        <th>
-          <div class="flex items-center justify-between">
-            Total
-            <p-columnFilter type="numeric" field="total" display="menu" currency="COP"></p-columnFilter>
+            Total Acumulado
+            <p-columnFilter type="numeric" field="total" display="menu"></p-columnFilter>
           </div>
         </th>
       </tr>
@@ -64,18 +47,16 @@
           <p-button type="button" pRipple [pRowToggler]="venta" [text]="true" [rounded]="true"
             [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'" />
         </td>
-        <td>{{ venta.fecha_venta }}</td>
         <td>{{ venta.numero_id }}</td>
         <td>{{ venta.nombre }}</td>
-        <td>{{ venta.forma_pago }}</td>
-        <td>{{ venta.estado_venta }}</td>
-        <td>{{ venta.total | currency }}</td>
+        <td>{{ venta.compras?.length ?? 0 }}</td>
+        <td>{{ venta.total | currency:'COP':'symbol-narrow':'1.0-0' }}</td>
       </tr>
     </ng-template>
 
     <ng-template #loadingbody>
       <tr>
-        <td colspan="7">
+        <td colspan="5">
           <div class="flex justify-center">
             <span>Cargando...</span>
           </div>
@@ -85,7 +66,7 @@
 
     <ng-template #emptymessage>
       <tr>
-        <td colspan="7">
+        <td colspan="5">
           <div class="flex justify-center">
             No hay ventas disponibles.
           </div>
@@ -95,39 +76,67 @@
 
     <ng-template #expandedrow let-venta>
       <tr>
-        <td colspan="7">
-          <div class="p-4">
-            <h5>Detalle de Venta</h5>
-            <p-table [value]="venta.detalle" dataKey="producto">
-              <ng-template #header>
-      <tr>
-        <th>Producto</th>
-        <th>Cantidad</th>
-        <th>Precio Unitario</th>
-        <th>Subtotal</th>
-      </tr>
-    </ng-template>
-    <ng-template #body let-detalle>
-      <tr>
-        <td>{{ detalle.producto }}</td>
-        <td>{{ detalle.cantidad }}</td>
-        <td>{{ detalle.precio_unitario | currency }}</td>
-        <td>{{ detalle.subtotal | currency }}</td>
-      </tr>
-    </ng-template>
-    <ng-template #emptymessage>
-      <tr>
-        <td colspan="4">
-          <div class="flex items-center justify-center">
-            No hay detalles disponibles.
+        <td colspan="5" class="p-0">
+          <div class="p-4 bg-surface-50">
+
+            <div class="compras-scroll">
+            <div *ngFor="let compra of venta.compras" class="mb-4 border border-surface-200 rounded-lg overflow-hidden shadow-sm">
+
+              <!-- Cabecera de cada compra -->
+              <div class="flex flex-wrap gap-4 items-center px-4 py-3 bg-surface-100 border-b border-surface-200">
+                <span class="font-semibold text-sm">
+                  <i class="pi pi-tag mr-1 text-primary"></i>
+                  Compra #{{ compra.id_venta }}
+                </span>
+                <span class="text-sm text-surface-600">
+                  <i class="pi pi-calendar mr-1"></i>
+                  {{ compra.fecha_venta }}
+                </span>
+                <span class="text-sm text-surface-600">
+                  <i class="pi pi-credit-card mr-1"></i>
+                  {{ compra.forma_pago }}
+                </span>
+                <span class="text-sm text-surface-600">
+                  <i class="pi pi-info-circle mr-1"></i>
+                  {{ compra.estado_venta }}
+                </span>
+                <span class="ml-auto font-bold text-primary">
+                  {{ compra.subtotal_compra | currency:'COP':'symbol-narrow':'1.0-0' }}
+                </span>
+              </div>
+
+              <!-- Productos de esa compra -->
+              <p-table [value]="compra.productos ?? []" [tableStyle]="{'min-width':'100%'}">
+                <ng-template #header>
+                  <tr>
+                    <th>Producto</th>
+                    <th style="width:8rem; text-align:center">Cantidad</th>
+                    <th style="width:12rem; text-align:right">Precio Unitario</th>
+                    <th style="width:12rem; text-align:right">Subtotal</th>
+                  </tr>
+                </ng-template>
+                <ng-template #body let-prod>
+                  <tr>
+                    <td>{{ prod.producto }}</td>
+                    <td style="text-align:center">{{ prod.cantidad }}</td>
+                    <td style="text-align:right">{{ prod.precio_unitario | currency:'COP':'symbol-narrow':'1.0-0' }}</td>
+                    <td style="text-align:right">{{ prod.subtotal | currency:'COP':'symbol-narrow':'1.0-0' }}</td>
+                  </tr>
+                </ng-template>
+                <ng-template #emptymessage>
+                  <tr>
+                    <td colspan="4" class="text-center text-surface-500 py-3">Sin productos registrados.</td>
+                  </tr>
+                </ng-template>
+              </p-table>
+
+            </div>
+            </div>
+
           </div>
         </td>
       </tr>
     </ng-template>
+
   </p-table>
-</div>
-</td>
-</tr>
-</ng-template>
-</p-table>
 </div>

@@ -4,24 +4,30 @@ import { Observable } from 'rxjs';
 import { environment } from 'src/enviroments/enviroment';
 
 export interface VentaDetalle {
-    cantidad: number;
     producto: string;
+    cantidad: number;
     precio_unitario: number;
     subtotal: number;
 }
 
-export interface Venta {
+export interface Compra {
+    id_venta: number;
     fecha_venta: string;
-    numero_id: number;
-    nombre: string;
     forma_pago: string;
     estado_venta: string;
+    subtotal_compra: number;
+    productos: VentaDetalle[] | null;
+}
+
+export interface VentaCliente {
+    numero_id: number;
+    nombre: string;
     total: number;
-    detalle: VentaDetalle[] | null;
+    compras: Compra[];
 }
 
 export interface FacturaData {
-    factura_json: Venta;
+    factura_json: VentaCliente;
 }
 
 export interface VentasResponse {
@@ -40,5 +46,19 @@ export class VentasService {
 
     getUltimasVentas(): Observable<VentasResponse> {
         return this.http.get<VentasResponse>(`${this.URL}/getUltimasVentas`);
+    }
+
+    streamNuevasVentas(): Observable<any> {
+        return new Observable(observer => {
+            const source = new EventSource(`${this.URL}/stream`);
+            source.onmessage = (event) => {
+                observer.next(JSON.parse(event.data));
+            };
+            source.onerror = () => {
+                source.close();
+                observer.error('SSE connection error');
+            };
+            return () => source.close();
+        });
     }
 }
