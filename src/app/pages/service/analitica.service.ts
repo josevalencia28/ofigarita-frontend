@@ -34,4 +34,8 @@ export class AnaliticaService {
     getProductosMasVendidosMes(): Observable<any> {
         return this.http.get(`${this.URL}/getProductosMasVendidosMes`);
     }
+
+    getResumenGeneral(): Observable<any> {
+        return this.http.get(`${this.URL}/resumenGeneral`);
+    }
 }

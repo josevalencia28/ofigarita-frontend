@@ -4,9 +4,9 @@ import { Table, TableModule } from 'primeng/table';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { ToastModule } from 'primeng/toast';
-import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { TagModule } from 'primeng/tag';
-import { MessageService, ConfirmationService } from 'primeng/api';
+import { MessageService } from 'primeng/api';
+import { DialogModule } from 'primeng/dialog';
 import { ClienteFactura, NotificarFacturaService } from '../service/notificar-factura.service';
 import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
@@ -20,28 +20,34 @@ import { InputIconModule } from 'primeng/inputicon';
     ButtonModule,
     InputTextModule,
     ToastModule,
-    ConfirmDialogModule,
     TagModule,
     IconFieldModule,
-    InputIconModule
+    InputIconModule,
+    DialogModule,
   ],
-  providers: [MessageService, ConfirmationService],
+  providers: [MessageService],
   templateUrl: './notificar-factura.html',
   styleUrl: './notificar-factura.scss'
 })
-export class NotificarFactura {
+export class NotificarFactura implements OnInit {
   @ViewChild('dt') dt!: Table;
 
   clientes: ClienteFactura[] = [];
-  loading: boolean = false;
+  loading = false;
   enviandoPuntual: { [key: string]: boolean } = {};
-  enviandoMasivo: boolean = false;
+  enviandoMasivo = false;
+
+  // Modal: envío puntual
+  showConfirmPuntual = false;
+  clienteSeleccionado: ClienteFactura | null = null;
+
+  // Modal: envío masivo
+  showConfirmMasivo = false;
 
   constructor(
     private notificarService: NotificarFacturaService,
     private messageService: MessageService,
-    private confirmationService: ConfirmationService
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     this.cargarClientes();
@@ -76,94 +82,106 @@ export class NotificarFactura {
     });
   }
 
-  enviarNotificacionPuntual(cliente: ClienteFactura): void {
-    const numero_id = cliente.factura_json.numero_id.toString();
-    this.messageService.clear();
-    this.confirmationService.confirm({
-      message: `¿Desea enviar la factura ${cliente.factura_json.nro_factura} a ${cliente.factura_json.nombre}?`,
-      header: 'Confirmar Envío',
-      icon: 'pi pi-exclamation-triangle',
-      acceptLabel: 'Sí, Enviar',
-      rejectLabel: 'Cancelar',
-      accept: () => {
-        this.enviandoPuntual[numero_id] = true;
+  // ── Envío puntual ───────────────────────────────────────────────────────────
 
-        this.notificarService.enviarNotificacionPuntual(numero_id).subscribe({
-          next: (response) => {
-            if (response.p_estado === 1) {
-              this.messageService.add({
-                severity: 'success',
-                summary: 'Factura Enviada',
-                detail: response.p_mensaje,
-                life: 4000
-              });
-            } else {
-              this.messageService.add({
-                severity: 'error',
-                summary: 'Error al Enviar',
-                detail: response.p_mensaje,
-                life: 5000
-              });
-            }
-            this.enviandoPuntual[numero_id] = false;
-          },
-          error: (error) => {
-            this.messageService.add({
-              severity: 'error',
-              summary: 'Error',
-              detail: 'Error al enviar la notificación: ' + error.message,
-              life: 5000
-            });
-            this.enviandoPuntual[numero_id] = false;
-          }
+  confirmarEnvioPuntual(cliente: ClienteFactura): void {
+    this.clienteSeleccionado = cliente;
+    this.showConfirmPuntual = true;
+  }
+
+  ejecutarEnvioPuntual(): void {
+    if (!this.clienteSeleccionado) return;
+    const cliente = this.clienteSeleccionado;
+    const numero_id = cliente.factura_json.numero_id.toString();
+
+    this.enviandoPuntual[numero_id] = true;
+    this.showConfirmPuntual = false;
+    this.messageService.clear();
+
+    this.notificarService.enviarNotificacionPuntual(numero_id).subscribe({
+      next: (response) => {
+        if (response.p_estado === 1) {
+          this.messageService.add({
+            severity: 'success',
+            summary: 'Factura enviada',
+            detail: response.p_mensaje,
+            life: 4000
+          });
+        } else {
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Error al enviar',
+            detail: response.p_mensaje,
+            life: 5000
+          });
+        }
+        this.enviandoPuntual[numero_id] = false;
+        this.clienteSeleccionado = null;
+      },
+      error: (error) => {
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: 'Error al enviar la notificación: ' + error.message,
+          life: 5000
         });
+        this.enviandoPuntual[numero_id] = false;
+        this.clienteSeleccionado = null;
       }
     });
   }
 
-  enviarNotificacionMasiva(): void {
-    this.messageService.clear();
-    this.confirmationService.confirm({
-      message: `¿Desea enviar facturas a ${this.clientes.length} clientes?`,
-      header: 'Confirmar Envío Masivo',
-      icon: 'pi pi-exclamation-triangle',
-      acceptLabel: 'Sí, Enviar a Todos',
-      rejectLabel: 'Cancelar',
-      acceptButtonStyleClass: 'p-button-danger',
-      accept: () => {
-        this.enviandoMasivo = true;
+  // ── Envío masivo ────────────────────────────────────────────────────────────
 
-        this.notificarService.enviarNotificacionMasiva().subscribe({
-          next: (response) => {
-            if (response.p_estado === 1 && response.resultados) {
-              this.messageService.add({
-                severity: 'success',
-                summary: 'Envío Masivo Completado',
-                detail: `${response.resultados.exitosos} enviados, ${response.resultados.fallidos} fallidos`,
-                life: 6000
-              });
-            } else {
-              this.messageService.add({
-                severity: 'error',
-                summary: 'Error',
-                detail: response.p_mensaje,
-                life: 5000
-              });
-            }
-            this.enviandoMasivo = false;
-          },
-          error: (error) => {
-            this.messageService.add({
-              severity: 'error',
-              summary: 'Error',
-              detail: 'Error en el envío masivo: ' + error.message,
-              life: 5000
-            });
-            this.enviandoMasivo = false;
-          }
+  confirmarEnvioMasivo(): void {
+    this.showConfirmMasivo = true;
+  }
+
+  ejecutarEnvioMasivo(): void {
+    this.enviandoMasivo = true;
+    this.showConfirmMasivo = false;
+    this.messageService.clear();
+
+    this.notificarService.enviarNotificacionMasiva().subscribe({
+      next: (response) => {
+        if (response.p_estado === 1 && response.resultados) {
+          this.messageService.add({
+            severity: 'success',
+            summary: 'Envío masivo completado',
+            detail: `${response.resultados.exitosos} enviados · ${response.resultados.fallidos} fallidos`,
+            life: 6000
+          });
+        } else {
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Error',
+            detail: response.p_mensaje,
+            life: 5000
+          });
+        }
+        this.enviandoMasivo = false;
+      },
+      error: (error) => {
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: 'Error en el envío masivo: ' + error.message,
+          life: 5000
         });
+        this.enviandoMasivo = false;
       }
     });
+  }
+
+  // ── Helpers ─────────────────────────────────────────────────────────────────
+
+  isEnviandoPuntual(numero_id: number): boolean {
+    return this.enviandoPuntual[numero_id.toString()] || false;
+  }
+
+  onGlobalFilter(event: Event): void {
+    const inputElement = event.target as HTMLInputElement;
+    this.dt.filterGlobal(inputElement.value, 'contains');
   }
 
   formatearFecha(fecha: string): string {
@@ -174,17 +192,7 @@ export class NotificarFactura {
     return new Intl.NumberFormat('es-CO', {
       style: 'currency',
       currency: 'COP',
-      minimumFractionDigits: 2
+      minimumFractionDigits: 0
     }).format(precio);
-  }
-
-  isEnviandoPuntual(numero_id: number): boolean {
-    return this.enviandoPuntual[numero_id.toString()] || false;
-  }
-
-
-  onGlobalFilter(event: Event): void {
-    const inputElement = event.target as HTMLInputElement;
-    this.dt.filterGlobal(inputElement.value, 'contains');
   }
 }

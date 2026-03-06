@@ -22,6 +22,8 @@ export class Dashboard implements OnInit {
     totalSemana: number = 0;
     totalMes: number = 0;
 
+    resumen: any = {};
+
     chartData: any;
     chartOptions: any;
 
@@ -36,20 +38,31 @@ export class Dashboard implements OnInit {
     productosChartData: any;
     productosChartOptions: any;
 
+    readonly mesActual = new Date().toLocaleDateString('es-CO', { month: 'long', year: 'numeric' });
+    readonly fechaHoy  = new Date().toLocaleDateString('es-CO', { weekday: 'long', day: 'numeric', month: 'long' });
+
     constructor(private http: HttpClient, private analiticaService: AnaliticaService, private messageService: MessageService) { }
 
     ngOnInit() {
-        // Inicializar todas las opciones de gráficos primero
         this.initChartOptions();
         this.initClientesChartOptions();
         this.initProductosChartOptions();
         this.initVentasAnualesChartOptions();
 
-        // Luego cargar los datos
         this.getVentasData();
         this.getTopClientes();
         this.getVentasAnuales();
         this.getTopProductos();
+        this.getResumenGeneral();
+    }
+
+    getResumenGeneral() {
+        this.analiticaService.getResumenGeneral().subscribe({
+            next: (response) => {
+                if (response.p_estado === 1) this.resumen = response.data;
+            },
+            error: (err) => console.error('Error resumen:', err)
+        });
     }
 
     getTopClientes() {

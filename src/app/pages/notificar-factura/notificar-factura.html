@@ -1,6 +1,5 @@
 <div class="card">
     <p-toast position="top-right"></p-toast>
-    <p-confirmDialog></p-confirmDialog>
 
     <p-table #dt [value]="clientes" dataKey="factura_json.numero_id" [loading]="loading" showGridlines
         [globalFilterFields]="['factura_json.nombre', 'factura_json.numero_id', 'factura_json.nro_factura', 'factura_json.correo', 'factura_json.total']"
@@ -9,18 +8,14 @@
         <ng-template pTemplate="caption">
             <div class="flex flex-wrap justify-between items-center gap-4">
                 <span class="text-xl font-bold text-gray-700">Notificación Factura</span>
-
                 <p-iconfield iconPosition="left" class="flex-1 max-w-md">
-                    <p-inputicon>
-                        <i class="pi pi-search"></i>
-                    </p-inputicon>
-                    <input pInputText type="text" (input)="onGlobalFilter($event)" placeholder="Buscar"
-                        class="w-full" />
+                    <p-inputicon><i class="pi pi-search"></i></p-inputicon>
+                    <input pInputText type="text" (input)="onGlobalFilter($event)"
+                        placeholder="Buscar" class="w-full" />
                 </p-iconfield>
-
                 <p-button label="Notificación Masiva" icon="pi pi-send" styleClass="p-button-success-custom"
                     [loading]="enviandoMasivo" [disabled]="clientes.length === 0 || enviandoMasivo"
-                    (onClick)="enviarNotificacionMasiva()" />
+                    (onClick)="confirmarEnvioMasivo()" />
             </div>
         </ng-template>
 
@@ -28,38 +23,26 @@
             <tr>
                 <th pSortableColumn="factura_json.nro_factura">
                     <div class="flex items-center justify-between">
-                        NO. FACTURAS
-                        <p-sortIcon field="factura_json.nro_factura"></p-sortIcon>
+                        NO. FACTURAS <p-sortIcon field="factura_json.nro_factura"></p-sortIcon>
                     </div>
                 </th>
                 <th pSortableColumn="factura_json.numero_id">
                     <div class="flex items-center justify-between">
-                        IDENTIFICACIÓN
-                        <p-sortIcon field="factura_json.numero_id"></p-sortIcon>
+                        IDENTIFICACIÓN <p-sortIcon field="factura_json.numero_id"></p-sortIcon>
                     </div>
                 </th>
                 <th pSortableColumn="factura_json.nombre">
                     <div class="flex items-center justify-between">
-                        NOMBRE
-                        <p-sortIcon field="factura_json.nombre"></p-sortIcon>
+                        NOMBRE <p-sortIcon field="factura_json.nombre"></p-sortIcon>
                     </div>
                 </th>
-                <th>
-                    <div class="flex items-center justify-between">
-                        CORREO
-                    </div>
-                </th>
+                <th>CORREO</th>
                 <th pSortableColumn="factura_json.total">
                     <div class="flex items-center justify-between">
-                        TOTAL
-                        <p-sortIcon field="factura_json.total"></p-sortIcon>
+                        TOTAL <p-sortIcon field="factura_json.total"></p-sortIcon>
                     </div>
                 </th>
-                <th>
-                    <div class="flex items-center justify-between">
-                        ACCIÓN
-                    </div>
-                </th>
+                <th>ACCIÓN</th>
             </tr>
         </ng-template>
 
@@ -75,7 +58,7 @@
                         <p-button label="Notificar" severity="success" size="small" icon="pi pi-send"
                             [loading]="isEnviandoPuntual(cliente.factura_json.numero_id)"
                             [disabled]="isEnviandoPuntual(cliente.factura_json.numero_id)"
-                            (onClick)="enviarNotificacionPuntual(cliente)" />
+                            (onClick)="confirmarEnvioPuntual(cliente)" />
                     </div>
                 </td>
             </tr>
@@ -104,3 +87,116 @@
         </ng-template>
     </p-table>
 </div>
+
+
+<!-- ═══════════════════════════════════════════════════════
+     MODAL: Confirmar envío puntual
+     ═══════════════════════════════════════════════════════ -->
+<p-dialog [(visible)]="showConfirmPuntual" [modal]="true" [style]="{ width: '480px' }"
+    [showHeader]="false" [closable]="false">
+
+    <div class="confirm-wrapper" *ngIf="clienteSeleccionado">
+
+        <div class="confirm-icon purple">
+            <i class="pi pi-envelope"></i>
+        </div>
+
+        <p class="confirm-title">Enviar factura</p>
+        <p class="confirm-subtitle">
+            Se enviará la factura al correo del cliente. Verifica los datos antes de continuar.
+        </p>
+
+        <div class="summary-box">
+            <div class="summary-row">
+                <span class="sr-label">Factura</span>
+                <span class="sr-value">#{{ clienteSeleccionado.factura_json.nro_factura }}</span>
+            </div>
+            <div class="summary-row">
+                <span class="sr-label">Cliente</span>
+                <span class="sr-value">{{ clienteSeleccionado.factura_json.nombre }}</span>
+            </div>
+            <div class="summary-row">
+                <span class="sr-label">Correo destino</span>
+                <span class="sr-value">
+                    <i class="pi pi-at text-xs text-gray-400"></i>
+                    {{ clienteSeleccionado.factura_json.correo }}
+                </span>
+            </div>
+            <div class="summary-row">
+                <span class="sr-label">Total factura</span>
+                <span class="sr-value sr-total">
+                    {{ formatearPrecio(clienteSeleccionado.factura_json.total) }}
+                </span>
+            </div>
+        </div>
+
+        <div class="info-note blue">
+            <i class="pi pi-info-circle"></i>
+            <span>El cliente recibirá un correo con el resumen de su factura y el detalle de productos.</span>
+        </div>
+
+        <div class="flex gap-3 justify-center w-full mt-5">
+            <p-button label="Cancelar" severity="secondary" [text]="true"
+                (onClick)="showConfirmPuntual = false; clienteSeleccionado = null">
+            </p-button>
+            <p-button label="Sí, enviar factura" icon="pi pi-send" severity="success"
+                (onClick)="ejecutarEnvioPuntual()">
+            </p-button>
+        </div>
+
+    </div>
+</p-dialog>
+
+
+<!-- ═══════════════════════════════════════════════════════
+     MODAL: Confirmar envío masivo
+     ═══════════════════════════════════════════════════════ -->
+<p-dialog [(visible)]="showConfirmMasivo" [modal]="true" [style]="{ width: '480px' }"
+    [showHeader]="false" [closable]="false">
+
+    <div class="confirm-wrapper">
+
+        <div class="confirm-icon amber">
+            <i class="pi pi-megaphone"></i>
+        </div>
+
+        <p class="confirm-title">Notificación masiva</p>
+        <p class="confirm-subtitle">
+            Se enviará la factura a <strong>todos los clientes</strong> de la lista de forma simultánea.
+        </p>
+
+        <div class="summary-box">
+            <div class="summary-row">
+                <span class="sr-label">Clientes a notificar</span>
+                <span class="sr-value">{{ clientes.length }} cliente(s)</span>
+            </div>
+            <div class="summary-row">
+                <span class="sr-label">Tipo de envío</span>
+                <span class="sr-value">
+                    <span class="badge-masivo">
+                        <i class="pi pi-megaphone"></i> Masivo
+                    </span>
+                </span>
+            </div>
+        </div>
+
+        <div class="info-note amber">
+            <i class="pi pi-exclamation-triangle"></i>
+            <span>
+                Esta acción enviará correos a <strong>{{ clientes.length }} destinatarios</strong> de forma inmediata.
+                Asegúrate de que todos los correos sean correctos antes de continuar.
+            </span>
+        </div>
+
+        <div class="flex gap-3 justify-center w-full mt-5">
+            <p-button label="Cancelar" severity="secondary" [text]="true"
+                (onClick)="showConfirmMasivo = false">
+            </p-button>
+            <p-button label="Sí, enviar a todos" icon="pi pi-megaphone"
+                severity="warn" [loading]="enviandoMasivo"
+                (onClick)="ejecutarEnvioMasivo()">
+            </p-button>
+        </div>
+
+    </div>
+</p-dialog>

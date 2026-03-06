@@ -1,28 +1,16 @@
-::ng-deep {
+// ── Overrides PrimeNG ────────────────────────────────────────────────────────
 
-    // Botón "Enviar a Todos" verde con letras blancas
+::ng-deep {
     .p-button-success-custom {
         background-color: #22c55e !important;
         border-color: #22c55e !important;
         color: white !important;
-
-        &:enabled:hover {
-            background-color: #16a34a !important;
-            border-color: #16a34a !important;
-        }
-
-        &:enabled:active {
-            background-color: #15803d !important;
-            border-color: #15803d !important;
-        }
-
-        .pi {
-            color: white !important;
-        }
+        &:enabled:hover  { background-color: #16a34a !important; border-color: #16a34a !important; }
+        &:enabled:active { background-color: #15803d !important; border-color: #15803d !important; }
+        .pi { color: white !important; }
     }
 
-    // Headers de la tabla en rosa
-    .p-datatable-thead>tr>th {
+    .p-datatable-thead > tr > th {
         background-color: #ec4899 !important;
         color: white !important;
         font-weight: 600;
@@ -31,29 +19,158 @@
         letter-spacing: 0.5px;
     }
 
-    .p-sortable-column-icon {
-        color: white !important;
+    .p-sortable-column-icon { color: white !important; }
+
+    .p-datatable-tbody > tr:hover { background-color: #fef3f8 !important; }
+
+    .p-inputtext:enabled:focus {
+        border-color: #ec4899;
+        box-shadow: 0 0 0 0.2rem rgba(236, 72, 153, 0.25);
     }
 
-    // Hover en las filas
-    .p-datatable-tbody>tr:hover {
-        background-color: #fef3f8 !important;
+    .p-paginator .p-paginator-pages .p-paginator-page.p-highlight {
+        background-color: #ec4899;
+        border-color: #ec4899;
+        color: white;
     }
+}
 
-    // Estilos del input de búsqueda
-    .p-inputtext {
-        &:enabled:focus {
-            border-color: #ec4899;
-            box-shadow: 0 0 0 0.2rem rgba(236, 72, 153, 0.25);
+// ── Animaciones ──────────────────────────────────────────────────────────────
+
+@keyframes pulsePurple {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(139, 92, 246, 0.35); }
+    50%       { box-shadow: 0 0 0 18px rgba(139, 92, 246, 0); }
+}
+
+@keyframes pulseAmber {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.35); }
+    50%       { box-shadow: 0 0 0 18px rgba(245, 158, 11, 0); }
+}
+
+@keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(14px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+// ── Contenedor modal ─────────────────────────────────────────────────────────
+
+.confirm-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 1.5rem 1rem 0.75rem;
+    animation: fadeInUp 0.25s ease;
+
+    .confirm-icon {
+        width: 5.5rem;
+        height: 5.5rem;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 1.25rem;
+        i { font-size: 2.25rem; }
+
+        &.purple {
+            background: linear-gradient(135deg, #ede9fe, #c4b5fd);
+            color: #6d28d9;
+            animation: pulsePurple 2.2s infinite;
+        }
+
+        &.amber {
+            background: linear-gradient(135deg, #fef3c7, #fcd34d);
+            color: #b45309;
+            animation: pulseAmber 2.2s infinite;
         }
     }
 
-    // Paginador
-    .p-paginator {
-        .p-paginator-pages .p-paginator-page.p-highlight {
-            background-color: #ec4899;
-            border-color: #ec4899;
-            color: white;
+    .confirm-title {
+        font-size: 1.2rem;
+        font-weight: 700;
+        color: #111827;
+        margin-bottom: 0.4rem;
+    }
+
+    .confirm-subtitle {
+        font-size: 0.875rem;
+        color: #6b7280;
+        margin-bottom: 1.5rem;
+        max-width: 340px;
+        line-height: 1.55;
+    }
+
+    .summary-box {
+        width: 100%;
+        background: #fff;
+        border-radius: 0.875rem;
+        border: 1px solid #e5e7eb;
+        overflow: hidden;
+        margin-bottom: 1rem;
+        text-align: left;
+
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.65rem 1rem;
+            font-size: 0.84rem;
+            border-bottom: 1px solid #f3f4f6;
+            &:last-child { border-bottom: none; }
+
+            .sr-label { color: #9ca3af; font-weight: 500; }
+            .sr-value {
+                font-weight: 600;
+                color: #1f2937;
+                display: flex;
+                align-items: center;
+                gap: 0.35rem;
+            }
+            .sr-total {
+                font-size: 1rem;
+                color: #ee2a7b;
+                font-weight: 800;
+            }
         }
     }
+
+    .info-note {
+        width: 100%;
+        border-radius: 0.75rem;
+        padding: 0.75rem 1rem;
+        display: flex;
+        align-items: flex-start;
+        gap: 0.6rem;
+        text-align: left;
+        font-size: 0.8rem;
+        line-height: 1.5;
+        i { flex-shrink: 0; margin-top: 1px; }
+
+        &.blue {
+            background: linear-gradient(135deg, #eff6ff, #dbeafe);
+            border: 1px solid #bfdbfe;
+            color: #1d4ed8;
+        }
+
+        &.amber {
+            background: linear-gradient(135deg, #fffbeb, #fef3c7);
+            border: 1px solid #fde68a;
+            color: #92400e;
+        }
+    }
+}
+
+// ── Badge masivo ─────────────────────────────────────────────────────────────
+
+.badge-masivo {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.25rem 0.75rem;
+    border-radius: 999px;
+    font-size: 0.78rem;
+    font-weight: 700;
+    background: #fef3c7;
+    color: #b45309;
+    border: 1px solid #fde68a;
 }

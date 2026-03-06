@@ -1,88 +1,121 @@
-<!-- Primera fila: Top Clientes y Ventas Totales -->
-<div class="dashboard-grid">
-    <p-toast position="top-right"></p-toast>
-    <!-- Card de Top Clientes (Izquierda Superior) -->
-    <p-card class="ventas-card">
-        <div class="card-header">
-            <div class="header-title">
-                <span class="title-text">Top Clientes con Más Compras</span>
-            </div>
+<p-toast position="top-right"></p-toast>
+
+<!-- ══ FILA 1: KPI Financieros ═══════════════════════════════════════════════ -->
+<div class="kpi-grid">
+
+    <!-- Ventas Hoy -->
+    <div class="kpi-card">
+        <div class="kpi-icon orange"><i class="pi pi-shopping-cart"></i></div>
+        <div class="kpi-body">
+            <div class="kpi-value">{{ formatCurrency(totalHoy) }}</div>
+            <div class="kpi-label">Ventas Hoy</div>
+            <div class="kpi-sub">{{ fechaHoy }}</div>
         </div>
+    </div>
 
-        <div class="chart-title">Resumen de Clientes</div>
-
-        <div class="chart-container">
-            <p-chart type="bar" [data]="clientesChartData" [options]="clientesChartOptions"
-                [style]="{'height': '280px'}">
-            </p-chart>
+    <!-- Ventas Semana -->
+    <div class="kpi-card">
+        <div class="kpi-icon purple"><i class="pi pi-chart-line"></i></div>
+        <div class="kpi-body">
+            <div class="kpi-value">{{ formatCurrency(totalSemana) }}</div>
+            <div class="kpi-label">Ventas Semana</div>
+            <div class="kpi-sub">Semana en curso</div>
         </div>
-    </p-card>
+    </div>
 
-    <!-- Card de Ventas Totales (Derecha Superior) -->
-    <p-card class="ventas-card">
-        <div class="card-header">
-            <div class="header-title">
-                <span class="title-text">Ventas Totales</span>
-            </div>
+    <!-- Ventas Mes -->
+    <div class="kpi-card">
+        <div class="kpi-icon green"><i class="pi pi-calendar"></i></div>
+        <div class="kpi-body">
+            <div class="kpi-value">{{ formatCurrency(totalMes) }}</div>
+            <div class="kpi-label">Ventas del Mes</div>
+            <div class="kpi-sub">{{ mesActual }}</div>
         </div>
+    </div>
 
-        <div class="metrics-grid">
-            <div class="metric-card">
-                <div class="metric-label">Hoy</div>
-                <div class="metric-value">{{ formatCurrency(totalHoy) }}</div>
-            </div>
-
-            <div class="metric-card">
-                <div class="metric-label">Semana</div>
-                <div class="metric-value">{{ formatCurrency(totalSemana) }}</div>
-            </div>
-
-            <div class="metric-card">
-                <div class="metric-label">Mes</div>
-                <div class="metric-value">{{ formatCurrency(totalMes) }}</div>
-            </div>
+    <!-- Cartera Pendiente -->
+    <div class="kpi-card" [class.kpi-alert]="(+resumen.total_cartera_pendiente || 0) > 0">
+        <div class="kpi-icon pink"><i class="pi pi-wallet"></i></div>
+        <div class="kpi-body">
+            <div class="kpi-value">{{ formatCurrency(+resumen.total_cartera_pendiente || 0) }}</div>
+            <div class="kpi-label">Cartera Pendiente</div>
+            <div class="kpi-sub">{{ resumen.clientes_con_cartera || 0 }} cliente(s) con deuda</div>
         </div>
+    </div>
 
-        <div class="chart-title">Resumen de Ingresos</div>
-
-        <div class="chart-container">
-            <p-chart type="bar" [data]="chartData" [options]="chartOptions" [style]="{'height': '280px'}">
-            </p-chart>
-        </div>
-    </p-card>
 </div>
 
-<!-- Segunda fila: Productos Más Vendidos y Total Anual -->
-<div class="dashboard-grid">
-    <!-- Card de Productos Más Vendidos (Izquierda Inferior) -->
-    <p-card class="ventas-card">
-        <div class="card-header">
-            <div class="header-title">
-                <span class="title-text">Productos Más Vendidos del Mes</span>
-            </div>
-        </div>
+<!-- ══ FILA 2: KPI Operativos ════════════════════════════════════════════════ -->
+<div class="kpi-grid kpi-grid-3">
 
-        <div class="chart-title">Top 5 Productos</div>
-
-        <div class="chart-container">
-            <p-chart type="bar" [data]="productosChartData" [options]="productosChartOptions"
-                [style]="{'height': '280px'}">
-            </p-chart>
+    <!-- Clientes Activos -->
+    <div class="kpi-card">
+        <div class="kpi-icon blue"><i class="pi pi-users"></i></div>
+        <div class="kpi-body">
+            <div class="kpi-value">{{ resumen.total_clientes || 0 }}</div>
+            <div class="kpi-label">Clientes Activos</div>
+            <div class="kpi-sub">Registrados en el sistema</div>
         </div>
-    </p-card>
+    </div>
 
-    <!-- Card de Total por Años y Meses (Derecha Inferior) -->
-    <p-card class="ventas-card annual-card">
-        <div class="card-header">
-            <div class="header-title">
-                <span class="title-text">Total por Años y Meses</span>
-            </div>
+    <!-- Productos con Stock Bajo -->
+    <div class="kpi-card" [class.kpi-alert]="(+resumen.productos_stock_bajo || 0) > 0">
+        <div class="kpi-icon" [ngClass]="(+resumen.productos_stock_bajo || 0) > 0 ? 'red' : 'green'">
+            <i class="pi pi-box"></i>
         </div>
+        <div class="kpi-body">
+            <div class="kpi-value">{{ resumen.productos_stock_bajo || 0 }}</div>
+            <div class="kpi-label">Sin Stock</div>
+            <div class="kpi-sub">Productos agotados (stock = 0)</div>
+        </div>
+    </div>
 
-        <div class="chart-container annual-chart">
-            <p-chart type="bar" [data]="ventasAnualesChartData" [options]="ventasAnualesChartOptions"
-                [style]="{'height': '280px'}">
-            </p-chart>
+    <!-- Solicitudes Pendientes -->
+    <div class="kpi-card" [class.kpi-alert]="(+resumen.solicitudes_pendientes || 0) > 0">
+        <div class="kpi-icon amber"><i class="pi pi-file-edit"></i></div>
+        <div class="kpi-body">
+            <div class="kpi-value">{{ resumen.solicitudes_pendientes || 0 }}</div>
+            <div class="kpi-label">Solicitudes Pendientes</div>
+            <div class="kpi-sub">Por aprobar o rechazar</div>
         </div>
-    </p-card>
+    </div>
+
+</div>
+
+<!-- ══ FILA 3: Evolución Anual (full width) ══════════════════════════════════ -->
+<div class="section-card">
+    <div class="section-header">
+        <span class="section-title">Evolución de Ventas por Año y Mes</span>
+        <span class="section-badge pink">Histórico</span>
+    </div>
+    <p-chart type="bar" [data]="ventasAnualesChartData" [options]="ventasAnualesChartOptions"
+        [style]="{'height': '300px'}">
+    </p-chart>
+</div>
+
+<!-- ══ FILA 4: Top Clientes + Top Productos ══════════════════════════════════ -->
+<div class="chart-grid-2">
+
+    <!-- Top Clientes -->
+    <div class="section-card mb-0">
+        <div class="section-header">
+            <span class="section-title">Top 5 Clientes</span>
+            <span class="section-badge gray">Por monto total</span>
+        </div>
+        <p-chart type="bar" [data]="clientesChartData" [options]="clientesChartOptions"
+            [style]="{'height': '280px'}">
+        </p-chart>
+    </div>
+
+    <!-- Top Productos -->
+    <div class="section-card mb-0">
+        <div class="section-header">
+            <span class="section-title">Top 5 Productos del Mes</span>
+            <span class="section-badge gray">Por unidades vendidas</span>
+        </div>
+        <p-chart type="bar" [data]="productosChartData" [options]="productosChartOptions"
+            [style]="{'height': '280px'}">
+        </p-chart>
+    </div>
+
 </div>

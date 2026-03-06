@@ -1,6 +1,5 @@
 <div class="card">
     <p-toast position="top-right"></p-toast>
-    <p-confirmDialog></p-confirmDialog>
 
     <p-table #dt [value]="carteraCliente" dataKey="internalId" [loading]="loading" showGridlines
         [expandedRowKeys]="expandedRows" [globalFilterFields]="['nombre', 'numero_id', 'forma_pago', 'estado_venta']"
@@ -58,11 +57,7 @@
                         <p-columnFilter type="numeric" field="total" display="menu" currency="COP"></p-columnFilter>
                     </div>
                 </th>
-                <th>
-                    <div class="flex items-center justify-between">
-                        Pago Total
-                    </div>
-                </th>
+                <th>Pago Total</th>
             </tr>
         </ng-template>
 
@@ -80,10 +75,10 @@
                 <td>{{ cliente.total | currency }}</td>
                 <td>
                     <div class="flex gap-2">
-                        <p-button label="EFECTIVO" (onClick)="actualizarPagoTotal(cliente.numero_id, 'EF')"
+                        <p-button label="EFECTIVO" (onClick)="confirmarPagoTotal(cliente, 'EF')"
                             severity="success" size="small" icon="pi pi-money-bill" />
-                        <p-button label="NEQUI" (onClick)="actualizarPagoTotal(cliente.numero_id, 'NE')" severity="info"
-                            size="small" icon="pi pi-mobile" />
+                        <p-button label="NEQUI" (onClick)="confirmarPagoTotal(cliente, 'NE')"
+                            severity="info" size="small" icon="pi pi-mobile" />
                     </div>
                 </td>
             </tr>
@@ -92,9 +87,7 @@
         <ng-template #loadingbody>
             <tr>
                 <td colspan="8">
-                    <div class="flex justify-center">
-                        <span>Cargando...</span>
-                    </div>
+                    <div class="flex justify-center"><span>Cargando...</span></div>
                 </td>
             </tr>
         </ng-template>
@@ -102,9 +95,7 @@
         <ng-template #emptymessage>
             <tr>
                 <td colspan="8">
-                    <div class="flex justify-center">
-                        No hay ventas disponibles.
-                    </div>
+                    <div class="flex justify-center">No hay ventas disponibles.</div>
                 </td>
             </tr>
         </ng-template>
@@ -116,72 +107,187 @@
                         <h5 class="mb-3 font-semibold text-lg">Ventas del Cliente</h5>
                         <p-table [value]="cliente.ventas" dataKey="id_venta" styleClass="mb-4">
                             <ng-template #header>
-            <tr>
-                <th>ID Venta</th>
-                <th>Fecha</th>
-                <th>Total</th>
-                <th>Estado</th>
-                <th>Acciones Individuales</th>
-            </tr>
-        </ng-template>
-        <ng-template #body let-venta>
-            <tr>
-                <td>{{ venta.id_venta }}</td>
-                <td>{{ venta.fecha_venta }}</td>
-                <td>{{ venta.total | currency }}</td>
-                <td>{{ venta.estado_venta }}</td>
-                <td>
-                    <div class="flex gap-2">
-                        <p-button label="EFECTIVO" (onClick)="actualizarTipoPago(venta.id_venta, 'EF')"
-                            severity="success" size="small" />
-                        <p-button label="NEQUI" (onClick)="actualizarTipoPago(venta.id_venta, 'NE')" severity="info"
-                            size="small" />
-                    </div>
-                </td>
-            </tr>
-        </ng-template>
-        <ng-template #emptymessage>
-            <tr>
-                <td colspan="5">
-                    <div class="flex items-center justify-center">
-                        No hay ventas disponibles.
-                    </div>
-                </td>
-            </tr>
-        </ng-template>
-    </p-table>
+                                <tr>
+                                    <th>ID Venta</th>
+                                    <th>Fecha</th>
+                                    <th>Total</th>
+                                    <th>Estado</th>
+                                    <th>Acciones Individuales</th>
+                                </tr>
+                            </ng-template>
+                            <ng-template #body let-venta>
+                                <tr>
+                                    <td>{{ venta.id_venta }}</td>
+                                    <td>{{ venta.fecha_venta }}</td>
+                                    <td>{{ venta.total | currency }}</td>
+                                    <td>{{ venta.estado_venta }}</td>
+                                    <td>
+                                        <div class="flex gap-2">
+                                            <p-button label="EFECTIVO"
+                                                (onClick)="confirmarPagoIndividual(venta.id_venta, 'EF')"
+                                                severity="success" size="small" icon="pi pi-money-bill" />
+                                            <p-button label="NEQUI"
+                                                (onClick)="confirmarPagoIndividual(venta.id_venta, 'NE')"
+                                                severity="info" size="small" icon="pi pi-mobile" />
+                                        </div>
+                                    </td>
+                                </tr>
+                            </ng-template>
+                            <ng-template #emptymessage>
+                                <tr>
+                                    <td colspan="5">
+                                        <div class="flex items-center justify-center">No hay ventas disponibles.</div>
+                                    </td>
+                                </tr>
+                            </ng-template>
+                        </p-table>
 
-    <h5 class="mb-3 font-semibold text-lg">Detalle de Productos Consolidado</h5>
-    <p-table [value]="getDetalleConsolidado(cliente.ventas)" dataKey="producto">
-        <ng-template #header>
-            <tr>
-                <th>Producto</th>
-                <th>Cantidad Total</th>
-                <th>Precio Unitario</th>
-                <th>Subtotal</th>
-            </tr>
-        </ng-template>
-        <ng-template #body let-detalle>
-            <tr>
-                <td>{{ detalle.producto }}</td>
-                <td>{{ detalle.cantidad }}</td>
-                <td>{{ detalle.precio_unitario | currency }}</td>
-                <td>{{ detalle.subtotal | currency }}</td>
-            </tr>
-        </ng-template>
-        <ng-template #emptymessage>
-            <tr>
-                <td colspan="4">
-                    <div class="flex items-center justify-center">
-                        No hay detalles disponibles.
+                        <h5 class="mb-3 font-semibold text-lg">Detalle de Productos Consolidado</h5>
+                        <p-table [value]="getDetalleConsolidado(cliente.ventas)" dataKey="producto">
+                            <ng-template #header>
+                                <tr>
+                                    <th>Producto</th>
+                                    <th>Cantidad Total</th>
+                                    <th>Precio Unitario</th>
+                                    <th>Subtotal</th>
+                                </tr>
+                            </ng-template>
+                            <ng-template #body let-detalle>
+                                <tr>
+                                    <td>{{ detalle.producto }}</td>
+                                    <td>{{ detalle.cantidad }}</td>
+                                    <td>{{ detalle.precio_unitario | currency }}</td>
+                                    <td>{{ detalle.subtotal | currency }}</td>
+                                </tr>
+                            </ng-template>
+                            <ng-template #emptymessage>
+                                <tr>
+                                    <td colspan="4">
+                                        <div class="flex items-center justify-center">No hay detalles disponibles.</div>
+                                    </td>
+                                </tr>
+                            </ng-template>
+                        </p-table>
                     </div>
                 </td>
             </tr>
         </ng-template>
     </p-table>
 </div>
-</td>
-</tr>
-</ng-template>
-</p-table>
-</div>
+
+
+<!-- ═══════════════════════════════════════════════════════
+     MODAL: Confirmar pago individual
+     ═══════════════════════════════════════════════════════ -->
+<p-dialog [(visible)]="showConfirmIndividual" [modal]="true" [style]="{ width: '460px' }"
+    [showHeader]="false" [closable]="false">
+
+    <div class="confirm-wrapper">
+
+        <div class="confirm-icon" [ngClass]="pendingTipoPago === 'EF' ? 'green' : 'blue'">
+            <i class="pi" [ngClass]="pendingTipoPago === 'EF' ? 'pi-money-bill' : 'pi-mobile'"></i>
+        </div>
+
+        <p class="confirm-title">Confirmar pago</p>
+        <p class="confirm-subtitle">
+            Registrar el pago de la venta con el siguiente método seleccionado.
+        </p>
+
+        <div class="summary-box">
+            <div class="summary-row">
+                <span class="sr-label">Venta</span>
+                <span class="sr-value">#{{ pendingVentaId }}</span>
+            </div>
+            <div class="summary-row">
+                <span class="sr-label">Método de pago</span>
+                <span class="sr-value">
+                    <span class="method-badge" [ngClass]="pendingTipoPago === 'EF' ? 'ef' : 'ne'">
+                        <i class="pi" [ngClass]="pendingTipoPago === 'EF' ? 'pi-money-bill' : 'pi-mobile'"></i>
+                        {{ pendingTipoPagoNombre }}
+                    </span>
+                </span>
+            </div>
+        </div>
+
+        <div class="info-note blue">
+            <i class="pi pi-info-circle"></i>
+            <span>La venta quedará marcada como <strong>PAGADA</strong> y se actualizará el estado en la cartera.</span>
+        </div>
+
+        <div class="flex gap-3 justify-center w-full mt-5">
+            <p-button label="Cancelar" severity="secondary" [text]="true"
+                [disabled]="procesando"
+                (onClick)="showConfirmIndividual = false; pendingVentaId = null">
+            </p-button>
+            <p-button label="Sí, confirmar pago" [icon]="pendingTipoPago === 'EF' ? 'pi pi-money-bill' : 'pi pi-mobile'"
+                severity="success" [loading]="procesando" [disabled]="procesando"
+                (onClick)="ejecutarPagoIndividual()">
+            </p-button>
+        </div>
+
+    </div>
+</p-dialog>
+
+
+<!-- ═══════════════════════════════════════════════════════
+     MODAL: Confirmar pago total del cliente
+     ═══════════════════════════════════════════════════════ -->
+<p-dialog [(visible)]="showConfirmTotal" [modal]="true" [style]="{ width: '480px' }"
+    [showHeader]="false" [closable]="false">
+
+    <div class="confirm-wrapper">
+
+        <div class="confirm-icon" [ngClass]="pendingTipoPago === 'EF' ? 'green' : 'blue'">
+            <i class="pi pi-wallet"></i>
+        </div>
+
+        <p class="confirm-title">Pago total del cliente</p>
+        <p class="confirm-subtitle">
+            Se actualizarán <strong>todas las ventas a crédito</strong> de este cliente
+            con el método de pago seleccionado.
+        </p>
+
+        <div class="summary-box">
+            <div class="summary-row">
+                <span class="sr-label">Cliente</span>
+                <span class="sr-value">{{ pendingClienteNombre }}</span>
+            </div>
+            <div class="summary-row">
+                <span class="sr-label">Ventas a liquidar</span>
+                <span class="sr-value">{{ pendingClienteVentas }} venta(s)</span>
+            </div>
+            <div class="summary-row">
+                <span class="sr-label">Total a registrar</span>
+                <span class="sr-value sr-total">
+                    {{ pendingClienteTotal | currency:'COP':'symbol-narrow':'1.0-0' }}
+                </span>
+            </div>
+            <div class="summary-row">
+                <span class="sr-label">Método de pago</span>
+                <span class="sr-value">
+                    <span class="method-badge" [ngClass]="pendingTipoPago === 'EF' ? 'ef' : 'ne'">
+                        <i class="pi" [ngClass]="pendingTipoPago === 'EF' ? 'pi-money-bill' : 'pi-mobile'"></i>
+                        {{ pendingTipoPagoNombre }}
+                    </span>
+                </span>
+            </div>
+        </div>
+
+        <div class="info-note amber">
+            <i class="pi pi-exclamation-triangle"></i>
+            <span>Esta acción liquidará <strong>todas</strong> las ventas pendientes del cliente. Verifica el total antes de continuar.</span>
+        </div>
+
+        <div class="flex gap-3 justify-center w-full mt-5">
+            <p-button label="Cancelar" severity="secondary" [text]="true"
+                [disabled]="procesando"
+                (onClick)="showConfirmTotal = false; pendingClienteId = null">
+            </p-button>
+            <p-button label="Sí, liquidar todo" icon="pi pi-check"
+                severity="success" [loading]="procesando" [disabled]="procesando"
+                (onClick)="ejecutarPagoTotal()">
+            </p-button>
+        </div>
+
+    </div>
+</p-dialog>

@@ -1,191 +1,154 @@
-.ventas-container {
-    padding: 1.5rem;
-    max-width: 1400px;
-    margin: 0 auto;
-}
+// ── KPI Grid ─────────────────────────────────────────────────────────────────
 
-/* Grid para las dos cards lado a lado */
-.dashboard-grid {
+.kpi-grid {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 1.5rem;
-    margin-bottom: 1.5rem;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.25rem;
+    margin-bottom: 1.25rem;
+
+    &.kpi-grid-3 {
+        grid-template-columns: repeat(3, 1fr);
+    }
 }
 
-.ventas-card {
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    border-radius: 12px;
-}
-
-.annual-card {
-    background: linear-gradient(to bottom, #ffffff 0%, #f9fafb 100%);
-}
-
-.card-header {
-    margin-bottom: 1rem;
-}
-
-.header-title {
+.kpi-card {
+    background: #ffffff;
+    border-radius: 14px;
+    padding: 1.25rem 1.5rem;
+    box-shadow: 0 1px 6px rgba(0, 0, 0, 0.07);
     display: flex;
     align-items: center;
-    gap: 0.75rem;
-}
-
-.header-icon {
-    font-size: 1.5rem;
-    color: #10B981;
-    background: #D1FAE5;
-    padding: 0.5rem;
-    border-radius: 8px;
-}
-
-/* Icono específico para clientes */
-.pi-users.header-icon {
-    color: #3B82F6;
-    background: #DBEAFE;
-}
-
-/* Icono para gráfico de barras */
-.pi-chart-bar.header-icon {
-    color: #8B5CF6;
-    background: #EDE9FE;
-}
-
-.title-text {
-    font-size: 1.125rem;
-    font-weight: 600;
-    color: #1F2937;
-}
-
-/* Metrics Grid */
-.metrics-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
     gap: 1rem;
-    margin-bottom: 1.5rem;
+    transition: transform 0.18s ease, box-shadow 0.18s ease;
+    border-left: 3px solid transparent;
+
+    &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    &.kpi-alert {
+        border-left-color: #f59e0b;
+        background: linear-gradient(135deg, #ffffff 0%, #fffbf0 100%);
+    }
+
+    .kpi-icon {
+        width: 52px;
+        height: 52px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        i { font-size: 1.4rem; }
+
+        &.orange { background: #fff7ed; color: #f97316; }
+        &.purple { background: #f5f3ff; color: #8b5cf6; }
+        &.green  { background: #f0fdf4; color: #22c55e; }
+        &.pink   { background: #fdf2f8; color: #ee2a7b; }
+        &.amber  { background: #fffbeb; color: #f59e0b; }
+        &.blue   { background: #eff6ff; color: #3b82f6; }
+        &.red    { background: #fef2f2; color: #ef4444; }
+    }
+
+    .kpi-body {
+        min-width: 0;
+
+        .kpi-value {
+            font-size: 1.4rem;
+            font-weight: 800;
+            color: #111827;
+            line-height: 1.2;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .kpi-label {
+            font-size: 0.7rem;
+            color: #9ca3af;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+            margin-top: 3px;
+        }
+
+        .kpi-sub {
+            font-size: 0.75rem;
+            color: #6b7280;
+            margin-top: 2px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+    }
 }
 
-.metric-card {
-    padding: 1rem;
-    background: #F9FAFB;
-    border-radius: 10px;
-    border-left: 4px solid #10B981;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
+// ── Section Cards (charts) ────────────────────────────────────────────────────
+
+.section-card {
+    background: #ffffff;
+    border-radius: 14px;
+    padding: 1.5rem;
+    box-shadow: 0 1px 6px rgba(0, 0, 0, 0.07);
+    margin-bottom: 1.25rem;
+
+    &.mb-0 { margin-bottom: 0; }
+
+    .section-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 1.25rem;
+        padding-bottom: 0.875rem;
+        border-bottom: 1px solid #f3f4f6;
+
+        .section-title {
+            font-size: 1rem;
+            font-weight: 700;
+            color: #111827;
+        }
+
+        .section-badge {
+            font-size: 0.7rem;
+            font-weight: 700;
+            padding: 0.2rem 0.65rem;
+            border-radius: 999px;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+
+            &.pink { background: #fdf2f8; color: #ee2a7b; }
+            &.gray { background: #f3f4f6; color: #6b7280; }
+        }
+    }
 }
 
-.metric-card:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+// ── Chart grids ───────────────────────────────────────────────────────────────
+
+.chart-grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.25rem;
+    margin-bottom: 1.25rem;
 }
 
-.metric-card:nth-child(1) {
-    border-left-color: #FE6A35;
-}
+// ── Responsive ────────────────────────────────────────────────────────────────
 
-.metric-card:nth-child(2) {
-    border-left-color: #8B5CF6;
-}
-
-.metric-card:nth-child(3) {
-    border-left-color: #10B981;
-}
-
-.metric-label {
-    font-size: 0.75rem;
-    color: #6B7280;
-    font-weight: 500;
-    margin-bottom: 0.5rem;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-}
-
-.metric-value {
-    font-size: 1.5rem;
-    font-weight: 700;
-    color: #1F2937;
-}
-
-/* Chart Section */
-.chart-title {
-    font-size: 0.95rem;
-    font-weight: 600;
-    color: #1F2937;
-    text-align: center;
-    margin-bottom: 1rem;
-    padding-bottom: 0.5rem;
-    border-bottom: 2px solid #E5E7EB;
-}
-
-.chart-container {
-    padding: 0.5rem 0;
-}
-
-.annual-chart {
-    padding: 1rem;
-}
-
-/* Responsive Design */
 @media (max-width: 1200px) {
-    .dashboard-grid {
+    .kpi-grid {
+        grid-template-columns: repeat(2, 1fr);
+        &.kpi-grid-3 { grid-template-columns: repeat(2, 1fr); }
+    }
+    .chart-grid-2 { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 640px) {
+    .kpi-grid {
         grid-template-columns: 1fr;
-        gap: 1.5rem;
+        &.kpi-grid-3 { grid-template-columns: 1fr; }
     }
 }
 
-@media (max-width: 768px) {
-    .ventas-container {
-        padding: 1rem;
-    }
+// ── PrimeNG overrides ─────────────────────────────────────────────────────────
 
-    .metrics-grid {
-        grid-template-columns: 1fr;
-        gap: 1rem;
-    }
-
-    .metric-value {
-        font-size: 1.5rem;
-    }
-
-    .title-text {
-        font-size: 1rem;
-    }
-
-    .chart-container {
-        overflow-x: auto;
-    }
-
-    .annual-chart {
-        padding: 1rem 0.5rem;
-    }
-}
-
-@media (max-width: 480px) {
-    .title-text {
-        font-size: 1rem;
-    }
-
-    .header-icon {
-        font-size: 1.25rem;
-        padding: 0.4rem;
-    }
-}
-
-/* PrimeNG Card Override */
-::ng-deep .ventas-card .p-card-body {
-    padding: 1.25rem;
-}
-
-::ng-deep .ventas-card .p-card-content {
-    padding: 0;
-}
-
-/* Chart Legend Custom Style */
-::ng-deep .chart-container canvas {
-    max-width: 100%;
-    height: auto !important;
-}
-
-/* Estilo específico para el gráfico anual */
-::ng-deep .annual-chart .p-chart {
-    width: 100%;
-}
+::ng-deep .p-toast { z-index: 9999; }
