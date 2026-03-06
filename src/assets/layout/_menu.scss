@@ -1,5 +1,50 @@
 @use 'mixins' as *;
 
+// ── Sidebar brand header ──────────────────────────────────────────────────────
+
+.sidebar-brand {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.875rem 0.5rem 0.75rem;
+
+    .sidebar-logo {
+        width: 44px;
+        height: 44px;
+        object-fit: contain;
+        flex-shrink: 0;
+    }
+
+    .sidebar-brand-text {
+        display: flex;
+        flex-direction: column;
+        line-height: 1.3;
+
+        .sidebar-name {
+            font-size: 1rem;
+            font-weight: 800;
+            color: #ee2a7b;
+            letter-spacing: -0.3px;
+        }
+
+        .sidebar-sub {
+            font-size: 0.65rem;
+            font-weight: 600;
+            color: var(--text-color-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+        }
+    }
+}
+
+.sidebar-divider {
+    height: 1px;
+    background: var(--surface-border);
+    margin: 0 0 0.75rem;
+}
+
+// ── Sidebar panel ─────────────────────────────────────────────────────────────
+
 .layout-sidebar {
     position: fixed;
     width: 20rem;
@@ -84,7 +129,10 @@
 
             &.active-route {
                 font-weight: 700;
-                color: var(--primary-color);
+                color: #ee2a7b;
+                background: linear-gradient(135deg, rgba(238, 42, 123, 0.08), rgba(238, 42, 123, 0.04));
+                border-left: 3px solid #ee2a7b;
+                padding-left: calc(1rem - 3px);
             }
 
             &:hover {

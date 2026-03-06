@@ -29,6 +29,12 @@
 
     <div class="layout-topbar-actions">
 
+        <!-- Botón tema oscuro/claro -->
+        <button class="layout-topbar-action topbar-theme-btn" (click)="toggleDarkMode()"
+            [pTooltip]="isDark ? 'Cambiar a modo claro' : 'Cambiar a modo oscuro'" tooltipPosition="bottom">
+            <i [class]="isDark ? 'pi pi-sun' : 'pi pi-moon'"></i>
+        </button>
+
         <button class="layout-topbar-menu-button layout-topbar-action" pStyleClass="@next" enterFromClass="hidden"
             enterActiveClass="animate-scalein" leaveToClass="hidden" leaveActiveClass="animate-fadeout"
             [hideOnOutsideClick]="true">
@@ -39,9 +45,15 @@
             <div class="layout-topbar-menu-content">
                 <div>
                     <p-menu #menu [model]="items" popup="true"></p-menu>
-                    <button type="button" (click)="menu.toggle($event)" class="layout-topbar-action">
-                        <i class="pi pi-user"></i>
-                        <span>Profile</span>
+                    <button type="button" (click)="menu.toggle($event)" class="layout-topbar-action topbar-user-btn">
+                        <div class="topbar-avatar">
+                            <i class="pi pi-user"></i>
+                        </div>
+                        <div class="topbar-user-info">
+                            <span class="topbar-user-name">{{ userName }}</span>
+                            <span class="topbar-user-role">Administrador</span>
+                        </div>
+                        <i class="pi pi-chevron-down topbar-chevron"></i>
                     </button>
                 </div>
             </div>

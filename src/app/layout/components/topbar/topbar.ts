@@ -16,11 +16,12 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { Button } from "primeng/button";
 import { Password } from "primeng/password";
 import { ConfirmDialog } from "primeng/confirmdialog";
+import { Tooltip } from 'primeng/tooltip';
 
 @Component({
     selector: 'app-topbar',
     standalone: true,
-    imports: [RouterModule, CommonModule, StyleClassModule, Menu, Toast, Dialog, ReactiveFormsModule, Button, Password, ConfirmDialog],
+    imports: [RouterModule, CommonModule, StyleClassModule, Menu, Toast, Dialog, ReactiveFormsModule, Button, Password, ConfirmDialog, Tooltip],
     templateUrl: './topbar.html',
     providers: [MessageService, ConfirmationService],
     styleUrl: './topbar.scss'
@@ -31,6 +32,15 @@ export class Topbar implements OnInit {
     isVisible: boolean = false;
     form: FormGroup;
     with_screen: number = window.innerWidth;
+
+    get userName(): string {
+        const u = this.authService.getUsuario;
+        return u?.USERNAME || u?.NOMBRE || 'Usuario';
+    }
+
+    get isDark(): boolean {
+        return this.layoutService.isDarkTheme();
+    }
 
 
     constructor(
