@@ -34,7 +34,7 @@ export class Topbar implements OnInit {
 
     get userName(): string {
         const u = this.authService.getUsuario;
-        return u?.USERNAME || u?.NOMBRE || 'Usuario';
+        return u?.USERNAME || u?.NOMBRES || 'Usuario';
     }
 
     get isDark(): boolean {
