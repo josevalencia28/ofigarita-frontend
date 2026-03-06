@@ -1,0 +1,371 @@
+<div class="card">
+    <p-toast position="top-right"></p-toast>
+
+    <!-- ───────── Tabla principal ───────── -->
+    <p-table #dt [value]="solicitudes" dataKey="id_solicitud" [loading]="loading" showGridlines
+        [globalFilterFields]="['proveedor', 'estado', 'fcha_rgstro']"
+        [paginator]="true" [rows]="10" [rowsPerPageOptions]="[5, 10, 20]">
+
+        <ng-template pTemplate="caption">
+            <div class="flex flex-wrap justify-between items-center gap-4">
+                <span class="text-xl font-bold text-gray-700">SOLICITUDES DE COMPRA</span>
+                <p-iconField iconPosition="left" class="flex-1 max-w-md">
+                    <p-inputicon><i class="pi pi-search"></i></p-inputicon>
+                    <input pInputText type="text"
+                        (input)="dt.filterGlobal($any($event.target).value, 'contains')"
+                        class="w-full" placeholder="Buscar por proveedor o estado" />
+                </p-iconField>
+                <p-button label="Nueva Solicitud" icon="pi pi-plus" severity="success" (onClick)="abrirModalNueva()" />
+            </div>
+        </ng-template>
+
+        <ng-template pTemplate="header">
+            <tr>
+                <th style="width:5%">#</th>
+                <th style="width:14%; text-align:center">Estado</th>
+                <th pSortableColumn="proveedor" style="width:22%">
+                    Proveedor <p-sortIcon field="proveedor"></p-sortIcon>
+                </th>
+                <th pSortableColumn="fecha" style="width:16%">
+                    Fecha <p-sortIcon field="fecha"></p-sortIcon>
+                </th>
+                <th style="width:14%">Total Estimado</th>
+                <th style="width:12%; text-align:center">N° Productos</th>
+                <th style="width:17%; text-align:center">Acciones</th>
+            </tr>
+        </ng-template>
+
+        <ng-template pTemplate="body" let-sol let-i="rowIndex">
+            <tr>
+                <td class="text-gray-400 text-sm">{{ i + 1 }}</td>
+                <td class="text-center">
+                    <p-tag [value]="sol.estado" [severity]="getSeveridadEstado(sol.estado)"></p-tag>
+                </td>
+                <td>{{ sol.proveedor ?? '—' }}</td>
+                <td>{{ sol.fecha | date:'dd/MM/yyyy' }}</td>
+                <td class="font-semibold text-primary">
+                    {{ sol.total_estimado | currency:'COP':'symbol-narrow':'1.0-0' }}
+                </td>
+                <td class="text-center">
+                    <p-tag [value]="(sol.productos?.length ?? 0) + ' producto(s)'"
+                        [severity]="(sol.productos?.length ?? 0) > 0 ? 'success' : 'warn'">
+                    </p-tag>
+                </td>
+                <td>
+                    <div class="flex gap-1 justify-center">
+                        <p-button icon="pi pi-eye" [rounded]="true" [text]="true" severity="info"
+                            pTooltip="Ver detalle" (onClick)="verDetalle(sol)">
+                        </p-button>
+                        <p-button *ngIf="sol.estado === 'PENDIENTE'"
+                            icon="pi pi-check" [rounded]="true" [text]="true" severity="success"
+                            pTooltip="Aprobar solicitud" (onClick)="confirmarAprobar(sol)">
+                        </p-button>
+                        <p-button *ngIf="sol.estado === 'PENDIENTE'"
+                            icon="pi pi-times" [rounded]="true" [text]="true" severity="danger"
+                            pTooltip="Rechazar solicitud" (onClick)="confirmarRechazar(sol)">
+                        </p-button>
+                    </div>
+                </td>
+            </tr>
+        </ng-template>
+
+        <ng-template pTemplate="emptymessage">
+            <tr>
+                <td colspan="7" class="text-center py-10 text-gray-400">
+                    <i class="pi pi-inbox text-4xl block mb-2"></i>
+                    No se encontraron solicitudes de compra.
+                </td>
+            </tr>
+        </ng-template>
+
+    </p-table>
+</div>
+
+
+<!-- ───────── Modal: Nueva solicitud ───────── -->
+<p-dialog header="Nueva Solicitud de Compra" [(visible)]="showModalNueva" [modal]="true"
+    [style]="{ width: '780px' }" [closable]="true" (onHide)="cerrarModalNueva()">
+
+    <div class="flex flex-col gap-5 pt-2">
+
+        <!-- Datos generales -->
+        <div class="grid grid-cols-2 gap-4">
+            <div class="flex flex-col gap-1">
+                <label class="text-sm font-semibold text-gray-600">Fecha <span class="text-red-500">*</span></label>
+                <input pInputText type="date" [(ngModel)]="nuevaSolicitud.fecha" class="w-full" />
+            </div>
+            <div class="flex flex-col gap-1">
+                <label class="text-sm font-semibold text-gray-600">Proveedor <span class="text-red-500">*</span></label>
+                <input pInputText type="text" [(ngModel)]="nuevaSolicitud.proveedor"
+                    placeholder="Nombre del proveedor" class="w-full" />
+            </div>
+        </div>
+
+        <div class="flex flex-col gap-1">
+            <label class="text-sm font-semibold text-gray-600">Observaciones</label>
+            <textarea pTextarea [(ngModel)]="nuevaSolicitud.observaciones"
+                placeholder="Notas adicionales..." rows="2" class="w-full resize-none"></textarea>
+        </div>
+
+        <!-- Sección agregar producto -->
+        <div class="border border-gray-200 rounded-lg p-4 bg-gray-50">
+            <p class="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-3">Agregar producto</p>
+
+            <!-- Toggle: catálogo vs nuevo -->
+            <div class="flex items-center gap-2 mb-3">
+                <p-checkbox [(ngModel)]="productoTemp.es_nuevo" [binary]="true"
+                    inputId="esNuevo" (onChange)="onNuevoToggle()">
+                </p-checkbox>
+                <label for="esNuevo" class="text-sm text-gray-600 cursor-pointer select-none">
+                    Producto nuevo (no está en el catálogo)
+                </label>
+            </div>
+
+            <!-- Del catálogo -->
+            <div *ngIf="!productoTemp.es_nuevo" class="flex flex-col gap-1 mb-3">
+                <label class="text-xs text-gray-500">Producto del catálogo <span class="text-red-500">*</span></label>
+                <p-select [options]="productos" appendTo="body" [(ngModel)]="productoSeleccionado"
+                    optionLabel="nombre_producto" [filter]="true" filterBy="nombre_producto"
+                    placeholder="Buscar producto..." [loading]="loadingProductos" [showClear]="true"
+                    styleClass="w-full" (onChange)="onProductoSeleccionado($event.value)">
+                    <ng-template let-prod pTemplate="item">
+                        <div class="flex items-center justify-between gap-3 py-1">
+                            <span class="font-medium text-sm">{{ prod.nombre_producto }}</span>
+                            <span class="text-xs text-gray-400">Stock: {{ prod.stock }}</span>
+                        </div>
+                    </ng-template>
+                    <ng-template let-prod pTemplate="selectedItem">
+                        <span class="font-medium text-sm">{{ prod.nombre_producto }}</span>
+                    </ng-template>
+                </p-select>
+            </div>
+
+            <!-- Producto nuevo -->
+            <div *ngIf="productoTemp.es_nuevo" class="grid grid-cols-2 gap-3 mb-3">
+                <div class="flex flex-col gap-1">
+                    <label class="text-xs text-gray-500">Nombre del producto <span class="text-red-500">*</span></label>
+                    <input pInputText type="text" [(ngModel)]="productoTemp.nombre_producto_nuevo"
+                        placeholder="Ej: Mani surtido grande" class="w-full" />
+                </div>
+                <div class="flex flex-col gap-1">
+                    <label class="text-xs text-gray-500">Precio venta sugerido</label>
+                    <p-inputNumber [(ngModel)]="productoTemp.precio_venta_sugerido" [min]="0"
+                        mode="currency" currency="COP" locale="es-CO" placeholder="$0" styleClass="w-full">
+                    </p-inputNumber>
+                </div>
+            </div>
+
+            <!-- Cantidad / valores (siempre visible) -->
+            <div class="grid grid-cols-3 gap-3 mb-3">
+                <div class="flex flex-col gap-1">
+                    <label class="text-xs text-gray-500">Cantidad <span class="text-red-500">*</span></label>
+                    <p-inputNumber [(ngModel)]="productoTemp.cantidad" [min]="1" placeholder="0" styleClass="w-full">
+                    </p-inputNumber>
+                </div>
+                <div class="flex flex-col gap-1">
+                    <label class="text-xs text-gray-500">Valor paquete <span class="text-red-500">*</span></label>
+                    <p-inputNumber [(ngModel)]="productoTemp.valor_paquete" [min]="0"
+                        mode="currency" currency="COP" locale="es-CO" placeholder="$0" styleClass="w-full">
+                    </p-inputNumber>
+                </div>
+                <div class="flex flex-col gap-1">
+                    <label class="text-xs text-gray-500">Precio unitario</label>
+                    <p-inputNumber [(ngModel)]="productoTemp.precio_unitario" [min]="0"
+                        mode="currency" currency="COP" locale="es-CO" placeholder="$0" styleClass="w-full">
+                    </p-inputNumber>
+                </div>
+            </div>
+
+            <p-button label="+ Agregar a la lista" severity="secondary" size="small"
+                [disabled]="productoTemp.es_nuevo
+                    ? (!productoTemp.nombre_producto_nuevo?.trim() || productoTemp.cantidad <= 0 || productoTemp.valor_paquete <= 0)
+                    : (!productoSeleccionado || productoTemp.cantidad <= 0 || productoTemp.valor_paquete <= 0)"
+                (onClick)="agregarProducto()">
+            </p-button>
+        </div>
+
+        <!-- Lista de productos en la solicitud -->
+        <div *ngIf="nuevaSolicitud.productos.length > 0">
+            <p class="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-2">Productos en esta solicitud</p>
+            <p-table [value]="nuevaSolicitud.productos" showGridlines styleClass="p-datatable-sm">
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th>Producto</th>
+                        <th style="width:90px; text-align:center">Cant.</th>
+                        <th style="width:130px">Valor paquete</th>
+                        <th style="width:130px">Precio unit.</th>
+                        <th style="width:50px"></th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-prod let-i="rowIndex">
+                    <tr>
+                        <td>
+                            <span class="font-medium">{{ getNombreProductoEnLista(prod) }}</span>
+                            <p-tag *ngIf="!prod.id_producto" value="Nuevo" severity="info"
+                                styleClass="text-xs ml-2">
+                            </p-tag>
+                        </td>
+                        <td class="text-center">{{ prod.cantidad }}</td>
+                        <td>{{ prod.valor_paquete | currency:'COP':'symbol-narrow':'1.0-0' }}</td>
+                        <td>{{ prod.precio_unitario | currency:'COP':'symbol-narrow':'1.0-2' }}</td>
+                        <td>
+                            <p-button icon="pi pi-times" [rounded]="true" [text]="true"
+                                severity="danger" size="small" (onClick)="quitarProducto(i)">
+                            </p-button>
+                        </td>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="footer">
+                    <tr>
+                        <td colspan="2" class="font-semibold text-gray-600">Total estimado</td>
+                        <td colspan="3" class="font-bold text-primary text-base">
+                            {{ totalSolicitud | currency:'COP':'symbol-narrow':'1.0-0' }}
+                        </td>
+                    </tr>
+                </ng-template>
+            </p-table>
+        </div>
+
+    </div>
+
+    <ng-template pTemplate="footer">
+        <p-button label="Cancelar" severity="secondary" [text]="true" (onClick)="cerrarModalNueva()">
+        </p-button>
+        <p-button label="Registrar solicitud" icon="pi pi-save"
+            [disabled]="!formValido() || guardando" [loading]="guardando"
+            (onClick)="guardarSolicitud()">
+        </p-button>
+    </ng-template>
+</p-dialog>
+
+
+<!-- ───────── Modal: Detalle ───────── -->
+<p-dialog header="Detalle de Solicitud" [(visible)]="showModalDetalle" [modal]="true"
+    [style]="{ width: '760px' }" (onHide)="cerrarModalDetalle()">
+
+    <div class="flex flex-col gap-4 pt-2" *ngIf="solicitudSeleccionada">
+
+        <div class="grid grid-cols-2 gap-4 bg-gray-50 rounded-lg p-4 border border-gray-200">
+            <div>
+                <p class="text-xs text-gray-400 font-semibold uppercase tracking-wide">ID Solicitud</p>
+                <p class="font-bold text-gray-700">#{{ solicitudSeleccionada.id_solicitud }}</p>
+            </div>
+            <div>
+                <p class="text-xs text-gray-400 font-semibold uppercase tracking-wide">Estado</p>
+                <p-tag [value]="solicitudSeleccionada.estado"
+                    [severity]="getSeveridadEstado(solicitudSeleccionada.estado)">
+                </p-tag>
+            </div>
+            <div>
+                <p class="text-xs text-gray-400 font-semibold uppercase tracking-wide">Proveedor</p>
+                <p class="font-medium">{{ solicitudSeleccionada.proveedor ?? '—' }}</p>
+            </div>
+            <div>
+                <p class="text-xs text-gray-400 font-semibold uppercase tracking-wide">Fecha</p>
+                <p class="font-medium">{{ solicitudSeleccionada.fecha | date:'dd/MM/yyyy' }}</p>
+            </div>
+            <div *ngIf="solicitudSeleccionada.observaciones" class="col-span-2">
+                <p class="text-xs text-gray-400 font-semibold uppercase tracking-wide">Observaciones</p>
+                <p class="text-gray-700">{{ solicitudSeleccionada.observaciones }}</p>
+            </div>
+            <div class="col-span-2 border-t border-gray-200 pt-3">
+                <p class="text-xs text-gray-400 font-semibold uppercase tracking-wide">Total estimado</p>
+                <p class="font-bold text-primary text-lg">
+                    {{ solicitudSeleccionada.total_estimado | currency:'COP':'symbol-narrow':'1.0-0' }}
+                </p>
+            </div>
+        </div>
+
+        <p class="text-sm font-semibold text-gray-500 uppercase tracking-wide">Productos solicitados</p>
+        <p-table [value]="solicitudSeleccionada.productos ?? []" showGridlines styleClass="p-datatable-sm">
+            <ng-template pTemplate="header">
+                <tr>
+                    <th>Producto</th>
+                    <th style="width:8rem; text-align:center">Cantidad</th>
+                    <th style="width:12rem; text-align:right">Valor paquete</th>
+                    <th style="width:12rem; text-align:right">Precio unitario</th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-prod>
+                <tr>
+                    <td>
+                        {{ prod.nombre_producto }}
+                        <p-tag *ngIf="prod.es_nuevo" value="Nuevo" severity="info" styleClass="text-xs ml-2"></p-tag>
+                    </td>
+                    <td class="text-center">{{ prod.cantidad }}</td>
+                    <td class="text-right">{{ prod.valor_paquete | currency:'COP':'symbol-narrow':'1.0-0' }}</td>
+                    <td class="text-right">{{ prod.precio_unitario | currency:'COP':'symbol-narrow':'1.0-2' }}</td>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="emptymessage">
+                <tr>
+                    <td colspan="4" class="text-center py-4 text-gray-400">Sin productos registrados.</td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </div>
+
+    <ng-template pTemplate="footer">
+        <p-button label="Cerrar" severity="secondary" (onClick)="cerrarModalDetalle()"></p-button>
+    </ng-template>
+</p-dialog>
+
+
+<!-- ───────── Modal: Confirmar Aprobación ───────── -->
+<p-dialog header="Aprobar Solicitud" [(visible)]="showModalAprobar" [modal]="true"
+    [style]="{ width: '460px' }" (onHide)="solicitudAGestionar = null">
+
+    <div class="pt-2" *ngIf="solicitudAGestionar">
+        <div class="flex items-start gap-3 mb-4">
+            <i class="pi pi-check-circle text-green-500 text-3xl mt-1"></i>
+            <div>
+                <p class="text-gray-700 font-medium mb-1">
+                    ¿Aprobar la solicitud <strong>#{{ solicitudAGestionar.id_solicitud }}</strong>
+                    del proveedor <strong>{{ solicitudAGestionar.proveedor }}</strong>?
+                </p>
+                <p class="text-sm text-gray-500">
+                    Se creará automáticamente un <strong>INGRESO DE COMPRAS</strong> y se actualizará
+                    el stock de los productos. Los productos nuevos serán añadidos al catálogo.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <ng-template pTemplate="footer">
+        <p-button label="Cancelar" severity="secondary" [text]="true"
+            (onClick)="showModalAprobar = false; solicitudAGestionar = null">
+        </p-button>
+        <p-button label="Aprobar" icon="pi pi-check" severity="success"
+            [loading]="aprobando" [disabled]="aprobando"
+            (onClick)="aprobarSolicitud()">
+        </p-button>
+    </ng-template>
+</p-dialog>
+
+
+<!-- ───────── Modal: Confirmar Rechazo ───────── -->
+<p-dialog header="Rechazar Solicitud" [(visible)]="showModalRechazar" [modal]="true"
+    [style]="{ width: '440px' }" (onHide)="solicitudAGestionar = null">
+
+    <div class="pt-2" *ngIf="solicitudAGestionar">
+        <div class="flex items-start gap-3">
+            <i class="pi pi-times-circle text-red-500 text-3xl mt-1"></i>
+            <div>
+                <p class="text-gray-700 font-medium mb-1">
+                    ¿Rechazar la solicitud <strong>#{{ solicitudAGestionar.id_solicitud }}</strong>?
+                </p>
+                <p class="text-sm text-red-500">Esta acción no se puede deshacer.</p>
+            </div>
+        </div>
+    </div>
+
+    <ng-template pTemplate="footer">
+        <p-button label="Cancelar" severity="secondary" [text]="true"
+            (onClick)="showModalRechazar = false; solicitudAGestionar = null">
+        </p-button>
+        <p-button label="Rechazar" icon="pi pi-times" severity="danger"
+            [loading]="rechazando" [disabled]="rechazando"
+            (onClick)="rechazarSolicitud()">
+        </p-button>
+    </ng-template>
+</p-dialog>

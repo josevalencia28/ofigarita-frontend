@@ -10,6 +10,7 @@ export const layoutRoutes: Routes = [
             { path: 'notificar-factura', loadComponent: () => import('../pages/notificar-factura/notificar-factura').then(m => m.NotificarFactura) },
             { path: 'ingresar-producto', loadComponent: () => import('../pages/ingreso-producto/ingreso-producto').then(m => m.IngresoProducto) },
             { path: 'ingresar-compra', loadComponent: () => import('../pages/ingreso-compra/ingreso-compra').then(m => m.IngresoCompra) },
+            { path: 'solicitudes-compra', loadComponent: () => import('../pages/solicitudes-compra/solicitudes-compra').then(m => m.SolicitudesCompra) },
         ],
     },
 

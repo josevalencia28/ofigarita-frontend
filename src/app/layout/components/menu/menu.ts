@@ -153,13 +153,11 @@ export class Menu {
                         label: 'Ingresar Compra',
                         icon: 'pi pi-fw pi-shopping-bag',
                         routerLink: ['ingresar-compra']
-                        // items: [
-                        //     {
-                        //         label: 'Cargue de Archivos',
-                        //         icon: 'pi pi-fw pi-file',
-                        //         routerLink: ['layout/cargue']
-                        //     }
-                        // ]
+                    },
+                    {
+                        label: 'Solicitudes de Compra',
+                        icon: 'pi pi-fw pi-file-edit',
+                        routerLink: ['solicitudes-compra']
                     }
                 ],
             },
