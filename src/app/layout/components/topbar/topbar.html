@@ -29,10 +29,11 @@
 
     <div class="layout-topbar-actions">
 
-        <!-- Botón tema oscuro/claro -->
-        <button class="layout-topbar-action topbar-theme-btn" (click)="toggleDarkMode()"
-            [pTooltip]="isDark ? 'Cambiar a modo claro' : 'Cambiar a modo oscuro'" tooltipPosition="bottom">
+        <!-- Toggle tema oscuro/claro -->
+        <button class="topbar-theme-toggle" (click)="toggleDarkMode()"
+            [title]="isDark ? 'Cambiar a modo claro' : 'Cambiar a modo oscuro'">
             <i [class]="isDark ? 'pi pi-sun' : 'pi pi-moon'"></i>
+            <span>{{ isDark ? 'Claro' : 'Oscuro' }}</span>
         </button>
 
         <button class="layout-topbar-menu-button layout-topbar-action" pStyleClass="@next" enterFromClass="hidden"

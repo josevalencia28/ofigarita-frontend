@@ -15,16 +15,35 @@ app-menu-bar {
     margin-left: 0.5rem;
 }
 
-// ── Botón de tema ─────────────────────────────────────────────────────────────
+// ── Toggle tema ───────────────────────────────────────────────────────────────
 
-.topbar-theme-btn {
+.topbar-theme-toggle {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.4rem 0.875rem;
+    border-radius: 999px;
+    border: 1.5px solid var(--surface-border);
+    background: var(--surface-hover);
+    color: var(--text-color);
+    cursor: pointer;
+    font-size: 0.8rem;
+    font-weight: 600;
+    transition: background 0.2s, border-color 0.2s, transform 0.15s;
+    white-space: nowrap;
+
     i {
-        font-size: 1.1rem;
+        font-size: 0.9rem;
         transition: transform 0.3s ease;
     }
 
-    &:hover i {
-        transform: rotate(20deg);
+    &:hover {
+        background: rgba(238, 42, 123, 0.08);
+        border-color: rgba(238, 42, 123, 0.4);
+        color: #ee2a7b;
+        transform: translateY(-1px);
+
+        i { transform: rotate(15deg); }
     }
 }
 

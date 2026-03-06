@@ -16,12 +16,11 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { Button } from "primeng/button";
 import { Password } from "primeng/password";
 import { ConfirmDialog } from "primeng/confirmdialog";
-import { Tooltip } from 'primeng/tooltip';
 
 @Component({
     selector: 'app-topbar',
     standalone: true,
-    imports: [RouterModule, CommonModule, StyleClassModule, Menu, Toast, Dialog, ReactiveFormsModule, Button, Password, ConfirmDialog, Tooltip],
+    imports: [RouterModule, CommonModule, StyleClassModule, Menu, Toast, Dialog, ReactiveFormsModule, Button, Password, ConfirmDialog],
     templateUrl: './topbar.html',
     providers: [MessageService, ConfirmationService],
     styleUrl: './topbar.scss'
