@@ -1,33 +1,82 @@
 <p-toast position="center" />
 
-<div
-    class="bg-surface-50 dark:bg-surface-950 flex items-center justify-center min-h-screen min-w-screen overflow-hidden">
-    <div class="flex flex-col items-center justify-center">
-        <div
-            style="border-radius: 56px; padding: 0.3rem; background: linear-gradient(180deg, var(--primary-color) 10%, rgba(33, 150, 243, 0) 30%)">
-            <div class="w-full bg-surface-0 dark:bg-surface-900 py-20 px-8 sm:px-20" style="border-radius: 53px">
-                <div class="text-center mb-8">
-                    <div class="text-center mb-8">
-                        <img src="/logos/logoOfigarita.png" alt="Ofigarita - Tienda Virtual"
-                            class="w-50 mx-auto block" />
-                        <div class="text-surface-900 dark:text-surface-0 text-3xl font-medium mb-4">Bienvenid@</div>
-                        <span class="text-muted-color font-medium">Sistema Ofigarita</span>
-                    </div>
+<div class="login-shell">
+
+    <!-- ── Panel izquierdo: Branding ─────────────────────────────────────── -->
+    <div class="login-brand">
+        <div class="deco-circle c1"></div>
+        <div class="deco-circle c2"></div>
+        <div class="deco-circle c3"></div>
+
+        <div class="brand-content">
+            <div class="brand-logo-wrap">
+                <img src="/logos/logoOfigarita.png" alt="Ofigarita" />
+            </div>
+            <h1 class="brand-name">Ofigarita</h1>
+            <p class="brand-tagline">Sistema de gestión administrativa</p>
+
+            <div class="brand-pills">
+                <div class="brand-pill">
+                    <i class="pi pi-chart-bar"></i>
+                    <span>Ventas y analítica en tiempo real</span>
                 </div>
-
-                <div>
-                    <label for="email1"
-                        class="block text-surface-900 dark:text-surface-0 text-xl font-medium mb-2">Email</label>
-                    <input pInputText id="email1" type="text" placeholder="Email address" class="w-full md:w-120 mb-8"
-                        [(ngModel)]="user" />
-
-                    <label for="password1"
-                        class="block text-surface-900 dark:text-surface-0 font-medium text-xl mb-2">Password</label>
-                    <p-password id="password1" [(ngModel)]="pass" placeholder="Password" [toggleMask]="true"
-                        class="mb-4" [fluid]="true" [feedback]="false"></p-password>
-                    <p-button label="Ingresar" styleClass="w-full" (onClick)="login()"></p-button>
+                <div class="brand-pill">
+                    <i class="pi pi-box"></i>
+                    <span>Control de inventario y compras</span>
+                </div>
+                <div class="brand-pill">
+                    <i class="pi pi-users"></i>
+                    <span>Gestión de clientes</span>
+                </div>
+                <div class="brand-pill">
+                    <i class="pi pi-wallet"></i>
+                    <span>Cartera y cobranza</span>
                 </div>
             </div>
         </div>
     </div>
+
+    <!-- ── Panel derecho: Formulario ─────────────────────────────────────── -->
+    <div class="login-form-side">
+        <div class="login-card">
+
+            <div class="lc-header">
+                <div class="lc-icon">
+                    <i class="pi pi-shield"></i>
+                </div>
+                <h2>Acceso al sistema</h2>
+                <p>Ingresa tus credenciales para continuar</p>
+            </div>
+
+            <div class="lc-fields">
+
+                <div class="lc-field">
+                    <label>Usuario</label>
+                    <div class="lc-input-wrap">
+                        <i class="pi pi-user lc-input-icon"></i>
+                        <input pInputText type="text" [(ngModel)]="user" placeholder="Ingresa tu usuario" />
+                    </div>
+                </div>
+
+                <div class="lc-field">
+                    <label>Contraseña</label>
+                    <div class="lc-input-wrap lc-password-wrap">
+                        <i class="pi pi-lock lc-input-icon"></i>
+                        <p-password [(ngModel)]="pass" placeholder="••••••••"
+                            [toggleMask]="true" [feedback]="false" [fluid]="true">
+                        </p-password>
+                    </div>
+                </div>
+
+                <button class="lc-submit" (click)="login()">
+                    <i class="pi pi-sign-in"></i>
+                    Ingresar al sistema
+                </button>
+
+            </div>
+
+            <p class="lc-footer">Ofigarita &mdash; Todos los derechos reservados</p>
+        </div>
+    </div>
+
 </div>

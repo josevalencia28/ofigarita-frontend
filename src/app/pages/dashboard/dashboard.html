@@ -1,5 +1,42 @@
 <p-toast position="top-right"></p-toast>
 
+<!-- ══ Banner de bienvenida ══════════════════════════════════════════════════ -->
+<div class="welcome-banner">
+    <div class="deco-blob b1"></div>
+    <div class="deco-blob b2"></div>
+
+    <div class="wb-info">
+        <span class="wb-eyebrow">Panel Administrativo</span>
+        <h2 class="wb-title">Bienvenido, Ofigarita</h2>
+        <p class="wb-date">
+            <i class="pi pi-calendar-clock"></i>
+            {{ fechaHoy }}
+        </p>
+    </div>
+
+    <div class="wb-stats">
+        <div class="wb-stat">
+            <span class="wb-stat-value">{{ resumen.ventas_hoy_cantidad || 0 }}</span>
+            <span class="wb-stat-label">Ventas hoy</span>
+        </div>
+        <div class="wb-sep"></div>
+        <div class="wb-stat">
+            <span class="wb-stat-value">{{ resumen.ventas_mes_cantidad || 0 }}</span>
+            <span class="wb-stat-label">Ventas del mes</span>
+        </div>
+        <div class="wb-sep"></div>
+        <div class="wb-stat">
+            <span class="wb-stat-value">{{ resumen.total_clientes || 0 }}</span>
+            <span class="wb-stat-label">Clientes activos</span>
+        </div>
+        <div class="wb-sep"></div>
+        <div class="wb-stat" [class.wb-stat-alert]="(+resumen.solicitudes_pendientes || 0) > 0">
+            <span class="wb-stat-value">{{ resumen.solicitudes_pendientes || 0 }}</span>
+            <span class="wb-stat-label">Pendientes</span>
+        </div>
+    </div>
+</div>
+
 <!-- ══ FILA 1: KPI Financieros ═══════════════════════════════════════════════ -->
 <div class="kpi-grid">
 

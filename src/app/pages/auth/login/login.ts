@@ -16,6 +16,7 @@ import { Toast } from "primeng/toast";
     standalone: true,
     imports: [ButtonModule, CheckboxModule, InputTextModule, PasswordModule, FormsModule, RouterModule, RippleModule, Toast],
     templateUrl: `./login.html`,
+    styleUrl: './login.scss',
     providers: [MessageService],
 })
 export class Login {

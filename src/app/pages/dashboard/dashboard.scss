@@ -1,3 +1,112 @@
+// ── Welcome Banner ────────────────────────────────────────────────────────────
+
+.welcome-banner {
+    background: linear-gradient(140deg, #0f0520 0%, #1c0a38 45%, #2e1060 100%);
+    border-radius: 16px;
+    padding: 1.75rem 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.5rem;
+    margin-bottom: 1.5rem;
+    position: relative;
+    overflow: hidden;
+
+    .deco-blob {
+        position: absolute;
+        border-radius: 50%;
+        pointer-events: none;
+
+        &.b1 {
+            width: 260px;
+            height: 260px;
+            background: radial-gradient(circle, rgba(238, 42, 123, 0.2) 0%, transparent 70%);
+            top: -100px;
+            right: -80px;
+        }
+
+        &.b2 {
+            width: 180px;
+            height: 180px;
+            background: radial-gradient(circle, rgba(124, 58, 237, 0.18) 0%, transparent 70%);
+            bottom: -80px;
+            left: 30%;
+        }
+    }
+
+    .wb-info {
+        position: relative;
+        z-index: 1;
+
+        .wb-eyebrow {
+            display: block;
+            font-size: 0.67rem;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: rgba(255, 255, 255, 0.45);
+            margin-bottom: 0.3rem;
+        }
+
+        .wb-title {
+            font-size: 1.4rem;
+            font-weight: 800;
+            color: #fff;
+            margin-bottom: 0.5rem;
+            letter-spacing: -0.3px;
+        }
+
+        .wb-date {
+            font-size: 0.82rem;
+            color: rgba(255, 255, 255, 0.5);
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            text-transform: capitalize;
+
+            i { color: #ee2a7b; font-size: 0.9rem; }
+        }
+    }
+
+    .wb-stats {
+        display: flex;
+        align-items: center;
+        gap: 1.75rem;
+        position: relative;
+        z-index: 1;
+
+        .wb-stat {
+            text-align: center;
+
+            .wb-stat-value {
+                display: block;
+                font-size: 1.6rem;
+                font-weight: 800;
+                color: #fff;
+                line-height: 1;
+            }
+
+            .wb-stat-label {
+                display: block;
+                font-size: 0.67rem;
+                font-weight: 600;
+                color: rgba(255, 255, 255, 0.45);
+                text-transform: uppercase;
+                letter-spacing: 0.5px;
+                margin-top: 0.35rem;
+            }
+
+            &.wb-stat-alert .wb-stat-value { color: #fbbf24; }
+        }
+
+        .wb-sep {
+            width: 1px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.12);
+        }
+    }
+}
+
 // ── KPI Grid ─────────────────────────────────────────────────────────────────
 
 .kpi-grid {
@@ -15,21 +124,33 @@
     background: #ffffff;
     border-radius: 14px;
     padding: 1.25rem 1.5rem;
-    box-shadow: 0 1px 6px rgba(0, 0, 0, 0.07);
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06), 0 4px 12px rgba(0, 0, 0, 0.04);
     display: flex;
     align-items: center;
     gap: 1rem;
     transition: transform 0.18s ease, box-shadow 0.18s ease;
-    border-left: 3px solid transparent;
+    border-top: 3px solid transparent;
+    position: relative;
+    overflow: hidden;
+
+    &::after {
+        content: '';
+        position: absolute;
+        top: 0; left: 0; right: 0;
+        height: 3px;
+        border-radius: 14px 14px 0 0;
+        opacity: 0;
+        transition: opacity 0.18s ease;
+    }
 
     &:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+        transform: translateY(-3px);
+        box-shadow: 0 8px 28px rgba(0, 0, 0, 0.1);
     }
 
     &.kpi-alert {
-        border-left-color: #f59e0b;
-        background: linear-gradient(135deg, #ffffff 0%, #fffbf0 100%);
+        background: linear-gradient(135deg, #ffffff 0%, #fffdf0 100%);
+        border-top-color: #f59e0b;
     }
 
     .kpi-icon {
@@ -40,22 +161,22 @@
         align-items: center;
         justify-content: center;
         flex-shrink: 0;
-        i { font-size: 1.4rem; }
+        i { font-size: 1.35rem; }
 
-        &.orange { background: #fff7ed; color: #f97316; }
-        &.purple { background: #f5f3ff; color: #8b5cf6; }
-        &.green  { background: #f0fdf4; color: #22c55e; }
-        &.pink   { background: #fdf2f8; color: #ee2a7b; }
-        &.amber  { background: #fffbeb; color: #f59e0b; }
-        &.blue   { background: #eff6ff; color: #3b82f6; }
-        &.red    { background: #fef2f2; color: #ef4444; }
+        &.orange { background: linear-gradient(135deg, #fff7ed, #ffedd5); color: #f97316; }
+        &.purple { background: linear-gradient(135deg, #f5f3ff, #ede9fe); color: #8b5cf6; }
+        &.green  { background: linear-gradient(135deg, #f0fdf4, #dcfce7); color: #22c55e; }
+        &.pink   { background: linear-gradient(135deg, #fdf2f8, #fce7f3); color: #ee2a7b; }
+        &.amber  { background: linear-gradient(135deg, #fffbeb, #fef3c7); color: #f59e0b; }
+        &.blue   { background: linear-gradient(135deg, #eff6ff, #dbeafe); color: #3b82f6; }
+        &.red    { background: linear-gradient(135deg, #fef2f2, #fee2e2); color: #ef4444; }
     }
 
     .kpi-body {
         min-width: 0;
 
         .kpi-value {
-            font-size: 1.4rem;
+            font-size: 1.45rem;
             font-weight: 800;
             color: #111827;
             line-height: 1.2;
@@ -65,7 +186,7 @@
         }
 
         .kpi-label {
-            font-size: 0.7rem;
+            font-size: 0.68rem;
             color: #9ca3af;
             font-weight: 700;
             text-transform: uppercase;
@@ -142,11 +263,26 @@
     .chart-grid-2 { grid-template-columns: 1fr; }
 }
 
+@media (max-width: 768px) {
+    .welcome-banner {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1.25rem;
+
+        .wb-stats {
+            width: 100%;
+            justify-content: space-around;
+        }
+    }
+}
+
 @media (max-width: 640px) {
     .kpi-grid {
         grid-template-columns: 1fr;
         &.kpi-grid-3 { grid-template-columns: 1fr; }
     }
+
+    .welcome-banner .wb-stats .wb-sep { display: none; }
 }
 
 // ── PrimeNG overrides ─────────────────────────────────────────────────────────

@@ -1,3 +1,16 @@
-app-menu-bar{
+app-menu-bar {
     width: 100%;
+}
+
+.topbar-logo-img {
+    height: 30px;
+    object-fit: contain;
+}
+
+.topbar-brand-name {
+    font-size: 1.05rem;
+    font-weight: 800;
+    color: #ee2a7b;
+    letter-spacing: -0.3px;
+    margin-left: 0.5rem;
 }
