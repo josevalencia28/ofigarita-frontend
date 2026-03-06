@@ -55,6 +55,16 @@ export class IngresoProducto implements OnInit {
   editStock: number = 0;
   editImg: string = '';
 
+  get productosActivos(): number {
+    return this.productos.filter(p => p.estado).length;
+  }
+  get productosSinStock(): number {
+    return this.productos.filter(p => p.estado && p.stock <= 0).length;
+  }
+  get valorInventario(): number {
+    return this.productos.filter(p => p.estado).reduce((s, p) => s + (p.stock * p.precio_venta), 0);
+  }
+
   constructor(
     private productoService: ProductoService,
     private messageService: MessageService,

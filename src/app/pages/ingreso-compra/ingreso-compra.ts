@@ -83,6 +83,13 @@ export class IngresoCompra implements OnInit {
   showModalEliminar = false;
   compraAEliminar: CompraAgrupada | null = null;
 
+  get totalInvertido(): number {
+    return this.compras.reduce((s, c) => s + Number(c.total_compra), 0);
+  }
+  get totalProductosIngresados(): number {
+    return this.compras.reduce((s, c) => s + (c.productos?.length ?? 0), 0);
+  }
+
   constructor(
     private ingresoCompraService: IngresoCompraService,
     private productoService: ProductoService,

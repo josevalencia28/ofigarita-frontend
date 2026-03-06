@@ -81,6 +81,20 @@ export class SolicitudesCompra implements OnInit {
     aprobando = false;
     rechazando = false;
 
+    get solicitudesPendientes(): number {
+        return this.solicitudes.filter(s => s.estado === 'PENDIENTE').length;
+    }
+    get solicitudesAprobadas(): number {
+        return this.solicitudes.filter(s => s.estado === 'APROBADA').length;
+    }
+    get solicitudesRechazadas(): number {
+        return this.solicitudes.filter(s => s.estado === 'RECHAZADA').length;
+    }
+    get totalEstimadoPendientes(): number {
+        return this.solicitudes.filter(s => s.estado === 'PENDIENTE')
+            .reduce((sum, s) => sum + Number(s.total_estimado), 0);
+    }
+
     // Modal nueva solicitud
     showModalNueva = false;
     nuevaSolicitud: SolicitudPayload = { fecha: '', proveedor: '', productos: [] };

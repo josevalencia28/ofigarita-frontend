@@ -1,6 +1,38 @@
 <div class="card">
     <p-toast position="top-right"></p-toast>
     <p-confirmDialog></p-confirmDialog>
+    <!-- ── Totalizadores ── -->
+    <div class="totals-bar" *ngIf="!loading && productos.length > 0">
+        <div class="total-chip">
+            <div class="tc-icon blue"><i class="pi pi-box"></i></div>
+            <div class="tc-body">
+                <div class="tc-value">{{ productos.length }}</div>
+                <div class="tc-label">Total productos</div>
+            </div>
+        </div>
+        <div class="total-chip">
+            <div class="tc-icon green"><i class="pi pi-check-circle"></i></div>
+            <div class="tc-body">
+                <div class="tc-value">{{ productosActivos }}</div>
+                <div class="tc-label">Activos</div>
+            </div>
+        </div>
+        <div class="total-chip">
+            <div class="tc-icon red"><i class="pi pi-exclamation-circle"></i></div>
+            <div class="tc-body">
+                <div class="tc-value">{{ productosSinStock }}</div>
+                <div class="tc-label">Sin stock</div>
+            </div>
+        </div>
+        <div class="total-chip">
+            <div class="tc-icon purple"><i class="pi pi-chart-bar"></i></div>
+            <div class="tc-body">
+                <div class="tc-value">{{ valorInventario | currency:'COP':'symbol-narrow':'1.0-0' }}</div>
+                <div class="tc-label">Valor inventario</div>
+            </div>
+        </div>
+    </div>
+
     <p-table #dt [value]="productos" dataKey="id_producto" [loading]="loading" showGridlines
         [globalFilterFields]="['nombre_producto', 'id_producto', 'precio_venta', 'stock']" [paginator]="true"
         [rows]="10" [rowsPerPageOptions]="[5, 10, 20]">

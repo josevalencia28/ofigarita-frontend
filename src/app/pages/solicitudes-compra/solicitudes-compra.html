@@ -1,6 +1,45 @@
 <div class="card">
     <p-toast position="top-right"></p-toast>
 
+    <!-- ── Totalizadores ── -->
+    <div class="totals-bar" *ngIf="!loading && solicitudes.length > 0">
+        <div class="total-chip">
+            <div class="tc-icon blue"><i class="pi pi-file-edit"></i></div>
+            <div class="tc-body">
+                <div class="tc-value">{{ solicitudes.length }}</div>
+                <div class="tc-label">Total solicitudes</div>
+            </div>
+        </div>
+        <div class="total-chip">
+            <div class="tc-icon amber"><i class="pi pi-clock"></i></div>
+            <div class="tc-body">
+                <div class="tc-value">{{ solicitudesPendientes }}</div>
+                <div class="tc-label">Pendientes</div>
+            </div>
+        </div>
+        <div class="total-chip">
+            <div class="tc-icon green"><i class="pi pi-check-circle"></i></div>
+            <div class="tc-body">
+                <div class="tc-value">{{ solicitudesAprobadas }}</div>
+                <div class="tc-label">Aprobadas</div>
+            </div>
+        </div>
+        <div class="total-chip">
+            <div class="tc-icon red"><i class="pi pi-times-circle"></i></div>
+            <div class="tc-body">
+                <div class="tc-value">{{ solicitudesRechazadas }}</div>
+                <div class="tc-label">Rechazadas</div>
+            </div>
+        </div>
+        <div class="total-chip">
+            <div class="tc-icon pink"><i class="pi pi-wallet"></i></div>
+            <div class="tc-body">
+                <div class="tc-value">{{ totalEstimadoPendientes | currency:'COP':'symbol-narrow':'1.0-0' }}</div>
+                <div class="tc-label">Estimado pendiente</div>
+            </div>
+        </div>
+    </div>
+
     <!-- ───────── Tabla principal ───────── -->
     <p-table #dt [value]="solicitudes" dataKey="id_solicitud" [loading]="loading" showGridlines
         [globalFilterFields]="['proveedor', 'estado', 'fcha_rgstro']"

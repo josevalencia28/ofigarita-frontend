@@ -243,6 +243,80 @@
   }
 }
 
+// ── Totalizadores ─────────────────────────────────────────────────────────────
+
+.totals-bar {
+    display: flex;
+    align-items: stretch;
+    background: #f8fafc;
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+    margin-bottom: 1.25rem;
+    overflow: hidden;
+    flex-wrap: wrap;
+}
+
+.total-chip {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.875rem 1.25rem;
+    flex: 1;
+    min-width: 150px;
+    border-right: 1px solid #e5e7eb;
+
+    &:last-child { border-right: none; }
+
+    .tc-icon {
+        width: 38px;
+        height: 38px;
+        border-radius: 9px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        i { font-size: 1.1rem; }
+
+        &.blue   { background: #eff6ff; color: #3b82f6; }
+        &.pink   { background: #fdf2f8; color: #ee2a7b; }
+        &.green  { background: #f0fdf4; color: #22c55e; }
+        &.amber  { background: #fffbeb; color: #f59e0b; }
+        &.purple { background: #f5f3ff; color: #8b5cf6; }
+        &.red    { background: #fef2f2; color: #ef4444; }
+        &.orange { background: #fff7ed; color: #f97316; }
+    }
+
+    .tc-body {
+        min-width: 0;
+
+        .tc-value {
+            font-size: 1.05rem;
+            font-weight: 800;
+            color: #111827;
+            line-height: 1.2;
+            white-space: nowrap;
+        }
+
+        .tc-label {
+            font-size: 0.68rem;
+            color: #9ca3af;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-top: 2px;
+        }
+    }
+}
+
+@media (max-width: 768px) {
+    .totals-bar { flex-direction: column; }
+    .total-chip {
+        border-right: none;
+        border-bottom: 1px solid #e5e7eb;
+        &:last-child { border-bottom: none; }
+    }
+}
+
 // ── Observaciones expandidas ─────────────────────────────────────────────────
 
 .obs-box {

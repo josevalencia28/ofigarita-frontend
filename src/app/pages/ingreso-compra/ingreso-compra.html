@@ -2,6 +2,31 @@
     <p-toast position="top-right"></p-toast>
     <p-confirmDialog></p-confirmDialog>
 
+    <!-- ── Totalizadores ── -->
+    <div class="totals-bar" *ngIf="!loading && compras.length > 0">
+        <div class="total-chip">
+            <div class="tc-icon blue"><i class="pi pi-list"></i></div>
+            <div class="tc-body">
+                <div class="tc-value">{{ compras.length }}</div>
+                <div class="tc-label">Ingresos registrados</div>
+            </div>
+        </div>
+        <div class="total-chip">
+            <div class="tc-icon pink"><i class="pi pi-dollar"></i></div>
+            <div class="tc-body">
+                <div class="tc-value">{{ totalInvertido | currency:'COP':'symbol-narrow':'1.0-0' }}</div>
+                <div class="tc-label">Total invertido</div>
+            </div>
+        </div>
+        <div class="total-chip">
+            <div class="tc-icon green"><i class="pi pi-box"></i></div>
+            <div class="tc-body">
+                <div class="tc-value">{{ totalProductosIngresados }}</div>
+                <div class="tc-label">Ítems de producto</div>
+            </div>
+        </div>
+    </div>
+
     <p-table #dt [value]="compras" dataKey="id_ingreso" [loading]="loading" showGridlines
         [globalFilterFields]="['proveedor', 'fecha']" [paginator]="true" [rows]="10" [rowsPerPageOptions]="[5, 10, 20]">
 

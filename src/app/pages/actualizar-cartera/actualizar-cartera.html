@@ -1,6 +1,31 @@
 <div class="card">
     <p-toast position="top-right"></p-toast>
 
+    <!-- ── Totalizadores ── -->
+    <div class="totals-bar" *ngIf="!loading && carteraCliente.length > 0">
+        <div class="total-chip">
+            <div class="tc-icon blue"><i class="pi pi-users"></i></div>
+            <div class="tc-body">
+                <div class="tc-value">{{ carteraCliente.length }}</div>
+                <div class="tc-label">Clientes en cartera</div>
+            </div>
+        </div>
+        <div class="total-chip">
+            <div class="tc-icon pink"><i class="pi pi-wallet"></i></div>
+            <div class="tc-body">
+                <div class="tc-value">{{ totalCartera | currency:'COP':'symbol-narrow':'1.0-0' }}</div>
+                <div class="tc-label">Total cartera</div>
+            </div>
+        </div>
+        <div class="total-chip">
+            <div class="tc-icon amber"><i class="pi pi-file-check"></i></div>
+            <div class="tc-body">
+                <div class="tc-value">{{ totalVentasCartera }}</div>
+                <div class="tc-label">Ventas pendientes</div>
+            </div>
+        </div>
+    </div>
+
     <p-table #dt [value]="carteraCliente" dataKey="internalId" [loading]="loading" showGridlines
         [expandedRowKeys]="expandedRows" [globalFilterFields]="['nombre', 'numero_id', 'forma_pago', 'estado_venta']"
         [paginator]="true" [rows]="10" [rowsPerPageOptions]="[5, 10, 20]">

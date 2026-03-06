@@ -50,6 +50,13 @@ export class ActualizarCartera {
   pendingTipoPago: string = '';
   pendingTipoPagoNombre: string = '';
 
+  get totalCartera(): number {
+    return this.carteraCliente.reduce((s, c) => s + Number(c.total), 0);
+  }
+  get totalVentasCartera(): number {
+    return this.carteraCliente.reduce((s, c) => s + (c.ventas?.length ?? 0), 0);
+  }
+
   constructor(
     private messageService: MessageService,
     private carteraClienteService: CarteraClienteService
