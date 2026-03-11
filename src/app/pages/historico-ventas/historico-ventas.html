@@ -1,0 +1,203 @@
+<!-- ══ Header ══════════════════════════════════════════════════════════════ -->
+<div class="hv-header">
+    <div>
+        <h2 class="hv-title">Histórico de Ventas</h2>
+        <p class="hv-subtitle">Consulta todas las ventas con filtros dinámicos y exporta los resultados</p>
+    </div>
+    <p-button
+        label="Exportar Excel"
+        icon="pi pi-file-excel"
+        severity="success"
+        [disabled]="!ventas.length"
+        (onClick)="exportarExcel()">
+    </p-button>
+</div>
+
+<!-- ══ Filtros ═════════════════════════════════════════════════════════════ -->
+<div class="hv-filters-card">
+    <div class="hv-filters-grid">
+
+        <div class="hv-filter-group">
+            <label>Fecha Desde</label>
+            <p-datepicker [(ngModel)]="fechaDesde" dateFormat="dd/mm/yy"
+                [showIcon]="true" placeholder="DD/MM/AAAA" [showClear]="true">
+            </p-datepicker>
+        </div>
+
+        <div class="hv-filter-group">
+            <label>Fecha Hasta</label>
+            <p-datepicker [(ngModel)]="fechaHasta" dateFormat="dd/mm/yy"
+                [showIcon]="true" placeholder="DD/MM/AAAA" [showClear]="true">
+            </p-datepicker>
+        </div>
+
+        <div class="hv-filter-group">
+            <label>Mes</label>
+            <p-select [(ngModel)]="mesSeleccionado" [options]="mesesOptions"
+                optionLabel="label" optionValue="value"
+                placeholder="Todos los meses" [showClear]="true">
+            </p-select>
+        </div>
+
+        <div class="hv-filter-group">
+            <label>Año</label>
+            <p-select [(ngModel)]="anioSeleccionado" [options]="aniosOptions"
+                optionLabel="label" optionValue="value"
+                placeholder="Todos los años" [showClear]="true">
+            </p-select>
+        </div>
+
+        <div class="hv-filter-group">
+            <label>Cliente</label>
+            <input pInputText type="text" [(ngModel)]="clienteFiltro"
+                placeholder="Nombre o cédula..." />
+        </div>
+
+        <div class="hv-filter-group">
+            <label>Producto</label>
+            <input pInputText type="text" [(ngModel)]="productoFiltro"
+                placeholder="Nombre del producto..." />
+        </div>
+
+        <div class="hv-filter-group">
+            <label>Medio de Pago</label>
+            <p-select [(ngModel)]="tipoPagoFiltro" [options]="tiposPagoOptions"
+                optionLabel="label" optionValue="value"
+                placeholder="Todos" [showClear]="true">
+            </p-select>
+        </div>
+
+        <div class="hv-filter-actions">
+            <p-button label="Buscar" icon="pi pi-search" (onClick)="buscar()"></p-button>
+            <p-button label="Limpiar" icon="pi pi-times" severity="secondary" (onClick)="limpiar()"></p-button>
+        </div>
+
+    </div>
+</div>
+
+<!-- ══ Totalizadores ═══════════════════════════════════════════════════════ -->
+@if (ventas.length > 0) {
+    <div class="hv-totals">
+        <div class="hv-total-card blue">
+            <span class="hv-total-icon"><i class="pi pi-receipt"></i></span>
+            <span class="hv-total-value">{{ totalizadores.total_registros }}</span>
+            <span class="hv-total-label">Total Ventas</span>
+        </div>
+        <div class="hv-total-card green">
+            <span class="hv-total-icon"><i class="pi pi-wallet"></i></span>
+            <span class="hv-total-value">{{ formatCurrency(totalizadores.suma_total) }}</span>
+            <span class="hv-total-label">Monto Total</span>
+        </div>
+        @for (entry of medioPagoEntries; track entry.key) {
+            <div class="hv-total-card gray">
+                <span class="hv-total-icon"><i class="pi pi-credit-card"></i></span>
+                <span class="hv-total-value">{{ entry.value.cantidad }}</span>
+                <span class="hv-total-label">{{ entry.key }}</span>
+                <span class="hv-total-sub">{{ formatCurrency(entry.value.total) }}</span>
+            </div>
+        }
+    </div>
+}
+
+<!-- ══ Tabla ════════════════════════════════════════════════════════════════ -->
+<div class="hv-table-card">
+    <p-table
+        [value]="ventas"
+        [loading]="loading"
+        dataKey="id_venta"
+        [paginator]="true"
+        [rows]="15"
+        [rowsPerPageOptions]="[10, 15, 25, 50]"
+        [showCurrentPageReport]="true"
+        currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} registros"
+        styleClass="p-datatable-sm p-datatable-striped p-datatable-gridlines"
+        [tableStyle]="{'min-width': '900px'}"
+        sortField="fecha_venta"
+        [sortOrder]="-1">
+
+        <ng-template pTemplate="header">
+            <tr>
+                <th style="width: 3rem"></th>
+                <th pSortableColumn="id_venta" style="width: 80px">
+                    # <p-sortIcon field="id_venta"></p-sortIcon>
+                </th>
+                <th pSortableColumn="fecha_venta">
+                    Fecha <p-sortIcon field="fecha_venta"></p-sortIcon>
+                </th>
+                <th>Cliente</th>
+                <th style="width: 120px">Cédula</th>
+                <th style="width: 130px">Medio de Pago</th>
+                <th pSortableColumn="estado" style="width: 110px">
+                    Estado <p-sortIcon field="estado"></p-sortIcon>
+                </th>
+                <th pSortableColumn="total" style="text-align: right; width: 140px">
+                    Total <p-sortIcon field="total"></p-sortIcon>
+                </th>
+            </tr>
+        </ng-template>
+
+        <ng-template pTemplate="body" let-venta>
+            <tr>
+                <td>
+                    <button
+                        type="button"
+                        class="hv-toggle-btn"
+                        (click)="toggleRow(venta)">
+                        <i [class]="expandedRows[venta.id_venta] ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"></i>
+                    </button>
+                </td>
+                <td><strong class="hv-id">#{{ venta.id_venta }}</strong></td>
+                <td>{{ venta.fecha_formateada }}</td>
+                <td>{{ venta.nombre_cliente }}</td>
+                <td>{{ venta.numero_id }}</td>
+                <td>
+                    <p-tag [value]="venta.medio_pago" [severity]="getMedioPagoSeverity(venta.medio_pago)"></p-tag>
+                </td>
+                <td>
+                    <p-tag [value]="venta.estado" [severity]="getEstadoSeverity(venta.estado)"></p-tag>
+                </td>
+                <td class="hv-total-cell">{{ formatCurrency(venta.total) }}</td>
+            </tr>
+            <tr class="hv-expanded-row" *ngIf="expandedRows[venta.id_venta]">
+                <td colspan="8">
+                    <div class="hv-products-panel">
+                        <p class="hv-products-title">
+                            <i class="pi pi-box"></i>
+                            Productos — Venta #{{ venta.id_venta }}
+                            <span class="hv-products-client">{{ venta.nombre_cliente }}</span>
+                        </p>
+                        <p-table [value]="venta.detalle_productos || []"
+                            styleClass="p-datatable-sm">
+                            <ng-template pTemplate="header">
+                                <tr>
+                                    <th>Producto</th>
+                                    <th style="text-align: center; width: 90px">Cantidad</th>
+                                    <th style="text-align: right; width: 140px">Precio Unit.</th>
+                                    <th style="text-align: right; width: 140px">Subtotal</th>
+                                </tr>
+                            </ng-template>
+                            <ng-template pTemplate="body" let-det>
+                                <tr>
+                                    <td>{{ det.producto }}</td>
+                                    <td style="text-align: center">{{ det.cantidad }}</td>
+                                    <td style="text-align: right">{{ formatCurrency(det.precio_unitario) }}</td>
+                                    <td style="text-align: right" class="hv-total-cell">{{ formatCurrency(det.subtotal) }}</td>
+                                </tr>
+                            </ng-template>
+                        </p-table>
+                    </div>
+                </td>
+            </tr>
+        </ng-template>
+
+        <ng-template pTemplate="emptymessage">
+            <tr>
+                <td colspan="8" class="hv-empty">
+                    <i class="pi pi-inbox"></i>
+                    <p>No se encontraron ventas con los filtros aplicados</p>
+                </td>
+            </tr>
+        </ng-template>
+
+    </p-table>
+</div>

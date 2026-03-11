@@ -1,0 +1,230 @@
+// ── Header ────────────────────────────────────────────────────────────────────
+
+.hv-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 1.25rem;
+
+    .hv-title {
+        font-size: 1.4rem;
+        font-weight: 800;
+        color: #111827;
+        margin: 0 0 0.25rem;
+    }
+
+    .hv-subtitle {
+        font-size: 0.82rem;
+        color: #6b7280;
+        margin: 0;
+    }
+}
+
+// ── Filtros ───────────────────────────────────────────────────────────────────
+
+.hv-filters-card {
+    background: #ffffff;
+    border-radius: 14px;
+    padding: 1.25rem 1.5rem;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06), 0 4px 12px rgba(0, 0, 0, 0.04);
+    margin-bottom: 1.25rem;
+}
+
+.hv-filters-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0.875rem 1.25rem;
+    align-items: end;
+}
+
+.hv-filter-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+
+    label {
+        font-size: 0.72rem;
+        font-weight: 700;
+        color: #6b7280;
+        text-transform: uppercase;
+        letter-spacing: 0.4px;
+    }
+
+    input,
+    p-datepicker,
+    p-select {
+        width: 100%;
+    }
+
+    ::ng-deep .p-datepicker,
+    ::ng-deep .p-select {
+        width: 100%;
+    }
+}
+
+.hv-filter-actions {
+    display: flex;
+    gap: 0.5rem;
+    align-items: flex-end;
+    padding-top: 1.4rem;
+}
+
+// ── Totalizadores ─────────────────────────────────────────────────────────────
+
+.hv-totals {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin-bottom: 1.25rem;
+}
+
+.hv-total-card {
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 1rem 1.25rem;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+    display: flex;
+    flex-direction: column;
+    min-width: 150px;
+    flex: 1;
+    border-top: 3px solid transparent;
+
+    &.blue  { border-top-color: #3b82f6; }
+    &.green { border-top-color: #22c55e; }
+    &.gray  { border-top-color: #9ca3af; }
+
+    .hv-total-icon {
+        font-size: 1rem;
+        margin-bottom: 0.4rem;
+        opacity: 0.5;
+    }
+
+    .hv-total-value {
+        font-size: 1.3rem;
+        font-weight: 800;
+        color: #111827;
+        line-height: 1.2;
+    }
+
+    .hv-total-label {
+        font-size: 0.68rem;
+        font-weight: 700;
+        color: #9ca3af;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-top: 0.2rem;
+    }
+
+    .hv-total-sub {
+        font-size: 0.78rem;
+        color: #6b7280;
+        margin-top: 0.2rem;
+        font-weight: 600;
+    }
+}
+
+// ── Tabla ─────────────────────────────────────────────────────────────────────
+
+.hv-table-card {
+    background: #ffffff;
+    border-radius: 14px;
+    padding: 1.25rem;
+    box-shadow: 0 1px 6px rgba(0, 0, 0, 0.07);
+    overflow: hidden;
+}
+
+.hv-id {
+    color: #4f218d;
+    font-size: 0.85rem;
+}
+
+.hv-total-cell {
+    text-align: right;
+    font-weight: 700;
+    color: #111827;
+}
+
+.hv-empty {
+    text-align: center;
+    padding: 3rem;
+    color: #9ca3af;
+
+    i { font-size: 2.5rem; display: block; margin-bottom: 0.75rem; }
+    p { margin: 0; font-size: 0.9rem; }
+}
+
+// ── Toggle button ─────────────────────────────────────────────────────────────
+
+.hv-toggle-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0.25rem 0.5rem;
+    border-radius: 6px;
+    color: #6b7280;
+    transition: background 0.15s, color 0.15s;
+
+    &:hover {
+        background: #f3f4f6;
+        color: #4f218d;
+    }
+
+    i { font-size: 0.8rem; }
+}
+
+// ── Expanded row ──────────────────────────────────────────────────────────────
+
+.hv-expanded-row > td {
+    background: #f9fafb;
+    padding: 0 !important;
+}
+
+.hv-products-panel {
+    padding: 1rem 1.5rem 1.25rem;
+
+    .hv-products-title {
+        font-size: 0.85rem;
+        font-weight: 700;
+        color: #374151;
+        margin: 0 0 0.75rem;
+        display: flex;
+        align-items: center;
+        gap: 0.4rem;
+
+        i { color: #4f218d; }
+
+        .hv-products-client {
+            font-weight: 400;
+            color: #6b7280;
+            margin-left: 0.25rem;
+        }
+    }
+}
+
+// ── Responsive ────────────────────────────────────────────────────────────────
+
+@media (max-width: 1200px) {
+    .hv-filters-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media (max-width: 900px) {
+    .hv-filters-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    .hv-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}
+
+@media (max-width: 600px) {
+    .hv-filters-grid {
+        grid-template-columns: 1fr;
+    }
+    .hv-totals {
+        flex-direction: column;
+    }
+}

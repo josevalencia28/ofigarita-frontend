@@ -103,11 +103,11 @@ export class SolicitudesCompra implements OnInit {
 
     // Modal detalle
     showModalDetalle = false;
-    solicitudSeleccionada: SolicitudAgrupada | null = null;
+    solicitudSeleccionada: SolicitudAgrupada | null | undefined;
 
     // Modal aprobar
     showModalAprobar = false;
-    solicitudAGestionar: SolicitudAgrupada | null = null;
+    solicitudAGestionar: SolicitudAgrupada | null | undefined;
 
     // Modal rechazar
     showModalRechazar = false;

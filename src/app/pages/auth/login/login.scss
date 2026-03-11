@@ -1,5 +1,10 @@
 // ── Login Shell ───────────────────────────────────────────────────────────────
 
+:host {
+    display: block;
+    min-height: 100vh;
+}
+
 .login-shell {
     display: flex;
     min-height: 100vh;
@@ -17,105 +22,113 @@
     align-items: center;
     justify-content: center;
     padding: 3rem;
+}
 
-    .brand-content {
-        position: relative;
-        z-index: 2;
-        color: #fff;
-        max-width: 360px;
-        width: 100%;
+.brand-content {
+    position: relative;
+    z-index: 2;
+    color: #fff;
+    max-width: 360px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.brand-logo-wrap {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1.75rem;
+
+    .brand-logo-glow {
+        position: absolute;
+        width: 200px;
+        height: 200px;
+        background: radial-gradient(circle, rgba(238, 42, 123, 0.3) 0%, transparent 70%);
+        border-radius: 50%;
+        animation: pulseGlow 3s ease-in-out infinite;
     }
 
-    .brand-logo-wrap {
-        width: 80px;
-        height: 80px;
-        background: rgba(255, 255, 255, 0.07);
-        border: 1px solid rgba(255, 255, 255, 0.12);
-        border-radius: 20px;
+    img {
+        width: 190px;
+        object-fit: contain;
+        position: relative;
+        z-index: 1;
+        filter: drop-shadow(0 8px 24px rgba(0, 0, 0, 0.4));
+    }
+}
+
+@keyframes pulseGlow {
+    0%, 100% { transform: scale(1); opacity: 0.8; }
+    50%       { transform: scale(1.1); opacity: 1; }
+}
+
+.brand-tagline {
+    font-size: 1rem;
+    color: rgba(255, 255, 255, 0.55);
+    margin-bottom: 2.5rem;
+    line-height: 1.5;
+    text-align: center;
+}
+
+.brand-pills {
+    display: flex;
+    flex-direction: column;
+    gap: 0.875rem;
+}
+
+.brand-pill {
+    display: flex;
+    align-items: center;
+    gap: 0.875rem;
+    color: rgba(255, 255, 255, 0.72);
+    font-size: 0.875rem;
+
+    i {
+        width: 34px;
+        height: 34px;
+        background: rgba(238, 42, 123, 0.15);
+        border: 1px solid rgba(238, 42, 123, 0.3);
+        border-radius: 9px;
         display: flex;
         align-items: center;
         justify-content: center;
-        margin-bottom: 1.5rem;
-        backdrop-filter: blur(12px);
+        color: #f472b6;
+        font-size: 0.85rem;
+        flex-shrink: 0;
+    }
+}
 
-        img {
-            width: 52px;
-            object-fit: contain;
-        }
+// Decorative circles
+.deco-circle {
+    position: absolute;
+    border-radius: 50%;
+
+    &.c1 {
+        width: 420px;
+        height: 420px;
+        background: radial-gradient(circle, rgba(238, 42, 123, 0.18) 0%, transparent 70%);
+        top: -140px;
+        right: -160px;
     }
 
-    .brand-name {
-        font-size: 2.4rem;
-        font-weight: 800;
-        color: #fff;
-        margin-bottom: 0.4rem;
-        letter-spacing: -0.5px;
+    &.c2 {
+        width: 280px;
+        height: 280px;
+        background: radial-gradient(circle, rgba(124, 58, 237, 0.2) 0%, transparent 70%);
+        bottom: -100px;
+        left: -80px;
     }
 
-    .brand-tagline {
-        font-size: 0.95rem;
-        color: rgba(255, 255, 255, 0.5);
-        margin-bottom: 2.5rem;
-        line-height: 1.5;
-    }
-
-    .brand-pills {
-        display: flex;
-        flex-direction: column;
-        gap: 0.875rem;
-
-        .brand-pill {
-            display: flex;
-            align-items: center;
-            gap: 0.875rem;
-            color: rgba(255, 255, 255, 0.72);
-            font-size: 0.875rem;
-
-            i {
-                width: 34px;
-                height: 34px;
-                background: rgba(238, 42, 123, 0.15);
-                border: 1px solid rgba(238, 42, 123, 0.3);
-                border-radius: 9px;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                color: #f472b6;
-                font-size: 0.85rem;
-                flex-shrink: 0;
-            }
-        }
-    }
-
-    // Decorative circles
-    .deco-circle {
-        position: absolute;
-        border-radius: 50%;
-
-        &.c1 {
-            width: 420px;
-            height: 420px;
-            background: radial-gradient(circle, rgba(238, 42, 123, 0.18) 0%, transparent 70%);
-            top: -140px;
-            right: -160px;
-        }
-
-        &.c2 {
-            width: 280px;
-            height: 280px;
-            background: radial-gradient(circle, rgba(124, 58, 237, 0.2) 0%, transparent 70%);
-            bottom: -100px;
-            left: -80px;
-        }
-
-        &.c3 {
-            width: 120px;
-            height: 120px;
-            background: rgba(238, 42, 123, 0.08);
-            border: 1px solid rgba(238, 42, 123, 0.18);
-            bottom: 36%;
-            right: -30px;
-        }
+    &.c3 {
+        width: 120px;
+        height: 120px;
+        background: rgba(238, 42, 123, 0.08);
+        border: 1px solid rgba(238, 42, 123, 0.18);
+        bottom: 36%;
+        right: -30px;
     }
 }
 
@@ -137,159 +150,158 @@
     border-radius: 20px;
     padding: 2.5rem 2rem;
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08), 0 2px 8px rgba(0, 0, 0, 0.04);
+}
 
-    // ── Header ──
-    .lc-header {
-        text-align: center;
-        margin-bottom: 2rem;
+// ── Header ──
 
-        .lc-icon {
-            width: 56px;
-            height: 56px;
-            background: linear-gradient(135deg, #fee2f0, #fecde3);
-            border-radius: 14px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 1.25rem;
+.lc-header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
 
-            i {
-                font-size: 1.4rem;
-                color: #ee2a7b;
-            }
-        }
+.lc-icon {
+    width: 56px;
+    height: 56px;
+    background: linear-gradient(135deg, #fee2f0, #fecde3);
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1.25rem;
 
-        h2 {
-            font-size: 1.4rem;
-            font-weight: 700;
-            color: #111827;
-            margin-bottom: 0.4rem;
-        }
-
-        p {
-            font-size: 0.85rem;
-            color: #6b7280;
-            line-height: 1.5;
-        }
+    i {
+        font-size: 1.4rem;
+        color: #ee2a7b;
     }
+}
 
-    // ── Fields ──
-    .lc-fields {
-        display: flex;
-        flex-direction: column;
-        gap: 1.1rem;
+.lc-header h2 {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: #111827;
+    margin-bottom: 0.4rem;
+}
+
+.lc-header p {
+    font-size: 0.85rem;
+    color: #6b7280;
+    line-height: 1.5;
+}
+
+// ── Fields ──
+
+.lc-fields {
+    display: flex;
+    flex-direction: column;
+    gap: 1.1rem;
+}
+
+.lc-field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+
+    label {
+        font-size: 0.82rem;
+        font-weight: 600;
+        color: #374151;
     }
+}
 
-    .lc-field {
-        display: flex;
-        flex-direction: column;
-        gap: 0.4rem;
+.lc-input-wrap {
+    position: relative;
 
-        label {
-            font-size: 0.82rem;
-            font-weight: 600;
-            color: #374151;
-        }
-
-        .lc-input-wrap {
-            position: relative;
-
-            .lc-input-icon {
-                position: absolute;
-                left: 0.875rem;
-                top: 50%;
-                transform: translateY(-50%);
-                color: #9ca3af;
-                font-size: 0.875rem;
-                z-index: 2;
-                pointer-events: none;
-            }
-
-            // Estilo del input de texto
-            ::ng-deep input.p-inputtext {
-                width: 100%;
-                padding: 0.75rem 0.875rem 0.75rem 2.6rem !important;
-                border: 1.5px solid #e5e7eb !important;
-                border-radius: 10px !important;
-                font-size: 0.9rem !important;
-                background: #fafafa !important;
-                box-shadow: none !important;
-                transition: border-color 0.2s, box-shadow 0.2s;
-
-                &:focus {
-                    border-color: #ee2a7b !important;
-                    box-shadow: 0 0 0 3px rgba(238, 42, 123, 0.1) !important;
-                    background: #fff !important;
-                    outline: none !important;
-                }
-            }
-        }
-
-        // Para el campo de contraseña (p-password ocupa todo el ancho)
-        .lc-password-wrap {
-            ::ng-deep {
-                .p-password {
-                    width: 100%;
-                    display: block;
-                }
-
-                input.p-inputtext {
-                    width: 100%;
-                    padding: 0.75rem 2.75rem 0.75rem 2.6rem !important;
-                    border: 1.5px solid #e5e7eb !important;
-                    border-radius: 10px !important;
-                    font-size: 0.9rem !important;
-                    background: #fafafa !important;
-                    box-shadow: none !important;
-                    transition: border-color 0.2s, box-shadow 0.2s;
-
-                    &:focus {
-                        border-color: #ee2a7b !important;
-                        box-shadow: 0 0 0 3px rgba(238, 42, 123, 0.1) !important;
-                        background: #fff !important;
-                        outline: none !important;
-                    }
-                }
-            }
-        }
-    }
-
-    // ── Botón ──
-    .lc-submit {
-        width: 100%;
-        padding: 0.9rem;
-        background: linear-gradient(135deg, #ee2a7b 0%, #c4186a 100%);
-        color: #fff;
-        border: none;
-        border-radius: 10px;
-        font-size: 0.95rem;
-        font-weight: 700;
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 0.5rem;
-        transition: transform 0.15s ease, box-shadow 0.15s ease;
-        margin-top: 0.5rem;
-        letter-spacing: 0.02em;
-
-        &:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 8px 24px rgba(238, 42, 123, 0.35);
-        }
-
-        &:active {
-            transform: translateY(0);
-        }
-    }
-
-    // ── Footer ──
-    .lc-footer {
-        text-align: center;
-        margin-top: 1.75rem;
-        font-size: 0.76rem;
+    .lc-input-icon {
+        position: absolute;
+        left: 0.875rem;
+        top: 50%;
+        transform: translateY(-50%);
         color: #9ca3af;
+        font-size: 0.875rem;
+        z-index: 2;
+        pointer-events: none;
     }
+
+    input {
+        width: 100%;
+        padding: 0.75rem 0.875rem 0.75rem 2.6rem;
+        border: 1.5px solid #e5e7eb;
+        border-radius: 10px;
+        font-size: 0.9rem;
+        background: #fafafa;
+        transition: border-color 0.2s, box-shadow 0.2s;
+
+        &:focus {
+            border-color: #ee2a7b;
+            box-shadow: 0 0 0 3px rgba(238, 42, 123, 0.1);
+            background: #fff;
+            outline: none;
+        }
+    }
+}
+
+// ── Botón ──
+
+.lc-submit {
+    width: 100%;
+    padding: 0.9rem;
+    background: linear-gradient(135deg, #ee2a7b 0%, #c4186a 100%);
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    font-size: 0.95rem;
+    font-weight: 700;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+    margin-top: 0.5rem;
+    letter-spacing: 0.02em;
+
+    &:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 8px 24px rgba(238, 42, 123, 0.35);
+    }
+
+    &:active {
+        transform: translateY(0);
+    }
+}
+
+// ── Footer ──
+
+.lc-footer {
+    text-align: center;
+    margin-top: 1.75rem;
+    font-size: 0.76rem;
+    color: #9ca3af;
+}
+
+// ── PrimeNG password override (sin ::ng-deep anidado) ────────────────────────
+
+.lc-password-wrap ::ng-deep .p-password {
+    width: 100%;
+    display: block;
+}
+
+.lc-password-wrap ::ng-deep input.p-inputtext {
+    width: 100%;
+    padding: 0.75rem 2.75rem 0.75rem 2.6rem !important;
+    border: 1.5px solid #e5e7eb !important;
+    border-radius: 10px !important;
+    font-size: 0.9rem !important;
+    background: #fafafa !important;
+    box-shadow: none !important;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.lc-password-wrap ::ng-deep input.p-inputtext:focus {
+    border-color: #ee2a7b !important;
+    box-shadow: 0 0 0 3px rgba(238, 42, 123, 0.1) !important;
+    background: #fff !important;
+    outline: none !important;
 }
 
 // ── Responsive ────────────────────────────────────────────────────────────────

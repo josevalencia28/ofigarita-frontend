@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from 'src/enviroments/enviroment';
 
@@ -46,6 +46,16 @@ export class VentasService {
 
     getUltimasVentas(): Observable<VentasResponse> {
         return this.http.get<VentasResponse>(`${this.URL}/getUltimasVentas`);
+    }
+
+    getHistoricoVentas(filters: Record<string, any> = {}): Observable<any> {
+        let params = new HttpParams();
+        for (const [key, value] of Object.entries(filters)) {
+            if (value !== null && value !== undefined && value !== '') {
+                params = params.set(key, String(value));
+            }
+        }
+        return this.http.get<any>(`${this.URL}/historicoVentas`, { params });
     }
 
     streamNuevasVentas(): Observable<any> {

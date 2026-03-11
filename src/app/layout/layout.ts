@@ -118,12 +118,6 @@ export class Layout implements OnDestroy, OnInit {
         this.conectarNotificacionesVentas();
     }
 
-    private esAdministrador(): boolean {
-        const usuario = this.authService.getUsuario;
-        // Ajusta el ID de rol si tu rol de administrador es distinto de 1
-        return Array.isArray(usuario.ROL) && usuario.ROL.includes(1);
-    }
-
     private async solicitarPermisoNotificaciones(): Promise<void> {
         if (typeof window === 'undefined' || !('Notification' in window)) {
             return;
@@ -153,10 +147,6 @@ export class Layout implements OnDestroy, OnInit {
     }
 
     conectarNotificacionesVentas(): void {
-        if (!this.esAdministrador()) {
-            return;
-        }
-
         this.sseSubscription = this.ventasService.streamNuevasVentas().subscribe({
             next: (venta: any) => {
                 const cliente = `${venta.nombres ?? ''} ${venta.apellidos ?? ''}`.trim() || 'Cliente';

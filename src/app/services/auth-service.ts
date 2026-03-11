@@ -74,6 +74,20 @@ export class AuthService {
         this._usuario.NUMERO_ID = payload.data.NUMERO_ID;
         this._usuario.TELEFONO = payload.data.TELEFONO;
         this._usuario.DIRECCION = payload.data.DIRECCION;
+        // Roles: intentar mapear desde el payload si existen
+        const rolesPayload = payload.data.ROL ?? payload.data.rol ?? payload.roles ?? payload.ROL;
+        if (Array.isArray(rolesPayload)) {
+            this._usuario.ROL = rolesPayload;
+        } else if (typeof rolesPayload === 'number') {
+            this._usuario.ROL = [rolesPayload];
+        } else if (typeof rolesPayload === 'string' && rolesPayload.trim().length > 0) {
+            try {
+                const parsed = JSON.parse(rolesPayload);
+                this._usuario.ROL = Array.isArray(parsed) ? parsed : [parsed];
+            } catch {
+                this._usuario.ROL = [Number(rolesPayload)].filter(n => !Number.isNaN(n));
+            }
+        }
         this.sessionService.setItem('user', this._usuario);
     }
 

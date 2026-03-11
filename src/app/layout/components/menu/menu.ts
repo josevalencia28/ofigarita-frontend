@@ -93,13 +93,11 @@ export class Menu {
                         label: 'Ventas',
                         icon: 'pi pi-fw pi-cart-plus',
                         routerLink: ['ventas']
-                        // items: [
-                        //     {
-                        //         label: 'Cargue de Archivos',
-                        //         icon: 'pi pi-fw pi-file',
-                        //         routerLink: ['layout/cargue']
-                        //     }
-                        // ]
+                    },
+                    {
+                        label: 'Histórico de Ventas',
+                        icon: 'pi pi-fw pi-history',
+                        routerLink: ['historico-ventas']
                     }
                 ],
             },

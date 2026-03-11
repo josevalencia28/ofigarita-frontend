@@ -30,10 +30,11 @@ export class Topbar implements OnInit {
     items!: MenuItem[];
     isVisible: boolean = false;
     form: FormGroup;
+    usuario_name : string = '';
     with_screen: number = window.innerWidth;
 
     get userName(): string {
-        const u = this.authService.getUsuario;
+        const u = this.authService.getUsuario;        
         return u?.USERNAME || u?.NOMBRES || 'Usuario';
     }
 
@@ -58,6 +59,9 @@ export class Topbar implements OnInit {
     }
 
     ngOnInit(): void {
+        const u = this.authService.getUsuario;
+        
+        this.usuario_name= u?.NOMBRES || u?.USERNAME || 'Usuario';
         this.items = [
             {
                 label: 'Opciones',
