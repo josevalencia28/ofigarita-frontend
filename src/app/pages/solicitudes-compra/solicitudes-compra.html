@@ -240,7 +240,7 @@
 
                 <p-button label="+ Agregar a la lista" icon="pi pi-plus" severity="secondary" size="small"
                     [disabled]="productoTemp.es_nuevo
-                        ? (!productoTemp.nombre_producto_nuevo?.trim() || productoTemp.cantidad <= 0 || productoTemp.valor_paquete <= 0)
+                        ? (!productoTemp.nombre_producto_nuevo.trim() || productoTemp.cantidad <= 0 || productoTemp.valor_paquete <= 0)
                         : (!productoSeleccionado || productoTemp.cantidad <= 0 || productoTemp.valor_paquete <= 0)"
                     (onClick)="agregarProducto()">
                 </p-button>

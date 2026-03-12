@@ -1,23 +1,15 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
 import { CardModule } from 'primeng/card';
 import { ChartModule } from 'primeng/chart';
-import { SelectModule } from 'primeng/select';
-import { HttpClient } from '@angular/common/http';
 import { AnaliticaService } from '@/pages/service/analitica.service';
-import { MessageService } from 'primeng/api';
 import { Toast } from "primeng/toast";
-
-
 
 @Component({
     selector: 'app-dashboard',
-    imports: [CommonModule, FormsModule, CardModule, ChartModule, SelectModule, Toast],
+    imports: [CommonModule, CardModule, ChartModule, Toast],
     templateUrl: './dashboard.html',
     styleUrl: './dashboard.scss',
-    providers: [MessageService],
-
 })
 export class Dashboard implements OnInit {
     totalHoy: number = 0;
@@ -25,9 +17,6 @@ export class Dashboard implements OnInit {
     totalMes: number = 0;
 
     resumen: any = {};
-
-    chartData: any;
-    chartOptions: any;
 
     topClientes: any[] = [];
     clientesChartData: any;
@@ -40,39 +29,21 @@ export class Dashboard implements OnInit {
     productosChartData: any;
     productosChartOptions: any;
 
-    // Gráfica torta — tipo de pago
-    periodoTipoPago: string = 'mes';
-    readonly periodoOptions = [
-        { label: 'Hoy', value: 'dia' },
-        { label: 'Este mes', value: 'mes' },
-        { label: 'Este año', value: 'anio' },
-    ];
-    tipoPagoChartData: any;
-    tipoPagoChartOptions: any;
-
-    // Panel stock de productos
-    stockProductos: any[] = [];
-    stockFiltro: 'urgentes' | 'agotado' | 'bajo' | 'ok' | 'todos' = 'urgentes';
-
     readonly mesActual = new Date().toLocaleDateString('es-CO', { month: 'long', year: 'numeric' });
     readonly fechaHoy  = new Date().toLocaleDateString('es-CO', { weekday: 'long', day: 'numeric', month: 'long' });
 
-    constructor(private http: HttpClient, private analiticaService: AnaliticaService, private messageService: MessageService) { }
+    constructor(private analiticaService: AnaliticaService) { }
 
     ngOnInit() {
-        this.initChartOptions();
         this.initClientesChartOptions();
         this.initProductosChartOptions();
         this.initVentasAnualesChartOptions();
-        this.initTipoPagoChartOptions();
 
         this.getVentasData();
         this.getTopClientes();
         this.getVentasAnuales();
         this.getTopProductos();
         this.getResumenGeneral();
-        this.getTipoPago();
-        this.getStock();
     }
 
     getResumenGeneral() {
@@ -101,19 +72,17 @@ export class Dashboard implements OnInit {
     getTopProductos() {
         this.analiticaService.getProductosMasVendidosMes().subscribe({
             next: (response) => {
-                // El backend retorna directamente un array
                 if (Array.isArray(response) && response.length > 0) {
                     this.topProductos = response;
                     this.updateProductosChartData();
                 } else if (response && response.p_estado === 1 && response.data && response.data.length > 0) {
-                    // Por si acaso retorna con estructura {p_estado, data}
                     this.topProductos = response.data;
                     this.updateProductosChartData();
                 } else {
                     this.initializeEmptyProductosChart();
                 }
             },
-            error: (error) => {
+            error: () => {
                 this.initializeEmptyProductosChart();
             }
         });
@@ -138,42 +107,11 @@ export class Dashboard implements OnInit {
                 this.totalHoy = parseFloat(data.totalHoy[0].total_hoy) || 0;
                 this.totalSemana = parseFloat(data.totalSemana[0].total_semana) || 0;
                 this.totalMes = parseFloat(data.totalMes[0].total_mes) || 0;
-
-                this.updateChartData();
             },
             error: (error) => {
                 console.error('Error al cargar datos:', error);
             }
         });
-    }
-
-    updateChartData() {
-        this.chartData = {
-            labels: ['Hoy', 'Semana', 'Mes'],
-            datasets: [
-                {
-                    label: 'Hoy',
-                    data: [this.totalHoy, 0, 0],
-                    backgroundColor: '#FE6A35',
-                    borderRadius: 8,
-                    barThickness: 80
-                },
-                {
-                    label: 'Semana',
-                    data: [0, this.totalSemana, 0],
-                    backgroundColor: '#8B5CF6',
-                    borderRadius: 8,
-                    barThickness: 80
-                },
-                {
-                    label: 'Mes',
-                    data: [0, 0, this.totalMes],
-                    backgroundColor: '#10B981',
-                    borderRadius: 8,
-                    barThickness: 80
-                }
-            ]
-        };
     }
 
     getVentasAnuales() {
@@ -252,7 +190,6 @@ export class Dashboard implements OnInit {
     updateProductosChartData() {
         const nombres = this.topProductos.map(p => {
             const nombreProducto = p.producto;
-            // Acortar nombres largos para que quepan en el gráfico
             return nombreProducto.length > 25
                 ? nombreProducto.substring(0, 25) + '...'
                 : nombreProducto;
@@ -274,58 +211,6 @@ export class Dashboard implements OnInit {
         };
     }
 
-    initChartOptions() {
-        const documentStyle = getComputedStyle(document.documentElement);
-        const textColorSecondary = documentStyle.getPropertyValue('--text-color-secondary') || '#6c757d';
-        const surfaceBorder = documentStyle.getPropertyValue('--surface-border') || '#dfe7ef';
-
-        this.chartOptions = {
-            maintainAspectRatio: false,
-            aspectRatio: 0.8,
-            plugins: {
-                legend: {
-                    display: true,
-                    position: 'bottom',
-                    labels: {
-                        color: textColorSecondary,
-                        usePointStyle: true,
-                        padding: 20,
-                        font: {
-                            size: 12
-                        }
-                    }
-                }
-            },
-            scales: {
-                x: {
-                    ticks: {
-                        color: textColorSecondary,
-                        font: {
-                            size: 12,
-                            weight: 500
-                        }
-                    },
-                    grid: {
-                        display: false
-                    }
-                },
-                y: {
-                    beginAtZero: true,
-                    ticks: {
-                        color: textColorSecondary,
-                        callback: function (value: any) {
-                            return '$' + value.toLocaleString();
-                        }
-                    },
-                    grid: {
-                        color: surfaceBorder,
-                        drawBorder: false
-                    }
-                }
-            }
-        };
-    }
-
     initClientesChartOptions() {
         const documentStyle = getComputedStyle(document.documentElement);
         const textColorSecondary = documentStyle.getPropertyValue('--text-color-secondary') || '#6c757d';
@@ -343,9 +228,7 @@ export class Dashboard implements OnInit {
                         color: textColorSecondary,
                         usePointStyle: true,
                         padding: 15,
-                        font: {
-                            size: 11
-                        }
+                        font: { size: 11 }
                     }
                 }
             },
@@ -354,29 +237,16 @@ export class Dashboard implements OnInit {
                     beginAtZero: true,
                     ticks: {
                         color: textColorSecondary,
-                        font: {
-                            size: 11
-                        },
+                        font: { size: 11 },
                         callback: function (value: any) {
                             return '$' + value.toLocaleString();
                         }
                     },
-                    grid: {
-                        color: surfaceBorder,
-                        drawBorder: false
-                    }
+                    grid: { color: surfaceBorder, drawBorder: false }
                 },
                 y: {
-                    ticks: {
-                        color: textColorSecondary,
-                        font: {
-                            size: 11,
-                            weight: 500
-                        }
-                    },
-                    grid: {
-                        display: false
-                    }
+                    ticks: { color: textColorSecondary, font: { size: 11, weight: 500 } },
+                    grid: { display: false }
                 }
             }
         };
@@ -399,21 +269,15 @@ export class Dashboard implements OnInit {
                         color: textColorSecondary,
                         usePointStyle: true,
                         padding: 15,
-                        font: {
-                            size: 11
-                        }
+                        font: { size: 11 }
                     }
                 },
                 tooltip: {
                     callbacks: {
                         label: function (context: any) {
                             let label = context.dataset.label || '';
-                            if (label) {
-                                label += ': ';
-                            }
-                            if (context.parsed.x !== null) {
-                                label += context.parsed.x + ' unidades';
-                            }
+                            if (label) label += ': ';
+                            if (context.parsed.x !== null) label += context.parsed.x + ' unidades';
                             return label;
                         }
                     }
@@ -422,30 +286,12 @@ export class Dashboard implements OnInit {
             scales: {
                 x: {
                     beginAtZero: true,
-                    ticks: {
-                        color: textColorSecondary,
-                        font: {
-                            size: 11
-                        },
-                        stepSize: 1,
-                        precision: 0
-                    },
-                    grid: {
-                        color: surfaceBorder,
-                        drawBorder: false
-                    }
+                    ticks: { color: textColorSecondary, font: { size: 11 }, stepSize: 1, precision: 0 },
+                    grid: { color: surfaceBorder, drawBorder: false }
                 },
                 y: {
-                    ticks: {
-                        color: textColorSecondary,
-                        font: {
-                            size: 11,
-                            weight: 500
-                        }
-                    },
-                    grid: {
-                        display: false
-                    }
+                    ticks: { color: textColorSecondary, font: { size: 11, weight: 500 } },
+                    grid: { display: false }
                 }
             }
         };
@@ -467,22 +313,15 @@ export class Dashboard implements OnInit {
                         color: textColorSecondary,
                         usePointStyle: true,
                         padding: 20,
-                        font: {
-                            size: 12,
-                            weight: 600
-                        }
+                        font: { size: 12, weight: 600 }
                     }
                 },
                 tooltip: {
                     callbacks: {
                         label: function (context: any) {
                             let label = context.dataset.label || '';
-                            if (label) {
-                                label += ': ';
-                            }
-                            if (context.parsed.y !== null) {
-                                label += '$' + context.parsed.y.toLocaleString();
-                            }
+                            if (label) label += ': ';
+                            if (context.parsed.y !== null) label += '$' + context.parsed.y.toLocaleString();
                             return label;
                         }
                     }
@@ -490,146 +329,23 @@ export class Dashboard implements OnInit {
             },
             scales: {
                 x: {
-                    ticks: {
-                        color: textColorSecondary,
-                        font: {
-                            size: 11,
-                            weight: 500
-                        }
-                    },
-                    grid: {
-                        display: false
-                    }
+                    ticks: { color: textColorSecondary, font: { size: 11, weight: 500 } },
+                    grid: { display: false }
                 },
                 y: {
                     beginAtZero: true,
                     ticks: {
                         color: textColorSecondary,
-                        font: {
-                            size: 11
-                        },
+                        font: { size: 11 },
                         callback: function (value: any) {
-                            if (value >= 1000) {
-                                return '$' + (value / 1000).toFixed(0) + 'K';
-                            }
+                            if (value >= 1000) return '$' + (value / 1000).toFixed(0) + 'K';
                             return '$' + value.toLocaleString();
                         }
                     },
-                    grid: {
-                        color: surfaceBorder,
-                        drawBorder: false
-                    }
+                    grid: { color: surfaceBorder, drawBorder: false }
                 }
             }
         };
-    }
-
-    getTipoPago() {
-        this.analiticaService.getVentasPorTipoPago(this.periodoTipoPago).subscribe({
-            next: (data: any[]) => {
-                if (Array.isArray(data) && data.length > 0) {
-                    this.updateTipoPagoChartData(data);
-                }
-            },
-            error: (err) => console.error('Error tipo pago:', err)
-        });
-    }
-
-    onPeriodoChange() {
-        this.getTipoPago();
-    }
-
-    updateTipoPagoChartData(data: any[]) {
-        const colores: { [key: string]: string } = {
-            'EFECTIVO': '#22c55e',
-            'NEQUI':    '#3b82f6',
-            'CRÉDITO':  '#f59e0b',
-        };
-        this.tipoPagoChartData = {
-            labels: data.map(d => `${d.medio_pago} (${d.cantidad})`),
-            datasets: [{
-                data: data.map(d => parseFloat(d.total)),
-                backgroundColor: data.map(d => colores[d.medio_pago] || '#6b7280'),
-                hoverOffset: 8,
-                borderWidth: 2,
-                borderColor: 'transparent'
-            }]
-        };
-    }
-
-    initTipoPagoChartOptions() {
-        const textColor = getComputedStyle(document.documentElement)
-            .getPropertyValue('--text-color') || '#374151';
-        const textColorSecondary = getComputedStyle(document.documentElement)
-            .getPropertyValue('--text-color-secondary') || '#6b7280';
-
-        this.tipoPagoChartOptions = {
-            maintainAspectRatio: false,
-            plugins: {
-                legend: {
-                    position: 'bottom',
-                    labels: {
-                        color: textColorSecondary,
-                        usePointStyle: true,
-                        padding: 18,
-                        font: { size: 12 }
-                    }
-                },
-                tooltip: {
-                    callbacks: {
-                        label: (ctx: any) => {
-                            const val = ctx.parsed;
-                            return ` $${val.toLocaleString('es-CO')}`;
-                        }
-                    }
-                }
-            }
-        };
-    }
-
-    getStock() {
-        this.analiticaService.getStockProductos().subscribe({
-            next: (data: any[]) => {
-                this.stockProductos = Array.isArray(data) ? data.map(p => ({
-                    ...p,
-                    stock: parseInt(p.stock, 10),
-                    precio_venta: parseFloat(p.precio_venta) || 0
-                })) : [];
-            },
-            error: (err) => console.error('Error stock:', err)
-        });
-    }
-
-    get stockFiltrado(): any[] {
-        switch (this.stockFiltro) {
-            case 'urgentes': return this.stockProductos.filter(p => p.stock <= 5);
-            case 'agotado':  return this.stockProductos.filter(p => p.stock === 0);
-            case 'bajo':     return this.stockProductos.filter(p => p.stock > 0 && p.stock <= 5);
-            case 'ok':       return this.stockProductos.filter(p => p.stock > 5);
-            default:         return this.stockProductos;
-        }
-    }
-
-    get stockAgotados(): number {
-        return this.stockProductos.filter(p => p.stock === 0).length;
-    }
-
-    get stockBajo(): number {
-        return this.stockProductos.filter(p => p.stock > 0 && p.stock <= 5).length;
-    }
-
-    get stockOk(): number {
-        return this.stockProductos.filter(p => p.stock > 5).length;
-    }
-
-    getStockStatus(stock: number): 'agotado' | 'bajo' | 'ok' {
-        if (stock === 0) return 'agotado';
-        if (stock <= 5) return 'bajo';
-        return 'ok';
-    }
-
-    setStockFiltro(filtro: 'urgentes' | 'agotado' | 'bajo' | 'ok' | 'todos') {
-        this.stockFiltro = filtro;
     }
 
     formatCurrency(value: number): string {

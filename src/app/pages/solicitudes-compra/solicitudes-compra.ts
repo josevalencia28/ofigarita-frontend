@@ -33,12 +33,12 @@ export interface DetalleSolicitud {
 export interface SolicitudAgrupada {
     id_solicitud: number;
     fecha: string;
-    proveedor: string;
+    proveedor: string | null;
     total_estimado: number;
     estado: string;
-    observaciones: string;
+    observaciones: string | null;
     fcha_rgstro: string;
-    productos: DetalleSolicitud[];
+    productos: DetalleSolicitud[] | null;
 }
 
 interface Producto {
