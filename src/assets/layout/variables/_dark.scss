@@ -8,36 +8,257 @@
 
 html.app-dark {
 
-    // ── KPI Cards (dashboard) ──
+    // ── Welcome Banner ──────────────────────────────────────────────────────
+    .welcome-banner {
+        background: linear-gradient(125deg, #1a0845 0%, #7a1244 50%, #200a6b 100%);
+        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5), 0 2px 8px rgba(0, 0, 0, 0.3);
+
+        .wb-stats {
+            background: rgba(0, 0, 0, 0.35);
+            border-color: rgba(255, 255, 255, 0.07);
+        }
+    }
+
+    // ── KPI Cards ────────────────────────────────────────────────────────────
     .kpi-card {
         background: var(--p-surface-800);
-        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+        border-color: var(--p-surface-700);
+        box-shadow: 0 1px 3px rgba(0,0,0,0.3), 0 4px 16px rgba(0,0,0,0.2);
+
+        &:hover {
+            box-shadow: 0 12px 32px rgba(0,0,0,0.4), 0 2px 8px rgba(0,0,0,0.3);
+        }
 
         &.kpi-alert {
-            background: linear-gradient(135deg, var(--p-surface-800) 0%, #1c1500 100%);
+            background: linear-gradient(160deg, var(--p-surface-800) 0%, rgba(28, 21, 0, 0.8) 100%);
+            border-color: rgba(245, 158, 11, 0.25);
+        }
+
+        // Íconos en dark: fondos más oscuros con opacidad
+        .kpi-icon {
+            &.orange { background: linear-gradient(135deg, rgba(249,115,22,0.15), rgba(249,115,22,0.1)); color: #fb923c; box-shadow: 0 4px 12px rgba(249,115,22,0.15); }
+            &.purple { background: linear-gradient(135deg, rgba(139,92,246,0.15), rgba(139,92,246,0.1)); color: #a78bfa; box-shadow: 0 4px 12px rgba(139,92,246,0.15); }
+            &.green  { background: linear-gradient(135deg, rgba(34,197,94,0.15),  rgba(34,197,94,0.1));  color: #4ade80; box-shadow: 0 4px 12px rgba(34,197,94,0.15); }
+            &.pink   { background: linear-gradient(135deg, rgba(238,42,123,0.15), rgba(238,42,123,0.1)); color: #f472b6; box-shadow: 0 4px 12px rgba(238,42,123,0.15); }
+            &.amber  { background: linear-gradient(135deg, rgba(245,158,11,0.15), rgba(245,158,11,0.1)); color: #fbbf24; box-shadow: 0 4px 12px rgba(245,158,11,0.15); }
+            &.blue   { background: linear-gradient(135deg, rgba(59,130,246,0.15),  rgba(59,130,246,0.1));  color: #60a5fa; box-shadow: 0 4px 12px rgba(59,130,246,0.15); }
+            &.red    { background: linear-gradient(135deg, rgba(239,68,68,0.15),  rgba(239,68,68,0.1));  color: #f87171; box-shadow: 0 4px 12px rgba(239,68,68,0.15); }
         }
 
         .kpi-body {
             .kpi-value { color: var(--p-surface-50); }
-            .kpi-sub   { color: var(--p-surface-400); }
+            .kpi-label { color: var(--p-surface-400); }
+            .kpi-sub   { color: var(--p-surface-500); }
         }
     }
 
-    // ── Section cards (gráficas) ──
+    // ── Section cards ────────────────────────────────────────────────────────
     .section-card {
         background: var(--p-surface-800);
-        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+        border-color: var(--p-surface-700);
+        box-shadow: 0 1px 3px rgba(0,0,0,0.3), 0 4px 16px rgba(0,0,0,0.2);
 
         .section-header {
-            border-bottom-color: var(--p-surface-600);
+            border-bottom-color: var(--p-surface-700);
+
             .section-title { color: var(--p-surface-50); }
+
+            .section-badge {
+                &.pink {
+                    background: rgba(238,42,123,0.12);
+                    color: #f472b6;
+                    border-color: rgba(238,42,123,0.25);
+                }
+                &.gray {
+                    background: var(--p-surface-700);
+                    color: var(--p-surface-400);
+                    border-color: var(--p-surface-600);
+                }
+            }
         }
     }
 
-    // ── Totals bar (totalizadores) ──
-    .totals-bar {
+    // ── Sidebar ──────────────────────────────────────────────────────────────
+    .layout-sidebar {
+        background: var(--p-surface-900);
+        border-color: var(--p-surface-700);
+        box-shadow: 0 4px 24px rgba(0,0,0,0.4), 0 1px 4px rgba(0,0,0,0.3);
+
+        &::-webkit-scrollbar-thumb {
+            background: rgba(238,42,123,0.3);
+        }
+    }
+
+    .sidebar-logo {
+        background: linear-gradient(135deg, rgba(238,42,123,0.15), rgba(139,92,246,0.15));
+        border-color: rgba(238,42,123,0.2);
+    }
+
+    .sidebar-divider {
+        background: var(--p-surface-700);
+    }
+
+    // ── Menú items ───────────────────────────────────────────────────────────
+    .layout-menu ul a {
+        color: var(--p-surface-300);
+
+        .layout-menuitem-icon { color: var(--p-surface-400); }
+
+        &.active-route {
+            color: #f472b6;
+            background: linear-gradient(135deg, rgba(238,42,123,0.12), rgba(238,42,123,0.06));
+            box-shadow: inset 3px 0 0 #ee2a7b;
+
+            .layout-menuitem-icon { color: #f472b6; }
+        }
+
+        &:hover:not(.active-route) {
+            background: var(--p-surface-800);
+            color: var(--p-surface-100);
+        }
+    }
+
+    .layout-root-menuitem > .layout-menuitem-root-text {
+        color: var(--p-surface-500);
+    }
+
+    // ── Topbar ───────────────────────────────────────────────────────────────
+    .layout-topbar {
+        background: var(--p-surface-900);
+        border-bottom-color: var(--p-surface-700);
+        box-shadow: 0 1px 0 var(--p-surface-700), 0 4px 20px rgba(0,0,0,0.3);
+    }
+
+    .topbar-brand-name { color: #f472b6; }
+
+    .topbar-theme-toggle {
+        border-color: var(--p-surface-600);
+        background: var(--p-surface-800);
+        color: var(--p-surface-300);
+
+        &:hover {
+            background: rgba(238,42,123,0.1);
+            border-color: rgba(238,42,123,0.4);
+            color: #f472b6;
+        }
+    }
+
+    .notif-bell-btn {
         background: var(--p-surface-800);
         border-color: var(--p-surface-600);
+        color: var(--p-surface-400);
+
+        &:hover, &.notif-bell-active {
+            background: rgba(238,42,123,0.1);
+            border-color: rgba(238,42,123,0.4);
+            color: #f472b6;
+        }
+    }
+
+    .notif-badge {
+        border-color: var(--p-surface-900);
+    }
+
+    // Panel de notificaciones
+    .notif-panel {
+        background: var(--p-surface-800);
+        border-color: var(--p-surface-700);
+        box-shadow: 0 20px 60px rgba(0,0,0,0.5), 0 4px 16px rgba(0,0,0,0.3);
+
+        &::before {
+            background: var(--p-surface-800);
+            border-color: var(--p-surface-700);
+        }
+    }
+
+    .notif-panel-header {
+        background: var(--p-surface-800);
+        border-bottom-color: var(--p-surface-700);
+    }
+
+    .notif-panel-title { color: var(--p-surface-100); }
+
+    .notif-count-badge {
+        background: rgba(238,42,123,0.15);
+        color: #f472b6;
+        border-color: rgba(238,42,123,0.3);
+    }
+
+    .notif-marcar-btn {
+        color: var(--p-surface-400);
+        border-color: var(--p-surface-600);
+
+        &:hover {
+            background: rgba(238,42,123,0.1);
+            border-color: rgba(238,42,123,0.35);
+            color: #f472b6;
+        }
+    }
+
+    .notif-empty-icon {
+        background: var(--p-surface-700);
+        i { color: var(--p-surface-500); }
+    }
+
+    .notif-empty-title { color: var(--p-surface-200); }
+    .notif-empty-sub   { color: var(--p-surface-500); }
+
+    .notif-item {
+        border-bottom-color: var(--p-surface-700);
+
+        &:hover { background: var(--p-surface-700); }
+
+        &.notif-no-leida { background: rgba(238,42,123,0.05); }
+    }
+
+    .notif-item-avatar {
+        background: linear-gradient(135deg, #9d174d, #6d28d9);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+
+        &.notif-item-avatar-read {
+            background: var(--p-surface-700);
+            box-shadow: none;
+        }
+    }
+
+    .notif-item-title  { color: var(--p-surface-100); }
+    .notif-item-tiempo { color: var(--p-surface-500); }
+    .notif-item-cliente { color: var(--p-surface-400); }
+
+    .notif-tag {
+        background: var(--p-surface-700);
+        border-color: var(--p-surface-600);
+        color: var(--p-surface-300);
+    }
+
+    .notif-tag-more {
+        background: rgba(238,42,123,0.1);
+        border-color: rgba(238,42,123,0.25);
+        color: #f472b6;
+    }
+
+    .notif-panel-footer {
+        background: var(--p-surface-900);
+        border-top-color: var(--p-surface-700);
+        color: var(--p-surface-500);
+    }
+
+    // ── User button ──────────────────────────────────────────────────────────
+    .topbar-user-btn {
+        .topbar-avatar {
+            background: linear-gradient(135deg, rgba(238,42,123,0.2), rgba(238,42,123,0.1));
+            i { color: #f472b6; }
+        }
+
+        .topbar-user-name  { color: var(--p-surface-100); }
+        .topbar-user-role  { color: var(--p-surface-500); }
+        .topbar-chevron    { color: var(--p-surface-500); }
+    }
+
+    // ── Totals bar ───────────────────────────────────────────────────────────
+    .totals-bar {
+        background: var(--p-surface-800);
+        border-color: var(--p-surface-700);
     }
 
     .total-chip {
@@ -48,12 +269,90 @@ html.app-dark {
         }
     }
 
-    // ── PrimeNG card wrapper ──
-    .card {
-        background: var(--p-surface-800) !important;
+    // ── PrimeNG DataTable: hover y cuerpo ───────────────────────────────────
+    .p-datatable {
+        .p-datatable-tbody > tr {
+            background: var(--p-surface-800);
+            color: var(--p-surface-100);
+
+            &:hover {
+                background: var(--p-surface-700) !important;
+                color: var(--p-surface-50) !important;
+
+                td { color: var(--p-surface-50) !important; }
+            }
+
+            > td {
+                color: var(--p-surface-200);
+                border-color: var(--p-surface-700);
+            }
+        }
+
+        .p-datatable-tfoot > tr > td {
+            background: var(--p-surface-800);
+            color: var(--p-surface-200);
+            border-color: var(--p-surface-700);
+        }
     }
 
-    // ── Summary box (modales confirm) ──
+    // ── Histórico de Ventas (.hv-*) ──────────────────────────────────────────
+    .hv-header {
+        .hv-title    { color: var(--p-surface-50); }
+        .hv-subtitle { color: var(--p-surface-400); }
+    }
+
+    .hv-filters-card {
+        background: var(--p-surface-800);
+        border: 1px solid var(--p-surface-700);
+        box-shadow: 0 1px 4px rgba(0,0,0,0.3);
+
+        .hv-filter-group label { color: var(--p-surface-400); }
+    }
+
+    .hv-total-card {
+        background: var(--p-surface-800);
+        border: 1px solid var(--p-surface-700);
+        box-shadow: 0 1px 4px rgba(0,0,0,0.3);
+
+        .hv-total-value { color: var(--p-surface-50); }
+        .hv-total-label { color: var(--p-surface-500); }
+        .hv-total-sub   { color: var(--p-surface-400); }
+    }
+
+    .hv-table-card {
+        background: var(--p-surface-800);
+        border: 1px solid var(--p-surface-700);
+        box-shadow: 0 1px 6px rgba(0,0,0,0.3);
+    }
+
+    .hv-id         { color: #c084fc; }
+    .hv-total-cell { color: var(--p-surface-100); }
+    .hv-empty      { color: var(--p-surface-500); }
+
+    .hv-toggle-btn {
+        color: var(--p-surface-400);
+
+        &:hover {
+            background: var(--p-surface-700);
+            color: var(--p-surface-100);
+        }
+    }
+
+    .hv-expanded-row > td { background: var(--p-surface-900) !important; }
+
+    .hv-products-panel {
+        .hv-products-title {
+            color: var(--p-surface-200);
+            i { color: #c084fc; }
+
+            .hv-products-client { color: var(--p-surface-400); }
+        }
+    }
+
+    // ── PrimeNG card wrapper ─────────────────────────────────────────────────
+    .card { background: var(--p-surface-800) !important; }
+
+    // ── Summary box ──────────────────────────────────────────────────────────
     .summary-box {
         background: var(--p-surface-900) !important;
         border-color: var(--p-surface-600) !important;
@@ -65,40 +364,20 @@ html.app-dark {
         }
     }
 
-    // ── Info notes ──
+    // ── Info notes ───────────────────────────────────────────────────────────
     .info-note {
-        &.blue {
-            background: linear-gradient(135deg, #0f1c33, #0f2444) !important;
-            border-color: #1e3a66 !important;
-            color: #93c5fd !important;
-        }
-        &.amber {
-            background: linear-gradient(135deg, #1c1200, #231800) !important;
-            border-color: #44300a !important;
-            color: #fcd34d !important;
-        }
-        &.red {
-            background: linear-gradient(135deg, #1c0808, #230a0a) !important;
-            border-color: #4a1010 !important;
-            color: #fca5a5 !important;
-        }
+        &.blue  { background: linear-gradient(135deg, #0f1c33, #0f2444) !important; border-color: #1e3a66 !important; color: #93c5fd !important; }
+        &.amber { background: linear-gradient(135deg, #1c1200, #231800) !important; border-color: #44300a !important; color: #fcd34d !important; }
+        &.red   { background: linear-gradient(135deg, #1c0808, #230a0a) !important; border-color: #4a1010 !important; color: #fca5a5 !important; }
     }
 
-    // ── Method badge ──
+    // ── Method badge ─────────────────────────────────────────────────────────
     .method-badge {
-        &.ef {
-            background: #0d2618;
-            color: #4ade80;
-            border-color: #166534;
-        }
-        &.ne {
-            background: #0e0f2e;
-            color: #a5b4fc;
-            border-color: #3730a3;
-        }
+        &.ef { background: #0d2618; color: #4ade80; border-color: #166534; }
+        &.ne { background: #0e0f2e; color: #a5b4fc; border-color: #3730a3; }
     }
 
-    // ── Obs box ──
+    // ── Obs box ──────────────────────────────────────────────────────────────
     .obs-box {
         background: #1c1200;
         border-color: #44300a;
@@ -106,23 +385,11 @@ html.app-dark {
         i { color: #f59e0b; }
     }
 
-    // ── Info cards (solicitudes modal) ──
+    // ── Info cards ───────────────────────────────────────────────────────────
     .info-card {
         background: var(--p-surface-700) !important;
         border-color: var(--p-surface-600) !important;
 
-        .ic-body {
-            .ic-value { color: var(--p-surface-50) !important; }
-        }
-    }
-
-    // ── Sidebar brand ──
-    .sidebar-divider {
-        background: var(--p-surface-600);
-    }
-
-    // ── Topbar shadow en dark ──
-    .layout-topbar {
-        box-shadow: 0 1px 8px rgba(0, 0, 0, 0.25);
+        .ic-body .ic-value { color: var(--p-surface-50) !important; }
     }
 }

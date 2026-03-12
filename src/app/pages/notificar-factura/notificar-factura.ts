@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { Table, TableModule } from 'primeng/table';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
-import { ToastModule } from 'primeng/toast';
+import { Toast } from 'primeng/toast';
 import { TagModule } from 'primeng/tag';
 import { MessageService } from 'primeng/api';
 import { DialogModule } from 'primeng/dialog';
@@ -19,7 +19,7 @@ import { InputIconModule } from 'primeng/inputicon';
     TableModule,
     ButtonModule,
     InputTextModule,
-    ToastModule,
+    Toast,
     TagModule,
     IconFieldModule,
     InputIconModule,

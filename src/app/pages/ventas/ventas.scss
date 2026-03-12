@@ -1,3 +1,16 @@
+// ── Contenedor tabla ──────────────────────────────────────────────────────────
+
+.page-table-card {
+    background: var(--surface-card);
+    border-radius: 16px;
+    padding: 1.25rem;
+    border: 1px solid var(--surface-border);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 4px 16px rgba(0,0,0,0.04);
+    overflow: hidden;
+}
+
+// ── Scroll compras ────────────────────────────────────────────────────────────
+
 .compras-scroll {
   max-height: 520px;
   overflow-y: auto;

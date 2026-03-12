@@ -38,4 +38,12 @@ export class AnaliticaService {
     getResumenGeneral(): Observable<any> {
         return this.http.get(`${this.URL}/resumenGeneral`);
     }
+
+    getVentasPorTipoPago(periodo: string): Observable<any> {
+        return this.http.get(`${this.URL}/ventasPorTipoPago?periodo=${periodo}`);
+    }
+
+    getStockProductos(): Observable<any> {
+        return this.http.get(`${this.URL}/stockProductos`);
+    }
 }

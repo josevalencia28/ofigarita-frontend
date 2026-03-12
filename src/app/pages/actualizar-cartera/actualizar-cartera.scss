@@ -1,3 +1,16 @@
+// ── Contenedor tabla ──────────────────────────────────────────────────────────
+
+.page-table-card {
+    background: var(--surface-card);
+    border-radius: 16px;
+    padding: 1.25rem;
+    border: 1px solid var(--surface-border);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 4px 16px rgba(0,0,0,0.04);
+    overflow: hidden;
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+
 @keyframes pulseGreen {
   0%, 100% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.35); }
   50%       { box-shadow: 0 0 0 18px rgba(34, 197, 94, 0); }
@@ -131,74 +144,92 @@
 // ── Totalizadores ─────────────────────────────────────────────────────────────
 
 .totals-bar {
-    display: flex;
-    align-items: stretch;
-    background: #f8fafc;
-    border: 1px solid #e5e7eb;
-    border-radius: 10px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
     margin-bottom: 1.25rem;
-    overflow: hidden;
-    flex-wrap: wrap;
 }
 
 .total-chip {
+    background: var(--surface-card);
+    border-radius: 16px;
+    padding: 1.35rem 1.5rem;
     display: flex;
     align-items: center;
-    gap: 0.75rem;
-    padding: 0.875rem 1.25rem;
-    flex: 1;
-    min-width: 150px;
-    border-right: 1px solid #e5e7eb;
+    gap: 1rem;
+    border: 1px solid var(--surface-border);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 4px 16px rgba(0,0,0,0.04);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    position: relative;
+    overflow: hidden;
 
-    &:last-child { border-right: none; }
+    &::before {
+        content: '';
+        position: absolute;
+        top: 0; left: 1.5rem; right: 1.5rem;
+        height: 2px;
+        border-radius: 0 0 4px 4px;
+        background: var(--chip-accent, #e5e7eb);
+    }
+
+    &:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 12px 32px rgba(0,0,0,0.1), 0 2px 8px rgba(0,0,0,0.06);
+    }
+
+    &:has(.tc-icon.blue)   { --chip-accent: #3b82f6; }
+    &:has(.tc-icon.pink)   { --chip-accent: #ee2a7b; }
+    &:has(.tc-icon.green)  { --chip-accent: #22c55e; }
+    &:has(.tc-icon.amber)  { --chip-accent: #f59e0b; }
+    &:has(.tc-icon.purple) { --chip-accent: #8b5cf6; }
+    &:has(.tc-icon.red)    { --chip-accent: #ef4444; }
 
     .tc-icon {
-        width: 38px;
-        height: 38px;
-        border-radius: 9px;
+        width: 50px;
+        height: 50px;
+        border-radius: 14px;
         display: flex;
         align-items: center;
         justify-content: center;
         flex-shrink: 0;
-        i { font-size: 1.1rem; }
+        i { font-size: 1.25rem; }
 
-        &.blue   { background: #eff6ff; color: #3b82f6; }
-        &.pink   { background: #fdf2f8; color: #ee2a7b; }
-        &.green  { background: #f0fdf4; color: #22c55e; }
-        &.amber  { background: #fffbeb; color: #f59e0b; }
-        &.purple { background: #f5f3ff; color: #8b5cf6; }
-        &.red    { background: #fef2f2; color: #ef4444; }
+        &.blue   { background: linear-gradient(135deg, #eef5ff, #dbeafe); color: #3b82f6; box-shadow: 0 4px 12px rgba(59,130,246,0.2); }
+        &.pink   { background: linear-gradient(135deg, #fdf0f7, #fce4f1); color: #ee2a7b; box-shadow: 0 4px 12px rgba(238,42,123,0.2); }
+        &.green  { background: linear-gradient(135deg, #edfff5, #d1fae5); color: #22c55e; box-shadow: 0 4px 12px rgba(34,197,94,0.2); }
+        &.amber  { background: linear-gradient(135deg, #fffbeb, #fef3c7); color: #f59e0b; box-shadow: 0 4px 12px rgba(245,158,11,0.2); }
+        &.purple { background: linear-gradient(135deg, #f3efff, #ede8fe); color: #8b5cf6; box-shadow: 0 4px 12px rgba(139,92,246,0.2); }
+        &.red    { background: linear-gradient(135deg, #fff1f1, #fee2e2); color: #ef4444; box-shadow: 0 4px 12px rgba(239,68,68,0.2); }
     }
 
     .tc-body {
         min-width: 0;
+        flex: 1;
 
         .tc-value {
-            font-size: 1.05rem;
+            font-size: 1.35rem;
             font-weight: 800;
-            color: #111827;
-            line-height: 1.2;
+            color: var(--text-color);
+            line-height: 1.15;
+            letter-spacing: -0.5px;
             white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
         .tc-label {
-            font-size: 0.68rem;
-            color: #9ca3af;
-            font-weight: 600;
+            font-size: 0.67rem;
+            font-weight: 700;
+            color: var(--text-color-secondary);
             text-transform: uppercase;
-            letter-spacing: 0.5px;
-            margin-top: 2px;
+            letter-spacing: 0.07em;
+            margin-top: 4px;
         }
     }
 }
 
-@media (max-width: 768px) {
-    .totals-bar { flex-direction: column; }
-    .total-chip {
-        border-right: none;
-        border-bottom: 1px solid #e5e7eb;
-        &:last-child { border-bottom: none; }
-    }
+@media (max-width: 640px) {
+    .totals-bar { grid-template-columns: 1fr; }
 }
 
 // ── Badge de método de pago ───────────────────────────────────────────────────

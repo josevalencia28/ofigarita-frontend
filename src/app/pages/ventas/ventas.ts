@@ -9,10 +9,11 @@ import { RippleModule } from 'primeng/ripple';
 import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
 import { InputTextModule } from 'primeng/inputtext';
+import { Toast } from 'primeng/toast';
 
 @Component({
   selector: 'app-ventas',
-  imports: [TableModule, CardModule, ButtonModule, CommonModule, RippleModule, IconFieldModule, InputIconModule, InputTextModule],
+  imports: [TableModule, CardModule, ButtonModule, CommonModule, RippleModule, IconFieldModule, InputIconModule, InputTextModule, Toast],
   templateUrl: './ventas.html',
   styleUrl: './ventas.scss'
 })

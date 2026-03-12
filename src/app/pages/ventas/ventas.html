@@ -1,11 +1,14 @@
-<div class="card">
-  <p-table #dt [value]="ventas" dataKey="internalId" [loading]="loading" showGridlines [expandedRowKeys]="expandedRows"
+<p-toast position="top-right"></p-toast>
+
+<div class="page-table-card">
+  <p-table #dt [value]="ventas" dataKey="internalId" [loading]="loading" [expandedRowKeys]="expandedRows"
     [globalFilterFields]="['nombre', 'listaProductos', 'numero_id']" [paginator]="true"
-    [rows]="10" [rowsPerPageOptions]="[5, 10, 20]">
+    [rows]="10" [rowsPerPageOptions]="[5, 10, 20]"
+    styleClass="p-datatable-sm p-datatable-striped p-datatable-gridlines">
 
     <ng-template #caption>
       <div class="flex flex-wrap justify-between items-center gap-2">
-        <span class="text-xl font-bold">Últimas Ventas</span>
+        <span class="text-xl font-bold" style="color: var(--text-color)">Ventas por Clientes</span>
         <p-iconfield iconPosition="left" class="ml-auto w-1/5">
           <p-inputicon>
             <i class="pi pi-search"></i>
@@ -106,7 +109,7 @@
               </div>
 
               <!-- Productos de esa compra -->
-              <p-table [value]="compra.productos ?? []" [tableStyle]="{'min-width':'100%'}">
+              <p-table [value]="compra.productos ?? []" [tableStyle]="{'min-width':'100%'}" styleClass="p-datatable-sm">
                 <ng-template #header>
                   <tr>
                     <th>Producto</th>

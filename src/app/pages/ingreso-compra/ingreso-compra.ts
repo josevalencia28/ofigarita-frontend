@@ -7,7 +7,7 @@ import { MessageService } from 'primeng/api';
 import { TableModule } from 'primeng/table';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
-import { ToastModule } from 'primeng/toast';
+import { Toast } from 'primeng/toast';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { TagModule } from 'primeng/tag';
 import { IconFieldModule } from 'primeng/iconfield';
@@ -52,7 +52,7 @@ interface Producto {
   standalone: true,
   imports: [
     DialogModule, InputNumberModule, FormsModule, CardModule, CommonModule,
-    TableModule, ButtonModule, InputTextModule, ToastModule, ConfirmDialogModule,
+    TableModule, ButtonModule, InputTextModule, Toast, ConfirmDialogModule,
     TagModule, IconFieldModule, InputIconModule, SelectModule
   ],
   providers: [MessageService],

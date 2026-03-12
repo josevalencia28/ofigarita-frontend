@@ -51,3 +51,27 @@
         outline-color: transparent !important;
     }
 }
+
+// ── Dark mode: DataTable hover global ─────────────────────────────────────────
+html.app-dark {
+    .p-datatable-tbody > tr:hover {
+        background-color: var(--p-surface-700) !important;
+
+        > td {
+            color: var(--p-surface-50) !important;
+            background-color: var(--p-surface-700) !important;
+        }
+    }
+
+    // Textos generales de página en dark
+    .hv-title    { color: var(--p-surface-50)  !important; }
+    .hv-subtitle { color: var(--p-surface-400) !important; }
+}
+
+// ── Fila expandida DataTable (dark + light) ───────────────────────────────────
+.vt-expanded-row > td,
+.hv-expanded-row > td,
+td:has(> .expanded-container) {
+    background: var(--surface-ground) !important;
+    padding: 0 !important;
+}

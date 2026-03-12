@@ -79,21 +79,27 @@
 @if (ventas.length > 0) {
     <div class="hv-totals">
         <div class="hv-total-card blue">
-            <span class="hv-total-icon"><i class="pi pi-receipt"></i></span>
-            <span class="hv-total-value">{{ totalizadores.total_registros }}</span>
-            <span class="hv-total-label">Total Ventas</span>
+            <div class="hv-total-icon"><i class="pi pi-receipt"></i></div>
+            <div class="hv-total-body">
+                <div class="hv-total-value">{{ totalizadores.total_registros }}</div>
+                <div class="hv-total-label">Total Ventas</div>
+            </div>
         </div>
         <div class="hv-total-card green">
-            <span class="hv-total-icon"><i class="pi pi-wallet"></i></span>
-            <span class="hv-total-value">{{ formatCurrency(totalizadores.suma_total) }}</span>
-            <span class="hv-total-label">Monto Total</span>
+            <div class="hv-total-icon"><i class="pi pi-wallet"></i></div>
+            <div class="hv-total-body">
+                <div class="hv-total-value">{{ formatCurrency(totalizadores.suma_total) }}</div>
+                <div class="hv-total-label">Monto Total</div>
+            </div>
         </div>
         @for (entry of medioPagoEntries; track entry.key) {
             <div class="hv-total-card gray">
-                <span class="hv-total-icon"><i class="pi pi-credit-card"></i></span>
-                <span class="hv-total-value">{{ entry.value.cantidad }}</span>
-                <span class="hv-total-label">{{ entry.key }}</span>
-                <span class="hv-total-sub">{{ formatCurrency(entry.value.total) }}</span>
+                <div class="hv-total-icon"><i class="pi pi-credit-card"></i></div>
+                <div class="hv-total-body">
+                    <div class="hv-total-value">{{ entry.value.cantidad }}</div>
+                    <div class="hv-total-label">{{ entry.key }}</div>
+                    <div class="hv-total-sub">{{ formatCurrency(entry.value.total) }}</div>
+                </div>
             </div>
         }
     </div>

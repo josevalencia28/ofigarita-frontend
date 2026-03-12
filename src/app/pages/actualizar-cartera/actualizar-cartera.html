@@ -1,5 +1,4 @@
-<div class="card">
-    <p-toast position="top-right"></p-toast>
+<p-toast position="top-right"></p-toast>
 
     <!-- ── Totalizadores ── -->
     <div class="totals-bar" *ngIf="!loading && carteraCliente.length > 0">
@@ -26,13 +25,15 @@
         </div>
     </div>
 
-    <p-table #dt [value]="carteraCliente" dataKey="internalId" [loading]="loading" showGridlines
+<div class="page-table-card">
+    <p-table #dt [value]="carteraCliente" dataKey="internalId" [loading]="loading"
         [expandedRowKeys]="expandedRows" [globalFilterFields]="['nombre', 'numero_id', 'forma_pago', 'estado_venta']"
-        [paginator]="true" [rows]="10" [rowsPerPageOptions]="[5, 10, 20]">
+        [paginator]="true" [rows]="10" [rowsPerPageOptions]="[5, 10, 20]"
+        styleClass="p-datatable-sm p-datatable-striped p-datatable-gridlines">
 
         <ng-template #caption>
             <div class="flex flex-wrap justify-between items-center gap-2">
-                <span class="text-xl font-bold">Cartera Clientes</span>
+                <span class="text-xl font-bold" style="color: var(--text-color)">Cartera Clientes</span>
                 <p-iconfield iconPosition="left" class="ml-auto w-1/5">
                     <p-inputicon>
                         <i class="pi pi-search"></i>

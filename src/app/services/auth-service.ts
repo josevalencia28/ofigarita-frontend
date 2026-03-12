@@ -22,14 +22,14 @@ export class AuthService {
   }
 
   get getUsuario(): Usuarios {
+        if (this._usuario?.USERNAME) {
+            return this._usuario;
+        }
         const user = this.sessionService.getItem('user');
-        if (this._usuario != null) {
+        if (user != null) {
+            this._usuario = user;
             return this._usuario;
-        } else if (this._usuario == null && user != null) {
-            this._usuario = user || "";
-            return this._usuario;
-        };
-
+        }
         return new Usuarios();
     }
 

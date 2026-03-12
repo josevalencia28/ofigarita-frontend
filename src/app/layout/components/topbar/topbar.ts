@@ -16,6 +16,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { Button } from "primeng/button";
 import { Password } from "primeng/password";
 import { ConfirmDialog } from "primeng/confirmdialog";
+import { NotificacionesService } from '@/services/notificaciones.service';
 
 @Component({
     selector: 'app-topbar',
@@ -32,10 +33,11 @@ export class Topbar implements OnInit {
     form: FormGroup;
     usuario_name : string = '';
     with_screen: number = window.innerWidth;
+    notifPanelOpen: boolean = false;
 
     get userName(): string {
-        const u = this.authService.getUsuario;        
-        return u?.USERNAME || u?.NOMBRES || 'Usuario';
+        const u = this.authService.getUsuario;
+        return u?.USERNAME || 'Usuario';
     }
 
     get isDark(): boolean {
@@ -50,6 +52,7 @@ export class Topbar implements OnInit {
         private messageService: MessageService,
         private confirmationService: ConfirmationService,
         private fb: FormBuilder,
+        public notifService: NotificacionesService,
     ) {
         this.form = this.fb.group({
             p_password_old: ['', [Validators.required,]],
@@ -61,7 +64,7 @@ export class Topbar implements OnInit {
     ngOnInit(): void {
         const u = this.authService.getUsuario;
         
-        this.usuario_name= u?.NOMBRES || u?.USERNAME || 'Usuario';
+        this.usuario_name = u?.USERNAME || 'Usuario';
         this.items = [
             {
                 label: 'Opciones',
@@ -162,6 +165,30 @@ export class Topbar implements OnInit {
 
     toggleDarkMode() {
         this.layoutService.layoutConfig.update((state) => ({ ...state, darkTheme: !state.darkTheme }));
+    }
+
+    toggleNotifPanel(): void {
+        this.notifPanelOpen = !this.notifPanelOpen;
+    }
+
+    marcarTodasLeidas(): void {
+        this.notifService.marcarTodasLeidas();
+    }
+
+    tiempoTranscurrido(fecha: string): string {
+        const diff = Date.now() - new Date(fecha).getTime();
+        const min = Math.floor(diff / 60000);
+        if (min < 1) return 'Ahora';
+        if (min < 60) return `hace ${min} min`;
+        const h = Math.floor(min / 60);
+        if (h < 24) return `hace ${h}h`;
+        const d = Math.floor(h / 24);
+        return `hace ${d}d`;
+    }
+
+    @HostListener('document:click')
+    onDocumentClick(): void {
+        this.notifPanelOpen = false;
     }
 
     @HostListener('window:resize', ['$event'])

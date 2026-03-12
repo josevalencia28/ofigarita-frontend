@@ -8,13 +8,14 @@ import { Footer } from './components/footer/footer';
 import { LayoutService } from '../layout/service/layout.service';
 import { VentasService } from '@/pages/service/ventas.service';
 import { MessageService } from 'primeng/api';
-import { ToastModule } from 'primeng/toast';
+import { Toast } from 'primeng/toast';
 import { AuthService } from '@/services/auth-service';
+import { NotificacionesService } from '@/services/notificaciones.service';
 
 @Component({
     selector: 'app-layout',
     standalone: true,
-    imports: [CommonModule, Topbar, RouterModule, Footer, Sidebar, ToastModule],
+    imports: [CommonModule, Topbar, RouterModule, Footer, Sidebar, Toast],
     templateUrl: `./layout.html`
 })
 export class Layout implements OnDestroy, OnInit {
@@ -37,6 +38,7 @@ export class Layout implements OnDestroy, OnInit {
         private ventasService: VentasService,
         private messageService: MessageService,
         private authService: AuthService,
+        private notificacionesService: NotificacionesService,
     ) {
         this.overlayMenuOpenSubscription = this.layoutService.overlayOpen$.subscribe(() => {
             if (!this.menuOutsideClickListener) {
@@ -125,14 +127,22 @@ export class Layout implements OnDestroy, OnInit {
 
         if (Notification.permission === 'default') {
             try {
-                await Notification.requestPermission();
+                const resultado = await Notification.requestPermission();
+                if (resultado === 'denied') {
+                    this.messageService.add({
+                        severity: 'warn',
+                        summary: 'Notificaciones bloqueadas',
+                        detail: 'Activa las notificaciones en la configuración del navegador para recibir alertas de compras.',
+                        life: 8000,
+                    });
+                }
             } catch {
                 // Ignorar errores de solicitud de permiso
             }
         }
     }
 
-    private mostrarNotificacionEscritorio(titulo: string, cuerpo: string): void {
+    private mostrarNotificacionEscritorio(venta: any): void {
         if (typeof window === 'undefined' || !('Notification' in window)) {
             return;
         }
@@ -141,9 +151,31 @@ export class Layout implements OnDestroy, OnInit {
             return;
         }
 
-        new Notification(titulo, {
+        const cliente = `${venta.nombres ?? ''} ${venta.apellidos ?? ''}`.trim() || 'Cliente';
+        const total = new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP', maximumFractionDigits: 0 }).format(venta.total);
+
+        const items: { nombre_producto: string; cantidad: number }[] = venta.items ?? [];
+        const lineasProductos = items.slice(0, 3).map((i: any) => `${i.cantidad}x ${i.nombre_producto}`);
+        if (items.length > 3) lineasProductos.push(`y ${items.length - 3} más...`);
+
+        const cuerpo = [
+            cliente,
+            total,
+            ...(lineasProductos.length ? ['', ...lineasProductos] : []),
+        ].join('\n');
+
+        const notif = new Notification('🛒 ¡Nueva compra! — Ofigarita', {
             body: cuerpo,
+            icon: '/assets/logoOfigarita.png',
+            badge: '/assets/logoOfigarita.png',
+            tag: `venta-${venta.id_venta}`,
+            requireInteraction: false,
         });
+
+        notif.onclick = () => {
+            window.focus();
+            notif.close();
+        };
     }
 
     conectarNotificacionesVentas(): void {
@@ -151,7 +183,8 @@ export class Layout implements OnDestroy, OnInit {
             next: (venta: any) => {
                 const cliente = `${venta.nombres ?? ''} ${venta.apellidos ?? ''}`.trim() || 'Cliente';
                 const total = new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP', maximumFractionDigits: 0 }).format(venta.total);
-                const detalle = `${cliente} — ${total}`;
+
+                this.notificacionesService.agregar(venta);
 
                 this.messageService.add({
                     severity: 'success',
@@ -160,7 +193,7 @@ export class Layout implements OnDestroy, OnInit {
                     life: 10000,
                 });
 
-                this.mostrarNotificacionEscritorio('¡Nueva compra!', detalle);
+                this.mostrarNotificacionEscritorio(venta);
             },
         });
     }

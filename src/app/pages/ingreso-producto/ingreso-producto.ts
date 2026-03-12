@@ -5,7 +5,7 @@ import { CommonModule } from '@angular/common';
 import { TableModule } from 'primeng/table';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
-import { ToastModule } from 'primeng/toast';
+import { Toast } from 'primeng/toast';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { TagModule } from 'primeng/tag';
 import { MessageService, ConfirmationService } from 'primeng/api';
@@ -30,7 +30,7 @@ interface Producto {
   selector: 'app-ingreso-producto',
   imports: [
     DialogModule, InputNumberModule, FormsModule, CardModule, CommonModule,
-    TableModule, ButtonModule, InputTextModule, ToastModule, ConfirmDialogModule,
+    TableModule, ButtonModule, InputTextModule, Toast, ConfirmDialogModule,
     TagModule, IconFieldModule, InputIconModule
   ],
   providers: [MessageService, ConfirmationService],

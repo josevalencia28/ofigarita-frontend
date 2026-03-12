@@ -11,7 +11,7 @@ import { InputTextModule } from 'primeng/inputtext';
 import { ButtonModule } from 'primeng/button';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { TooltipModule } from 'primeng/tooltip';
-import { ToastModule } from 'primeng/toast';
+import { Toast } from 'primeng/toast';
 import { DialogModule } from 'primeng/dialog';
 import { TiendaClienteService } from '@/pages/service/tienda.cliente.service';
 import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
@@ -65,7 +65,7 @@ interface ClienteData {
         ButtonModule,
         ProgressSpinnerModule,
         TooltipModule,
-        ToastModule,
+        Toast,
         DialogModule,
         SelectModule,
         ReactiveFormsModule

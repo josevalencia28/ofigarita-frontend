@@ -9,7 +9,7 @@ import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
 import { InputTextModule } from 'primeng/inputtext';
 import { MessageService } from 'primeng/api';
-import { ToastModule } from 'primeng/toast';
+import { Toast } from 'primeng/toast';
 import { DialogModule } from 'primeng/dialog';
 
 @Component({
@@ -23,7 +23,7 @@ import { DialogModule } from 'primeng/dialog';
     IconFieldModule,
     InputIconModule,
     InputTextModule,
-    ToastModule,
+    Toast,
     DialogModule,
   ],
   templateUrl: './actualizar-cartera.html',

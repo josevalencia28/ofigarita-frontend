@@ -8,7 +8,7 @@ import { ProductoService } from '../service/producto.service';
 import { TableModule } from 'primeng/table';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
-import { ToastModule } from 'primeng/toast';
+import { Toast } from 'primeng/toast';
 import { TagModule } from 'primeng/tag';
 import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
@@ -63,7 +63,7 @@ interface ProductoTemp {
     standalone: true,
     imports: [
         CommonModule, FormsModule,
-        TableModule, ButtonModule, InputTextModule, ToastModule,
+        TableModule, ButtonModule, InputTextModule, Toast,
         TagModule, IconFieldModule, InputIconModule, DialogModule,
         InputNumberModule, SelectModule, CheckboxModule, TextareaModule, TooltipModule
     ],
