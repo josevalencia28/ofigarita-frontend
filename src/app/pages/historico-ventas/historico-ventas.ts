@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { TableModule } from 'primeng/table';
@@ -8,6 +8,7 @@ import { SelectModule } from 'primeng/select';
 import { DatePickerModule } from 'primeng/datepicker';
 import { TagModule } from 'primeng/tag';
 import { VentasService } from '@/pages/service/ventas.service';
+import { Subscription } from 'rxjs';
 
 @Component({
     selector: 'app-historico-ventas',
@@ -25,7 +26,7 @@ import { VentasService } from '@/pages/service/ventas.service';
     templateUrl: './historico-ventas.html',
     styleUrl: './historico-ventas.scss',
 })
-export class HistoricoVentas implements OnInit {
+export class HistoricoVentas implements OnInit, OnDestroy {
     ventas: any[] = [];
     totalizadores: any = { total_registros: 0, suma_total: 0, por_medio_pago: {} };
     loading = false;
@@ -39,6 +40,7 @@ export class HistoricoVentas implements OnInit {
     productoFiltro = '';
     tipoPagoFiltro: string | null = null;
     expandedRows: { [key: string]: boolean } = {};
+    private sseSub?: Subscription;
 
     mesesOptions = [
         { label: 'Enero', value: 1 },
@@ -72,6 +74,15 @@ export class HistoricoVentas implements OnInit {
             this.aniosOptions.push({ label: y.toString(), value: y });
         }
         this.buscar();
+        // Refrescar automáticamente cuando llega una nueva venta
+        this.sseSub = this.ventasService.streamNuevasVentas().subscribe({
+            next: () => this.buscar(),
+            error: () => {},
+        });
+    }
+
+    ngOnDestroy(): void {
+        this.sseSub?.unsubscribe();
     }
 
     buscar() {

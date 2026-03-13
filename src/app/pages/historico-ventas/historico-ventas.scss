@@ -10,13 +10,13 @@
     .hv-title {
         font-size: 1.4rem;
         font-weight: 800;
-        color: #111827;
+        color: var(--text-color);
         margin: 0 0 0.25rem;
     }
 
     .hv-subtitle {
         font-size: 0.82rem;
-        color: #6b7280;
+        color: var(--text-color-secondary);
         margin: 0;
     }
 }
@@ -171,7 +171,13 @@
     padding: 1.25rem;
     border: 1px solid var(--surface-border);
     box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 4px 16px rgba(0,0,0,0.04);
-    overflow: hidden;
+    overflow: visible;
+
+    // Quitar bordes cuadrados en las esquinas del thead de PrimeNG
+    ::ng-deep .p-datatable-table-container {
+        border-radius: 10px;
+        overflow: hidden;
+    }
 }
 
 .hv-id {
@@ -182,7 +188,7 @@
 .hv-total-cell {
     text-align: right;
     font-weight: 700;
-    color: #111827;
+    color: var(--text-color);
 }
 
 .hv-empty {

@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit, ViewChild, AfterViewInit, Renderer2, HostListener } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild, HostListener } from '@angular/core';
 import { ConfirmationService, MenuItem, MenuItemCommandEvent, MessageService } from 'primeng/api';
 import { Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
@@ -34,6 +34,8 @@ export class Topbar implements OnInit {
     usuario_name : string = '';
     with_screen: number = window.innerWidth;
     notifPanelOpen: boolean = false;
+
+    @ViewChild('notifWrapperEl') notifWrapperEl!: ElementRef;
 
     get userName(): string {
         const u = this.authService.getUsuario;
@@ -175,6 +177,14 @@ export class Topbar implements OnInit {
         this.notifService.marcarTodasLeidas();
     }
 
+    limpiarNotificaciones(): void {
+        this.notifService.limpiar();
+    }
+
+    nombreCliente(n: { nombres: string; apellidos: string }): string {
+        return (n.nombres + ' ' + n.apellidos).trim() || 'Cliente';
+    }
+
     tiempoTranscurrido(fecha: string): string {
         const diff = Date.now() - new Date(fecha).getTime();
         const min = Math.floor(diff / 60000);
@@ -186,9 +196,11 @@ export class Topbar implements OnInit {
         return `hace ${d}d`;
     }
 
-    @HostListener('document:click')
-    onDocumentClick(): void {
-        this.notifPanelOpen = false;
+    @HostListener('document:click', ['$event'])
+    onDocumentClick(event: Event): void {
+        if (this.notifWrapperEl && !this.notifWrapperEl.nativeElement.contains(event.target)) {
+            this.notifPanelOpen = false;
+        }
     }
 
     @HostListener('window:resize', ['$event'])

@@ -49,10 +49,21 @@ export class NotificacionesService {
         this.guardarEnStorage(actualizadas);
     }
 
+    limpiar(): void {
+        this._notificaciones.set([]);
+        try { localStorage.removeItem(STORAGE_KEY); } catch { }
+    }
+
     private cargarDeStorage(): Notificacion[] {
         try {
             const raw = localStorage.getItem(STORAGE_KEY);
-            return raw ? JSON.parse(raw) : [];
+            if (!raw) return [];
+            const parsed: any[] = JSON.parse(raw);
+            // Filtrar entradas corruptas (sin id_venta válido)
+            return parsed.filter(n =>
+                n && typeof n.id_venta === 'number' && n.id_venta > 0 &&
+                typeof n.fecha === 'string' && n.fecha.length > 0
+            );
         } catch {
             return [];
         }

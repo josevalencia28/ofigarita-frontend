@@ -1,13 +1,15 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { CardModule } from 'primeng/card';
 import { ChartModule } from 'primeng/chart';
+import { SelectModule } from 'primeng/select';
 import { AnaliticaService } from '@/pages/service/analitica.service';
 import { Toast } from "primeng/toast";
 
 @Component({
     selector: 'app-dashboard',
-    imports: [CommonModule, CardModule, ChartModule, Toast],
+    imports: [CommonModule, FormsModule, CardModule, ChartModule, SelectModule, Toast],
     templateUrl: './dashboard.html',
     styleUrl: './dashboard.scss',
 })
@@ -29,6 +31,20 @@ export class Dashboard implements OnInit {
     productosChartData: any;
     productosChartOptions: any;
 
+    // Gráfica torta — tipo de pago
+    periodoTipoPago: string = 'mes';
+    readonly periodoOptions = [
+        { label: 'Hoy', value: 'dia' },
+        { label: 'Este mes', value: 'mes' },
+        { label: 'Este año', value: 'anio' },
+    ];
+    tipoPagoChartData: any;
+    tipoPagoChartOptions: any;
+
+    // Panel alertas de stock
+    stockProductos: any[] = [];
+    stockFiltro: 'urgentes' | 'agotado' | 'bajo' | 'ok' | 'todos' = 'urgentes';
+
     readonly mesActual = new Date().toLocaleDateString('es-CO', { month: 'long', year: 'numeric' });
     readonly fechaHoy  = new Date().toLocaleDateString('es-CO', { weekday: 'long', day: 'numeric', month: 'long' });
 
@@ -38,12 +54,15 @@ export class Dashboard implements OnInit {
         this.initClientesChartOptions();
         this.initProductosChartOptions();
         this.initVentasAnualesChartOptions();
+        this.initTipoPagoChartOptions();
 
         this.getVentasData();
         this.getTopClientes();
         this.getVentasAnuales();
         this.getTopProductos();
         this.getResumenGeneral();
+        this.getTipoPago();
+        this.getStock();
     }
 
     getResumenGeneral() {
@@ -346,6 +365,95 @@ export class Dashboard implements OnInit {
                 }
             }
         };
+    }
+
+    // ── Tipo de pago ─────────────────────────────────────────────────────────
+
+    getTipoPago() {
+        this.analiticaService.getVentasPorTipoPago(this.periodoTipoPago).subscribe({
+            next: (data: any[]) => {
+                if (Array.isArray(data) && data.length > 0) this.updateTipoPagoChartData(data);
+            },
+            error: (err) => console.error('Error tipo pago:', err)
+        });
+    }
+
+    onPeriodoChange() { this.getTipoPago(); }
+
+    updateTipoPagoChartData(data: any[]) {
+        const colores: { [key: string]: string } = {
+            'EFECTIVO': '#22c55e',
+            'NEQUI':    '#3b82f6',
+            'CRÉDITO':  '#f59e0b',
+        };
+        this.tipoPagoChartData = {
+            labels: data.map(d => `${d.medio_pago} (${d.cantidad})`),
+            datasets: [{
+                data: data.map(d => parseFloat(d.total)),
+                backgroundColor: data.map(d => colores[d.medio_pago] || '#6b7280'),
+                hoverOffset: 8,
+                borderWidth: 2,
+                borderColor: 'transparent'
+            }]
+        };
+    }
+
+    initTipoPagoChartOptions() {
+        const textColorSecondary = getComputedStyle(document.documentElement)
+            .getPropertyValue('--text-color-secondary') || '#6b7280';
+        this.tipoPagoChartOptions = {
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'bottom',
+                    labels: { color: textColorSecondary, usePointStyle: true, padding: 18, font: { size: 12 } }
+                },
+                tooltip: {
+                    callbacks: {
+                        label: (ctx: any) => ` $${ctx.parsed.toLocaleString('es-CO')}`
+                    }
+                }
+            }
+        };
+    }
+
+    // ── Stock / Alertas inventario ────────────────────────────────────────────
+
+    getStock() {
+        this.analiticaService.getStockProductos().subscribe({
+            next: (data: any[]) => {
+                this.stockProductos = Array.isArray(data) ? data.map(p => ({
+                    ...p,
+                    stock: parseInt(p.stock, 10),
+                    precio_venta: parseFloat(p.precio_venta) || 0
+                })) : [];
+            },
+            error: (err) => console.error('Error stock:', err)
+        });
+    }
+
+    get stockFiltrado(): any[] {
+        switch (this.stockFiltro) {
+            case 'urgentes': return this.stockProductos.filter(p => p.stock <= 5);
+            case 'agotado':  return this.stockProductos.filter(p => p.stock === 0);
+            case 'bajo':     return this.stockProductos.filter(p => p.stock > 0 && p.stock <= 5);
+            case 'ok':       return this.stockProductos.filter(p => p.stock > 5);
+            default:         return this.stockProductos;
+        }
+    }
+
+    get stockAgotados(): number { return this.stockProductos.filter(p => p.stock === 0).length; }
+    get stockBajo(): number     { return this.stockProductos.filter(p => p.stock > 0 && p.stock <= 5).length; }
+    get stockOk(): number       { return this.stockProductos.filter(p => p.stock > 5).length; }
+
+    getStockStatus(stock: number): 'agotado' | 'bajo' | 'ok' {
+        if (stock === 0) return 'agotado';
+        if (stock <= 5) return 'bajo';
+        return 'ok';
+    }
+
+    setStockFiltro(filtro: 'urgentes' | 'agotado' | 'bajo' | 'ok' | 'todos') {
+        this.stockFiltro = filtro;
     }
 
     formatCurrency(value: number): string {

@@ -37,7 +37,7 @@
         </button>
 
         <!-- Campanita de notificaciones -->
-        <div class="notif-wrapper" (click)="$event.stopPropagation()">
+        <div class="notif-wrapper" #notifWrapperEl>
             <button class="notif-bell-btn" (click)="toggleNotifPanel()" title="Notificaciones de compras"
                 [class.notif-bell-active]="notifPanelOpen">
                 <i class="pi pi-bell" [class.notif-bell-ring]="notifService.noLeidas() > 0"></i>
@@ -54,6 +54,8 @@
                         <div class="notif-panel-header-left">
                             <span class="notif-panel-title">Notificaciones</span>
                             @if (notifService.noLeidas() > 0) {
+                                <span class="notif-count-badge">{{ notifService.noLeidas() }} nueva{{ notifService.noLeidas() > 1 ? 's' : '' }}</span>
+                            } @else {
                                 <span class="notif-count-badge">{{ notifService.noLeidas() }} nueva{{ notifService.noLeidas() > 1 ? 's' : '' }}</span>
                             }
                         </div>
@@ -92,7 +94,7 @@
                                         <span class="notif-item-tiempo">{{ tiempoTranscurrido(n.fecha) }}</span>
                                     </div>
                                     <div class="notif-item-cliente">
-                                        <i class="pi pi-user"></i> {{ n.nombres }} {{ n.apellidos }}
+                                        <i class="pi pi-user"></i> {{ nombreCliente(n) }}
                                     </div>
                                     @if (n.items && n.items.length > 0) {
                                         <div class="notif-item-tags">
@@ -104,20 +106,29 @@
                                             }
                                         </div>
                                     }
-                                    <div class="notif-item-total">
-                                        {{ n.total | currency:'COP':'symbol-narrow':'1.0-0':'es-CO' }}
-                                    </div>
+                                    @if (n.total > 0) {
+                                        <div class="notif-item-total">
+                                            {{ n.total | currency:'COP':'symbol-narrow':'1.0-0':'es-CO' }}
+                                        </div>
+                                    }
                                 </div>
                             </div>
                         }
                     </div>
 
                     <!-- Footer -->
-                    @if (notifService.notificaciones().length > 0) {
-                        <div class="notif-panel-footer">
-                            <span>{{ notifService.notificaciones().length }} notificación{{ notifService.notificaciones().length > 1 ? 'es' : '' }} en total</span>
-                        </div>
-                    }
+                    <div class="notif-panel-footer">
+                        @if (notifService.notificaciones().length > 0) {
+                            <span class="notif-footer-count">
+                                {{ notifService.notificaciones().length }} notificación{{ notifService.notificaciones().length > 1 ? 'es' : '' }}
+                            </span>
+                            <button class="notif-limpiar-btn" (click)="limpiarNotificaciones()" title="Borrar historial">
+                                <i class="pi pi-trash"></i> Limpiar historial
+                            </button>
+                        } @else {
+                            <span class="notif-footer-count">Sin notificaciones</span>
+                        }
+                    </div>
                 </div>
             }
         </div>

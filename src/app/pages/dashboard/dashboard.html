@@ -131,7 +131,81 @@
     </p-chart>
 </div>
 
-<!-- ══ FILA 4: Top Clientes + Top Productos ══════════════════════════════════ -->
+<!-- ══ FILA 4: Tipo de Pago + Alertas Inventario ═════════════════════════════ -->
+<div class="chart-grid-2">
+
+    <!-- Torta: Ventas por tipo de pago -->
+    <div class="section-card mb-0">
+        <div class="section-header">
+            <span class="section-title">Ventas por Tipo de Pago</span>
+            <p-select
+                [(ngModel)]="periodoTipoPago"
+                [options]="periodoOptions"
+                optionLabel="label"
+                optionValue="value"
+                (ngModelChange)="onPeriodoChange()"
+                [style]="{'width': '130px', 'font-size': '0.75rem'}">
+            </p-select>
+        </div>
+        <p-chart type="pie" [data]="tipoPagoChartData" [options]="tipoPagoChartOptions"
+            [style]="{'height': '260px'}">
+        </p-chart>
+    </div>
+
+    <!-- Panel: Alertas de inventario -->
+    <div class="section-card mb-0 stock-panel">
+        <div class="section-header">
+            <span class="section-title">Alertas de Inventario</span>
+            <div class="stock-filter-tabs">
+                <button class="stf-btn" [class.active]="stockFiltro === 'urgentes'" (click)="setStockFiltro('urgentes')">
+                    Urgentes <span class="stf-count red">{{ stockAgotados + stockBajo }}</span>
+                </button>
+                <button class="stf-btn" [class.active]="stockFiltro === 'agotado'" (click)="setStockFiltro('agotado')">
+                    Agotados <span class="stf-count red">{{ stockAgotados }}</span>
+                </button>
+                <button class="stf-btn" [class.active]="stockFiltro === 'bajo'" (click)="setStockFiltro('bajo')">
+                    Bajo Stock <span class="stf-count amber">{{ stockBajo }}</span>
+                </button>
+                <button class="stf-btn" [class.active]="stockFiltro === 'ok'" (click)="setStockFiltro('ok')">
+                    Disponibles <span class="stf-count green">{{ stockOk }}</span>
+                </button>
+                <button class="stf-btn" [class.active]="stockFiltro === 'todos'" (click)="setStockFiltro('todos')">Todos</button>
+            </div>
+        </div>
+
+        <div class="stock-summary">
+            <div class="ss-chip agotado">
+                <span class="ss-dot"></span><span class="ss-val">{{ stockAgotados }}</span><span class="ss-lbl">Agotados</span>
+            </div>
+            <div class="ss-chip bajo">
+                <span class="ss-dot"></span><span class="ss-val">{{ stockBajo }}</span><span class="ss-lbl">Stock Bajo</span>
+            </div>
+            <div class="ss-chip ok">
+                <span class="ss-dot"></span><span class="ss-val">{{ stockOk }}</span><span class="ss-lbl">Disponibles</span>
+            </div>
+        </div>
+
+        <div class="stock-list">
+            <div *ngIf="stockFiltrado.length === 0" class="stock-empty">
+                <i class="pi pi-check-circle"></i>
+                <span>Todos los productos tienen buen stock</span>
+            </div>
+            <div *ngFor="let p of stockFiltrado" class="stock-item" [class]="'si-' + getStockStatus(p.stock)">
+                <div class="si-status">
+                    <span class="si-badge" [class]="getStockStatus(p.stock)">
+                        {{ p.stock === 0 ? 'Agotado' : p.stock <= 5 ? 'Stock Bajo' : 'OK' }}
+                    </span>
+                </div>
+                <div class="si-name" [title]="p.nombre_producto">{{ p.nombre_producto }}</div>
+                <div class="si-stock" [class]="getStockStatus(p.stock)">{{ p.stock }}</div>
+                <div class="si-price">{{ p.precio_venta | currency:'COP':'symbol-narrow':'1.0-0' }}</div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<!-- ══ FILA 5: Top Clientes + Top Productos ══════════════════════════════════ -->
 <div class="chart-grid-2">
 
     <!-- Top Clientes -->

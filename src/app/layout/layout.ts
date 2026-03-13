@@ -21,6 +21,7 @@ import { NotificacionesService } from '@/services/notificaciones.service';
 export class Layout implements OnDestroy, OnInit {
     overlayMenuOpenSubscription: Subscription;
     private sseSubscription?: Subscription;
+    private sseReconectTimeout?: any;
 
     menuOutsideClickListener: any;
     with_screen:number = window.innerWidth;
@@ -112,6 +113,7 @@ export class Layout implements OnDestroy, OnInit {
         }
 
         this.sseSubscription?.unsubscribe();
+        clearTimeout(this.sseReconectTimeout);
     }
 
     ngOnInit(): void {
@@ -179,6 +181,7 @@ export class Layout implements OnDestroy, OnInit {
     }
 
     conectarNotificacionesVentas(): void {
+        this.sseSubscription?.unsubscribe();
         this.sseSubscription = this.ventasService.streamNuevasVentas().subscribe({
             next: (venta: any) => {
                 const cliente = `${venta.nombres ?? ''} ${venta.apellidos ?? ''}`.trim() || 'Cliente';
@@ -194,6 +197,10 @@ export class Layout implements OnDestroy, OnInit {
                 });
 
                 this.mostrarNotificacionEscritorio(venta);
+            },
+            error: () => {
+                // Reconectar automáticamente tras 5 segundos
+                this.sseReconectTimeout = setTimeout(() => this.conectarNotificacionesVentas(), 5000);
             },
         });
     }
